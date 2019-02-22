@@ -105,6 +105,8 @@ class ContextProvider extends React.Component {
                     this.perfectScores.coop += record.wr;
                 }
                 this.perfectScores.overall += record.wr;
+            } else {
+                record.ties = 0;
             }
         }
     }
