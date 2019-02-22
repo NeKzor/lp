@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
+import Link from '@material-ui/core/Link';
+import Paper from '@material-ui/core/Paper';
+import PlayArrow from '@material-ui/icons/PlayArrow';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -8,44 +11,25 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
-import PlayArrow from '@material-ui/icons/PlayArrow';
-import IconButton from '@material-ui/core/IconButton';
-import Link from '@material-ui/core/Link';
-
-function desc(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
-
-function stableSort(array, cmp) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-        const order = cmp(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
-    return stabilizedThis.map(el => el[0]);
-}
-
-function getSorting(order, orderBy) {
-    return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
-}
+import { withStyles } from '@material-ui/core/styles';
+import stableSort from '../utils/stableSort';
 
 const rows = [
-    { id: 'name', numeric: false, sortable: true, disablePadding: false, label: 'Map' },
-    { id: 'wr', numeric: true, sortable: true, disablePadding: false, label: 'Portals' },
-    { id: 'ties', numeric: false, sortable: true, disablePadding: false, label: 'Ties' },
-    { id: 'video', numeric: false, sortable: false, disablePadding: false, label: 'Video' },
+    { id: 'name', numeric: false, sortable: true, label: 'Map' },
+    { id: 'wr', numeric: true, sortable: true, label: 'Portals' },
+    { id: 'ties', numeric: true, sortable: true, label: 'Ties' },
+    { id: 'video', numeric: true, sortable: false, label: 'Video' },
 ];
 
 class RecordsTableHead extends React.Component {
+    static propTypes = {
+        onRequestSort: PropTypes.func.isRequired,
+        order: PropTypes.string.isRequired,
+        orderBy: PropTypes.string.isRequired,
+        rowCount: PropTypes.number.isRequired,
+    };
+
     createSortHandler = property => event => {
         this.props.onRequestSort(event, property);
     };
@@ -60,7 +44,7 @@ class RecordsTableHead extends React.Component {
                         row => (
                             <TableCell
                                 key={row.id}
-                                align={row.numeric ? 'center' : 'center'}
+                                align={row.numeric ? 'center' : 'left'}
                                 padding={row.disablePadding ? 'none' : 'default'}
                                 sortDirection={orderBy === row.id ? order : false}
                             >
@@ -90,32 +74,26 @@ class RecordsTableHead extends React.Component {
     }
 }
 
-RecordsTableHead.propTypes = {
-    onRequestSort: PropTypes.func.isRequired,
-    order: PropTypes.string.isRequired,
-    orderBy: PropTypes.string.isRequired,
-    rowCount: PropTypes.number.isRequired,
-};
-
-const styles = theme => ({
-    root: {
-        /* width: '50%', */
-        marginTop: theme.spacing.unit * 3,
-    },
-    tableWrapper: {
-        overflowX: 'auto',
+const styles = _ => ({
+   helpLink: {
+       cursor: 'help'
     },
 });
 
 class RecordsTable extends React.Component {
+    static propTypes = {
+        classes: PropTypes.object.isRequired,
+        data: PropTypes.array.isRequired,
+    };
+
     state = {
         order: 'asc',
-        orderBy: 'name',
+        orderBy: 'index',
         page: 0,
         rowsPerPage: 10,
     };
 
-    handleRequestSort = (event, property) => {
+    handleRequestSort = (_, property) => {
         const orderBy = property;
         let order = 'desc';
 
@@ -126,15 +104,15 @@ class RecordsTable extends React.Component {
         this.setState({ order, orderBy });
     };
 
-    handleChangePage = (event, page) => {
+    handleChangePage = (_, page) => {
         this.setState({ page });
     };
 
-    handleChangeRowsPerPage = event => {
-        this.setState({ rowsPerPage: event.target.value });
+    handleChangeRowsPerPage = (ev) => {
+        this.setState({ rowsPerPage: ev.target.value });
     };
 
-    gotoYouTube = (record) => {
+    gotoYouTube = (record) => () => {
         let query = `Portal+2+${record.name.replace(/ /g, '+')}+in+${record.wr}+Portals`;
         let tab = window.open(`https://www.youtube.com/results?search_query=${query}`, '_blank');
         tab.opener = null;
@@ -144,54 +122,68 @@ class RecordsTable extends React.Component {
         const { classes, data } = this.props;
         const { order, orderBy, rowsPerPage, page } = this.state;
 
+        const ExcludedMapsInfo = () => (
+            <Tooltip
+                placement="right"
+                title="Disabled tracking records for this map."
+                disableFocusListener
+                disableTouchListener
+            >
+                <Link className={classes.helpLink}>n/a</Link>
+            </Tooltip>
+        );
+
         return (
-            <Paper className={classes.root}>
-                <div className={classes.tableWrapper}>
-                    <Table className={classes.table} aria-labelledby="tableTitle">
-                        <RecordsTableHead
-                            order={order}
-                            orderBy={orderBy}
-                            onRequestSort={this.handleRequestSort}
-                            rowCount={data.length}
-                        />
-                        <TableBody>
-                            {stableSort(data, getSorting(order, orderBy))
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map(record => {
-                                    return (
-                                        <TableRow hover tabIndex={-1} key={record.id}>
-                                            <TableCell align="center">
-                                                <Link
-                                                    target="_blank"
-                                                    rel="noopener"
-                                                    color="inherit"
-                                                    href={`https://steamcommunity.com/stats/Portal2/leaderboards/${record.id}`}
-                                                >
-                                                    {record.name}
-                                                </Link>
-                                            </TableCell>
-                                            <TableCell align="center">{record.wr}</TableCell>
-                                            <TableCell align="center">{(record.excluded === true) ? '-' : record.ties}</TableCell>
-                                            <TableCell align="center">
-                                                <Tooltip placement="right" title="Search record on YouTube" disableFocusListener disableTouchListener>
-                                                    <IconButton color="primary" onClick={() => this.gotoYouTube(record)}>
-                                                        <PlayArrow />
-                                                    </IconButton>
-                                                </Tooltip>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                        </TableBody>
-                    </Table>
-                </div>
+            <Paper>
+                <Table aria-labelledby="tableTitle">
+                    <RecordsTableHead
+                        order={order}
+                        orderBy={orderBy}
+                        onRequestSort={this.handleRequestSort}
+                        rowCount={data.length}
+                    />
+                    <TableBody>
+                        {stableSort(data, order, orderBy)
+                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            .map(record => {
+                                return (
+                                    <TableRow hover tabIndex={-1} key={record.id}>
+                                        <TableCell>
+                                            <Link
+                                                target="_blank"
+                                                rel="noopener"
+                                                color="inherit"
+                                                href={`https://steamcommunity.com/stats/Portal2/leaderboards/${record.id}`}
+                                            >
+                                                {record.name}
+                                            </Link>
+                                        </TableCell>
+                                        <TableCell align="center">{record.wr}</TableCell>
+                                        <TableCell align="center">
+                                            {(record.excluded === true)
+                                                ? <ExcludedMapsInfo />
+                                                : record.ties
+                                            }
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            <Tooltip placement="right" title="Search record on YouTube" disableFocusListener disableTouchListener>
+                                                <IconButton color="primary" onClick={this.gotoYouTube(record)}>
+                                                    <PlayArrow />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
+                    </TableBody>
+                </Table>
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 20, 50, 100]}
                     component="div"
                     count={data.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
-                    labelDisplayedRows={() =>''}
+                    labelDisplayedRows={() => ''}
                     backIconButtonProps={{
                         'aria-label': 'Previous Page',
                     }}
@@ -205,9 +197,5 @@ class RecordsTable extends React.Component {
         );
     }
 }
-
-RecordsTable.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles)(RecordsTable);

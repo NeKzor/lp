@@ -10,9 +10,6 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
-    root: {
-        marginTop: theme.spacing.unit * 3,
-    },
     help: {
         cursor: 'help',
     },
@@ -67,7 +64,7 @@ class AboutView extends React.Component {
         );
 
         return (
-            <div className={classes.root}>
+            <>
                 <Grid container>
                     <Grid item xs={false} md={1} lg={3} />
                     <Grid item xs={12} md={10} lg={6}>
@@ -83,7 +80,7 @@ class AboutView extends React.Component {
                         </Paper>
                     </Grid>
                 </Grid>
-            </div>
+            </>
         );
     }
 }

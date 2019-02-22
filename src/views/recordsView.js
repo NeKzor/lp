@@ -8,11 +8,9 @@ import RecordsTable from '../components/recordsTable';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
-    root: {
-        marginTop: theme.spacing.unit * 3,
-    },
     searchBox: {
         padding: 10,
+        marginBottom: theme.spacing.unit * 3,
     },
 });
 
@@ -41,7 +39,7 @@ class RecordsView extends React.Component {
         const { classes, data } = this.props;
 
         return (
-            <div className={classes.root}>
+            <>
                 <Grid container>
                     <Grid item xs={false} md={1} lg={3} />
                     <Grid item xs={12} md={10} lg={6}>
@@ -58,7 +56,7 @@ class RecordsView extends React.Component {
                         <RecordsTable data={this.filterRecords(data)} />
                     </Grid>
                 </Grid>
-            </div>
+            </>
         );
     }
 }

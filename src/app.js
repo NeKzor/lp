@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import AppBar from './components/appBar';
 import ProfileDialog from './components/profileDialog';
 import AboutView from './views/aboutView';
@@ -6,8 +7,19 @@ import RecordsView from './views/recordsView';
 import ScoreboardView from './views/scoreboardView';
 import { withContext } from './withContext';
 import { withRoot } from './withRoot';
+import { withStyles } from '@material-ui/core';
+
+const styles = theme => ({
+    views: {
+        marginTop: theme.spacing.unit * 3,
+    },
+});
 
 class App extends React.PureComponent {
+    static propTypes = {
+        classes: PropTypes.object.isRequired,
+    };
+
     state = {
         currentTab: 0,
     };
@@ -18,6 +30,7 @@ class App extends React.PureComponent {
 
     render() {
         const {
+            classes,
             boards: { sp,
                 coop,
                 overall
@@ -35,12 +48,14 @@ class App extends React.PureComponent {
         return (
             <>
                 <AppBar currentTab={currentTab} onTabChange={this.handleTabChange} />
-                {currentTab === 0 && <ScoreboardView data={sp} dialogOpener={cacheProfile} />}
-                {currentTab === 1 && <ScoreboardView data={coop} dialogOpener={cacheProfile} />}
-                {currentTab === 2 && <ScoreboardView data={overall} dialogOpener={cacheProfile} />}
-                {currentTab === 3 && <RecordsView data={records} />}
-                {currentTab === 4 && <AboutView data={stats} />}
-                {currentProfile &&
+                <div className={classes.views}>
+                    {currentTab === 0 && <ScoreboardView data={sp} dialogOpener={cacheProfile} />}
+                    {currentTab === 1 && <ScoreboardView data={coop} dialogOpener={cacheProfile} />}
+                    {currentTab === 2 && <ScoreboardView data={overall} dialogOpener={cacheProfile} />}
+                    {currentTab === 3 && <RecordsView data={records} />}
+                    {currentTab === 4 && <AboutView data={stats} />}
+                </div>
+                {currentProfile &&  
                     <ProfileDialog
                         dialogOpen={currentProfile !== null}
                         handleClose={clearProfile}
@@ -53,4 +68,4 @@ class App extends React.PureComponent {
     }
 }
 
-export default withRoot(withContext(App));
+export default withRoot(withContext(withStyles(styles)(App)));

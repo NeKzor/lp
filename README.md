@@ -2,7 +2,7 @@
 
 - ~~Learn basic react~~
 - ~~Learn material-ui~~
-- Fix tiny bugs
+- ~~Fix tiny bugs~~
 - Clean up app context
-- Deploy api
+- ~~Deploy api~~
 - Deploy page
