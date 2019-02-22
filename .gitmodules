@@ -1,0 +1,6 @@
+[submodule "lib/Portal2Boards.Net"]
+	path = lib/Portal2Boards.Net
+	url = https://github.com/NeKzor/Portal2Boards.Net
+[submodule "lib/SteamCommunity.Net"]
+	path = lib/SteamCommunity.Net
+	url = https://github.com/NeKzor/SteamCommunity.Net
