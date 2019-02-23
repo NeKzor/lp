@@ -1,12 +1,6 @@
 import React from 'react';
-import profiles from './api/profiles.json';
-import wrs from './api/wrs.json';
-import stats from './api/stats.json';
-import board_sp from './api/boards/sp.json';
-import board_coop from './api/boards/coop.json';
-import board_overall from './api/boards/overall.json';
-import jsonPlayer from './api/players/76561198049848090.json';
 import { AppContext } from './withContext';
+import Client from './client.js';
 
 class ContextProvider extends React.Component {
     perfectScores = {
@@ -19,80 +13,38 @@ class ContextProvider extends React.Component {
         profiles: [],
         records: [],
         stats: [],
+        currentProfile: null,
+        playerCache: {},
         boards: {
             sp: [],
             coop: [],
-            overall: []
+            overall: [],
         },
-        currentProfile: null,
-        playerCache: {},
         calcWrDelta: (entry) => Math.abs(this.state.findRecord(entry.id).wr - entry.score),
         findRecord: (id) => this.state.records.find(r => r.id === id),
         findProfile: (id) => this.state.profiles.find(p => p.id === id),
         cacheProfile: (id) => this.cacheProfile(id),
         clearProfile: () => this.setState({ currentProfile: null }),
+        downloadBoard: async (type) => await this.downloadBoard(type),
     };
 
-    componentDidMount() {
-        /* fetch('https://raw.githubusercontent.com/NeKzor/lp/api/profiles.json')
-            .then(res => res.json())
-            .then(profilesJson => this.setState({ profiles: profilesJson }));
-        fetch('https://raw.githubusercontent.com/NeKzor/lp/api/wrs.json')
-            .then(res => res.json())
-            .then(recordsJson => {
-                fetch('https://raw.githubusercontent.com/NeKzor/lp/api/stats.json')
-                    .then(res => res.json())
-                    .then(statsJson => {
-                        initRecords(statsJson, recordsJson);
-                        this.setState({ records: recordsJson, stats: statsJson });
-                    });
-            }); */
-
-        this.initRecords(stats.tied_records, wrs);
-        this.initBoards(board_sp, 'sp');
-        this.initBoards(board_coop, 'coop');
-        this.initBoards(board_overall, 'overall');
-        this.setState({
-            records: wrs,
-            stats: stats,
-            profiles: profiles,
-            boards: {
-                sp: board_sp,
-                coop: board_coop,
-                overall: board_overall
-            }
-        }, () => console.log(this.state));
+    constructor() {
+        super();
+        this.api = new Client();
     }
 
-    initBoards(board, type) {
-        let that = this;
-        for (let item of board) {
-            item.getProfile = function () {
-                return that.state.profiles.find(p => p.id === this.id);
-            };
-            if (type === 'sp') {
-                item.getStats = function () {
-                    return {
-                        delta: that.perfectScores.sp - this.score,
-                        percentage: Math.round(that.perfectScores.sp / this.score * 100)
-                    };
-                };
-            } else if (type === 'coop') {
-                item.getStats = function () {
-                    return {
-                        delta: that.perfectScores.coop - this.score,
-                        percentage: Math.round(that.perfectScores.coop / this.score * 100)
-                    };
-                };
-            } else {
-                item.getStats = function () {
-                    return {
-                        delta: that.perfectScores.overall - this.score,
-                        percentage: Math.round(that.perfectScores.overall / this.score * 100)
-                    };
-                };
-            }
-        }
+    async componentDidMount() {
+        // Boards depend on profiles (name, avatar) and on records (perfect score)
+        let profiles = await this.api.getProfiles();
+        let records = await this.api.getRecords();
+
+        // Records and About pages depend on stats (ties, number of cheaters, last update)
+        let stats = await this.api.getStats();
+
+        // Set ties to records page and calculate perfect score for each board
+        this.initRecords(stats.tied_records, records);
+
+        this.setState({ records, stats, profiles });
     }
 
     initRecords(ties, records) {
@@ -111,13 +63,67 @@ class ContextProvider extends React.Component {
         }
     }
 
-    cacheProfile(profileId) {
+    async downloadBoard(type) {
+        let that = this;
+
+        let board = await this.api.getBoard(type);
+        for (let item of board) {
+            item.getProfile = function () {
+                if (this._profile === undefined) {
+                    this._profile = that.state.profiles.find(p => p.id === this.id);
+                }
+                return this._profile;
+            };
+            if (type === 'sp') {
+                item.getStats = function () {
+                    if (this._stats === undefined) {
+                        this._stats = {
+                            delta: that.perfectScores.sp - this.score,
+                            percentage: Math.round(that.perfectScores.sp / this.score * 100)
+                        };
+                    }
+                    return this._stats;
+                };
+            } else if (type === 'coop') {
+                item.getStats = function () {
+                    if (this._stats === undefined) {
+                        this._stats = {
+                            delta: that.perfectScores.coop - this.score,
+                            percentage: Math.round(that.perfectScores.coop / this.score * 100)
+                        };
+                    }
+                    return this._stats;
+                };
+            } else if (type === 'overall') {
+                item.getStats = function () {
+                    if (this._stats === undefined) {
+                        this._stats = {
+                            delta: that.perfectScores.overall - this.score,
+                            percentage: Math.round(that.perfectScores.overall / this.score * 100)
+                        };
+                    }
+                    return this._stats;
+                };
+            } else {
+                throw new Error('Invalid board type!');
+            }
+        }
+
+        this.setState((prevState) => ({
+            boards: {
+                ...prevState.boards,
+                [type]: board
+            }
+        }), () => console.log('Updated state:', this.state));
+    }
+
+    async cacheProfile(profileId) {
         if (this.state.playerCache[profileId] === undefined) {
-            /* fetch(`https://raw.githubusercontent.com/NeKzor/lp/api/players/${profileId}.json`)
-                .then(res => res.json())
-                .then(jsonPlayer => { */
+            console.log(`Caching ${profileId}...`);
+            let player = await this.api.getPlayer(profileId);
+
             let entries = [];
-            for (let entry of jsonPlayer.entries) {
+            for (let entry of player.entries) {
                 entries.push({
                     id: entry.id,
                     name: this.state.findRecord(entry.id).name,
@@ -138,15 +144,15 @@ class ContextProvider extends React.Component {
                             name: profile.profile_name,
                             avatar: profile.avatar_link,
                         },
-                        sp: jsonPlayer.sp_score,
-                        coop: jsonPlayer.coop_score,
-                        overall: jsonPlayer.overall_score,
-                        entries: entries
+                        sp: player.sp_score,
+                        coop: player.coop_score,
+                        overall: player.overall_score,
+                        entries
                     }
                 }
             }));
-            /* }); */
         } else {
+            console.log(`From cache: ${profileId}`);
             this.setState({ currentProfile: profileId });
         }
     }

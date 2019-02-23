@@ -75,7 +75,7 @@ const styles = _ => ({
         display: 'flex',
         alignItems: 'center',
     },
-    classLink: {
+    clickLink: {
         cursor: 'pointer',
     },
 });

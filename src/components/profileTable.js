@@ -76,7 +76,7 @@ class ProfileTable extends React.Component {
 
     state = {
         order: 'asc',
-        orderBy: 'name',
+        orderBy: 'index',
         page: 0,
         rowsPerPage: 100,
     };

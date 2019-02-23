@@ -18,6 +18,10 @@ const styles = theme => ({
 class App extends React.PureComponent {
     static propTypes = {
         classes: PropTypes.object.isRequired,
+        records: PropTypes.array.isRequired,
+        playerCache: PropTypes.object.isRequired,
+        cacheProfile: PropTypes.func.isRequired,
+        clearProfile: PropTypes.func.isRequired,
     };
 
     state = {
@@ -31,16 +35,17 @@ class App extends React.PureComponent {
     render() {
         const {
             classes,
-            boards: { sp,
+            boards: {
+                sp,
                 coop,
-                overall
+                overall,
             },
             records,
             stats,
             currentProfile,
             playerCache,
             cacheProfile,
-            clearProfile
+            clearProfile,
         } = this.props;
 
         const { currentTab } = this.state;
@@ -49,9 +54,9 @@ class App extends React.PureComponent {
             <>
                 <AppBar currentTab={currentTab} onTabChange={this.handleTabChange} />
                 <div className={classes.views}>
-                    {currentTab === 0 && <ScoreboardView data={sp} dialogOpener={cacheProfile} />}
-                    {currentTab === 1 && <ScoreboardView data={coop} dialogOpener={cacheProfile} />}
-                    {currentTab === 2 && <ScoreboardView data={overall} dialogOpener={cacheProfile} />}
+                    {currentTab === 0 && <ScoreboardView data={sp} boardType="sp" dialogOpener={cacheProfile} />}
+                    {currentTab === 1 && <ScoreboardView data={coop} boardType="coop" dialogOpener={cacheProfile} />}
+                    {currentTab === 2 && <ScoreboardView data={overall} boardType="overall" dialogOpener={cacheProfile} />}
                     {currentTab === 3 && <RecordsView data={records} />}
                     {currentTab === 4 && <AboutView data={stats} />}
                 </div>
