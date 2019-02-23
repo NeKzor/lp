@@ -135,12 +135,14 @@ class ScoresTable extends React.Component {
                                 return (
                                     <TableRow hover tabIndex={-1} key={item.id}>
                                         <TableCell align="center">{item.rank}</TableCell>
-                                        <TableCell align="center" className={classes.playerCell}>
+                                        <TableCell>
+                                            <div className={classes.playerCell}>
                                             <Avatar src={profile && profile.avatar_link} />
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    <Link className={classes.clickLink} onClick={() => handleClickOpen(item.id)} color="inherit">
+                                            <Link className={classes.clickLink} onClick={() => handleClickOpen(item.id)} color="inherit">
                                                 {(profile && profile.profile_name) || item.id}
                                             </Link>
+                                            </div>
                                         </TableCell>
                                         <TableCell align="center">
                                             <Tooltip
