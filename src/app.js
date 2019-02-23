@@ -53,13 +53,15 @@ class App extends React.PureComponent {
         return (
             <>
                 <AppBar currentTab={currentTab} onTabChange={this.handleTabChange} />
-                <div className={classes.views}>
-                    {currentTab === 0 && <ScoreboardView data={sp} boardType="sp" dialogOpener={cacheProfile} />}
-                    {currentTab === 1 && <ScoreboardView data={coop} boardType="coop" dialogOpener={cacheProfile} />}
-                    {currentTab === 2 && <ScoreboardView data={overall} boardType="overall" dialogOpener={cacheProfile} />}
-                    {currentTab === 3 && <RecordsView data={records} />}
-                    {currentTab === 4 && <AboutView data={stats} />}
-                </div>
+                {records.length !== 0 &&
+                    <div className={classes.views}>
+                        {currentTab === 0 && <ScoreboardView data={sp} boardType="sp" dialogOpener={cacheProfile} />}
+                        {currentTab === 1 && <ScoreboardView data={coop} boardType="coop" dialogOpener={cacheProfile} />}
+                        {currentTab === 2 && <ScoreboardView data={overall} boardType="overall" dialogOpener={cacheProfile} />}
+                        {currentTab === 3 && <RecordsView data={records} />}
+                        {currentTab === 4 && <AboutView data={stats} />}
+                    </div>
+                }
                 {currentProfile &&  
                     <ProfileDialog
                         dialogOpen={currentProfile !== null}
