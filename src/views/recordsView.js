@@ -53,7 +53,9 @@ class RecordsView extends React.Component {
                                 />
                             </FormGroup>
                         </Paper>
-                        <RecordsTable data={this.filterRecords(data)} />
+                        <Paper>
+                            <RecordsTable data={this.filterRecords(data)} />
+                        </Paper>
                     </Grid>
                 </Grid>
             </>
