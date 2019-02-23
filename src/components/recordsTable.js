@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
 import Link from '@material-ui/core/Link';
-import Paper from '@material-ui/core/Paper';
 import PlayArrow from '@material-ui/icons/PlayArrow';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -134,7 +133,7 @@ class RecordsTable extends React.Component {
         );
 
         return (
-            <Paper>
+            <>
                 <Table aria-labelledby="tableTitle">
                     <RecordsTableHead
                         order={order}
@@ -193,7 +192,7 @@ class RecordsTable extends React.Component {
                     onChangePage={this.handleChangePage}
                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                 />
-            </Paper>
+            </>
         );
     }
 }

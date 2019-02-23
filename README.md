@@ -5,4 +5,4 @@
 - ~~Fix tiny bugs~~
 - ~~Clean up app context~~
 - ~~Deploy api~~
-- Deploy page
+- ~~[Deploy page](https://nekzor.github.io/lp)~~

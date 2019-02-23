@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Avatar from '@material-ui/core/Avatar';
-import { Link } from '@material-ui/core';
-import Paper from '@material-ui/core/Paper';
+import Link from '@material-ui/core/Link';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -118,7 +117,7 @@ class ScoresTable extends React.Component {
         const { order, orderBy, rowsPerPage, page } = this.state;
 
         return (
-            <Paper>
+            <>
                 <Table>
                     <ScoresTableHead
                         order={order}
@@ -175,7 +174,7 @@ class ScoresTable extends React.Component {
                     onChangePage={this.handleChangePage}
                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                 />
-            </Paper>
+            </>
         );
     }
 }

@@ -4,8 +4,8 @@ import FormGroup from '@material-ui/core/FormGroup';
 import Grid from '@material-ui/core/Grid';
 import Input from '@material-ui/core/Input';
 import Paper from '@material-ui/core/Paper';
-import RecordsTable from '../components/recordsTable';
 import { withStyles } from '@material-ui/core/styles';
+import RecordsTable from '../components/recordsTable';
 
 const styles = theme => ({
     searchBox: {

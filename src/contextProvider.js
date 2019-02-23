@@ -3,18 +3,11 @@ import { AppContext } from './withContext';
 import Client from './client.js';
 
 class ContextProvider extends React.Component {
-    perfectScores = {
-        sp: 0,
-        coop: 0,
-        overall: 0,
-    };
-
     state = {
         profiles: [],
         records: [],
         stats: [],
         currentProfile: null,
-        playerCache: {},
         boards: {
             sp: [],
             coop: [],
@@ -31,6 +24,12 @@ class ContextProvider extends React.Component {
     constructor() {
         super();
         this.api = new Client();
+        this.perfectScores = {
+            sp: 0,
+            coop: 0,
+            overall: 0,
+        };
+        this.playerCache = {};
     }
 
     async componentDidMount() {
@@ -118,8 +117,21 @@ class ContextProvider extends React.Component {
     }
 
     async cacheProfile(profileId) {
-        if (this.state.playerCache[profileId] === undefined) {
-            console.log(`Caching ${profileId}...`);
+        let currentProfile = this.playerCache[profileId];
+        if (currentProfile === undefined) {
+            let profile = this.state.findProfile(profileId);
+            currentProfile = {
+                id: profileId,
+                name: profile.profile_name,
+                avatar: profile.avatar_link,
+                sp: 0,
+                coop: 0,
+                overall: 0,
+                entries: []
+            };
+
+            this.setState({ currentProfile });
+
             let player = await this.api.getPlayer(profileId);
 
             let entries = [];
@@ -128,32 +140,27 @@ class ContextProvider extends React.Component {
                     id: entry.id,
                     name: this.state.findRecord(entry.id).name,
                     score: entry.score,
-                    wrDelta: this.state.calcWrDelta(entry),
-                    video: null
+                    wrDelta: this.state.calcWrDelta(entry)
                 });
             }
 
-            let profile = this.state.findProfile(profileId);
+            currentProfile = {
+                ...currentProfile,
+                sp: player.sp_score,
+                coop: player.coop_score,
+                overall: player.overall_score,
+                entries
+            };
 
-            this.setState((prevState) => ({
-                currentProfile: profileId,
-                playerCache: {
-                    ...prevState.playerCache,
-                    [profileId]: {
-                        profile: {
-                            name: profile.profile_name,
-                            avatar: profile.avatar_link,
-                        },
-                        sp: player.sp_score,
-                        coop: player.coop_score,
-                        overall: player.overall_score,
-                        entries
-                    }
-                }
-            }));
+            this.setState({ currentProfile });
+
+            this.playerCache = {
+                ...this.playerCache,
+                [profileId]: currentProfile
+            };
         } else {
             console.log(`From cache: ${profileId}`);
-            this.setState({ currentProfile: profileId });
+            this.setState({ currentProfile });
         }
     }
 

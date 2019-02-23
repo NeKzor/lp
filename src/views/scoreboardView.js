@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Paper from '@material-ui/core/Paper';
 import ScoresTable from '../components/scoresTable';
 import { withContext } from '../withContext';
 
@@ -26,7 +28,10 @@ class ScoreboardView extends React.Component {
                 <Grid container>
                     <Grid item xs={false} md={1} lg={3} />
                     <Grid item xs={12} md={10} lg={6}>
-                        <ScoresTable data={data} handleClickOpen={dialogOpener} />
+                        <Paper>
+                            {data.length === 0 && <LinearProgress />}
+                            <ScoresTable data={data} handleClickOpen={dialogOpener} />
+                        </Paper>
                     </Grid>
                 </Grid>
             </>
