@@ -39,7 +39,7 @@ class AppBarWithDrawer extends React.Component {
         this.homepage = 'https://nekzor.github.io/';
         this.pageLinks = [
             { text: 'Glitches', link: 'glitches.html' },
-            { text: 'Least Portals', link: 'lp.html' },
+            { text: 'Least Portals', link: 'lp' },
             { text: 'Demo Parser', link: 'parser.html' }
         ];
     }
