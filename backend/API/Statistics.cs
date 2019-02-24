@@ -14,14 +14,8 @@ namespace nekzor.github.io.lp
         [JsonProperty("export_date")]
         public string ExportDate { get; set; }
 
-        [JsonIgnore]
-        private string _file { get; set; }
-        [JsonIgnore]
-        private string _copy { get; set; }
-
-        public Statistics(string file)
+        public Statistics()
         {
-            _file = App.CurDir + file;
             TiedRecords = new Dictionary<ulong, int>();
             Cheaters = new HashSet<ulong>();
         }
@@ -35,16 +29,21 @@ namespace nekzor.github.io.lp
         public bool IsCheater(ulong id)
             => Cheaters.Contains(id);
 
-        public async Task Export()
+        public async Task Export(string file)
         {
             ExportDate = System.DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss '(UTC)'");
-            if (File.Exists(_file)) File.Delete(_file);
-            await File.WriteAllTextAsync(_file, JsonConvert.SerializeObject(this, Formatting.Indented));
+            if (File.Exists(file)) File.Delete(file);
+            await File.WriteAllTextAsync(file, JsonConvert.SerializeObject(this));
         }
-        public async Task Import()
+        public async Task Import(string file)
         {
-            if (!File.Exists(_file)) return;
-            var stats = JsonConvert.DeserializeObject<Statistics>(await File.ReadAllTextAsync(_file));
+            if (!File.Exists(file))
+            {
+                await Export(file);
+                return;
+            }
+
+            var stats = JsonConvert.DeserializeObject<Statistics>(await File.ReadAllTextAsync(file));
             TiedRecords = stats.TiedRecords;
             Cheaters = stats.Cheaters;
         }

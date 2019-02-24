@@ -1,29 +1,33 @@
 {
-  "name": "create-react-app",
-  "version": "3.0.0",
-  "private": true,
-  "dependencies": {
-    "@material-ui/core": "^3.9.1",
-    "@material-ui/icons": "^3.0.2",
-    "gh-pages": "^2.0.1",
-    "prop-types": "latest",
-    "react": "latest",
-    "react-dom": "latest",
-    "react-scripts": "^2.1.5"
-  },
-  "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build -m Update -u \"NeKzBot <44978126+NeKzBot@users.noreply.github.com>\"",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
-  "homepage": "https://nekzor.github.io/lp"
+    "name": "lp",
+    "version": "1.0.0",
+    "private": true,
+    "dependencies": {
+        "@material-ui/core": "^3.9.1",
+        "@material-ui/icons": "^3.0.2",
+        "gh-pages": "^2.0.1",
+        "prop-types": "latest",
+        "react": "latest",
+        "react-dom": "latest",
+        "react-scripts": "^2.1.5"
+    },
+    "scripts": {
+        "predeploy": "npm run build",
+        "deploy": "gh-pages -d build -m Update -u \"NeKzBot <44978126+NeKzBot@users.noreply.github.com>\"",
+        "api": "gh-pages -b api -d api -m Update -u \"NeKzBot <44978126+NeKzBot@users.noreply.github.com>\"",
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test --env=jsdom",
+        "eject": "react-scripts eject",
+        "bbuild": "dotnet restore backend/leastportals.csproj && dotnet build backend/leastportals.csproj -c Release",
+        "brun": "dotnet run --project backend/leastportals.csproj  -c Release --no-rebuild",
+        "rmcache": "rm -rf bin/cache/"
+    },
+    "browserslist": [
+        ">0.2%",
+        "not dead",
+        "not ie <= 11",
+        "not op_mini all"
+    ],
+    "homepage": "https://nekzor.github.io/lp"
 }

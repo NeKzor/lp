@@ -5,6 +5,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
 	<LangVersion>7.1</LangVersion>
 	<RuntimeFrameworkVersion>2.0.0</RuntimeFrameworkVersion>
+    <OutDir>$(SolutionDir)../bin/</OutDir>
   </PropertyGroup>
 
   <ItemGroup>

@@ -15,7 +15,6 @@ namespace nekzor.github.io.lp
         private List<Player> _players;
         private List<Player> _players2;
         private List<ScoreboardEntry> _scoreboard;
-        private List<Player2> _allPlayers;
         private Statistics _stats;
 
         private readonly SteamCommunityClient _client;
@@ -25,17 +24,13 @@ namespace nekzor.github.io.lp
             _players = new List<Player>();
             _players2 = new List<Player>();
             _scoreboard = new List<ScoreboardEntry>();
-            _allPlayers = new List<Player2>();
-            _stats = new Statistics("stats.json");
+            _stats = new Statistics();
+            _ = _stats.Import($"{App.CurDir}stats.json");
 
             _client = new SteamCommunityClient(userAgent, false);
             _client.Log += Logger.LogSteamCommunityClient;
 
             _wrs = JsonConvert.DeserializeObject<List<Map>>(File.ReadAllText($"{App.CurDir}wrs.json"));
-
-            foreach (var map in Portal2.CampaignMaps.Where(x => x.IsOfficial))
-                _wrs.First(x => x.Id == map.BestPortalsId).Index = map.Index;
-            _ = Ex($"{App.CurDir}wrs2.json", JsonConvert.SerializeObject(_wrs));
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
@@ -167,37 +162,38 @@ namespace nekzor.github.io.lp
             Logger.Log($"Filtered {after} from {before} players.");
             return Task.CompletedTask;
         }
-        private async Task Ex(string path, string contents)
+        private async Task Ex(string path, object obj)
         {
-            /* if (File.Exists(path)) File.Delete(path);
-            await File.WriteAllTextAsync(path, contents); */
-            if (!File.Exists(path))
-            {
-                await File.WriteAllTextAsync(path, contents);
-                Logger.Log($"Exported {path}");
-            }
+            if (File.Exists(path))
+                File.Delete(path);
+            await File.WriteAllTextAsync(path, JsonConvert.SerializeObject(obj));
         }
         public async Task Export()
         {
-            await Ex($"{App.CurDir}players.json", JsonConvert.SerializeObject(_players));
-            await Ex($"{App.CurDir}boards/sp.json", JsonConvert.SerializeObject(_scoreboard.Where(sb => sb.Mode == Portal2MapType.SinglePlayer)));
-            await Ex($"{App.CurDir}boards/coop.json", JsonConvert.SerializeObject(_scoreboard.Where(sb => sb.Mode == Portal2MapType.Cooperative)));
-            await Ex($"{App.CurDir}boards/overall.json", JsonConvert.SerializeObject(_scoreboard.Where(sb => sb.Mode == Portal2MapType.Unknown)));
-            var profiles = new List<Profile>();
+            await Ex($"{App.CurDir}players.json", _players);
+
+            await Ex($"{App.Api}wrs.json", _wrs);
+            await Ex($"{App.ApiBoards}sp.json", _scoreboard.Where(sb => sb.Mode == Portal2MapType.SinglePlayer));
+            await Ex($"{App.ApiBoards}coop.json", _scoreboard.Where(sb => sb.Mode == Portal2MapType.Cooperative));
+            await Ex($"{App.ApiBoards}overall.json", _scoreboard.Where(sb => sb.Mode == Portal2MapType.Unknown));
+
+            var profiles = new List<ProfileModel>();
             foreach (var player in _players)
             {
                 if (player.ProfileDownloaded)
-                    profiles.Add(new Profile(player));
-                await Ex($"{App.CurDir}players/{player.Id}.json", JsonConvert.SerializeObject(new Player2(player)));
+                    profiles.Add(new ProfileModel(player));
+                await Ex($"{App.ApiPlayers}{player.Id}.json", new PlayerModel(player));
             }
-            await Ex($"{App.CurDir}profiles.json", JsonConvert.SerializeObject(profiles));
-            await _stats.Export();
+            await Ex($"{App.Api}profiles.json", profiles);
+
+            await _stats.Export($"{App.CurDir}stats.json");
+            await _stats.Export($"{App.Api}stats.json");
         }
         public async Task Import()
         {
             if (!File.Exists($"{App.CurDir}players.json")) return;
             _players = JsonConvert.DeserializeObject<List<Player>>(await File.ReadAllTextAsync($"{App.CurDir}players.json"));
-            await _stats.Import();
+            await _stats.Import($"{App.CurDir}stats.json");
 
             foreach (var player in _players)
                 player.CalculateTotalScore();
