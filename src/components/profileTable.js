@@ -104,6 +104,17 @@ class ProfileTable extends React.Component {
         const { data } = this.props;
         const { order, orderBy, rowsPerPage, page } = this.state;
 
+        const UnknownScoreInfo = () => (
+            <Tooltip
+                placement="right"
+                title="Unknown score."
+                disableFocusListener
+                disableTouchListener
+            >
+                <Link style={{cursor: 'help'}}>n/a</Link>
+            </Tooltip>
+        );
+
         return (
             <>
                 <Table aria-labelledby="tableTitle">
@@ -117,6 +128,15 @@ class ProfileTable extends React.Component {
                         {stableSort(data, order, orderBy)
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map(record => {
+                                let score = record.score != null
+                                    ? record.score
+                                    : <UnknownScoreInfo />;
+                                let delta = record.score != null
+                                    ? (record.wrDelta === 0)
+                                        ? '-'
+                                        : `+${record.wrDelta}`
+                                    : <UnknownScoreInfo />;
+
                                 return (
                                     <TableRow hover tabIndex={-1} key={record.id}>
                                         <TableCell align="center">
@@ -129,14 +149,8 @@ class ProfileTable extends React.Component {
                                                 {record.name}
                                             </Link>
                                         </TableCell>
-                                        <TableCell align="center">{record.score}</TableCell>
-                                        <TableCell align="center">
-                                            {(record.wrDelta !== null)
-                                                ? (record.wrDelta === 0)
-                                                    ? '-'
-                                                    : `+${record.wrDelta}`
-                                                : 'n/a'}
-                                        </TableCell>
+                                        <TableCell align="center">{score}</TableCell>
+                                        <TableCell align="center">{delta}</TableCell>
                                     </TableRow>
                                 );
                             })}
