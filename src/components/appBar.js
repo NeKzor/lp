@@ -40,7 +40,8 @@ class AppBarWithDrawer extends React.Component {
         this.pageLinks = [
             { text: 'Glitches', link: 'glitches.html' },
             { text: 'Least Portals', link: 'lp' },
-            { text: 'Demo Parser', link: 'parser.html' }
+            { text: 'Demo Parser', link: 'parser.html' },
+            { text: 'Cvars', link: 'cvars' },
         ];
     }
 
@@ -62,7 +63,7 @@ class AppBarWithDrawer extends React.Component {
         const list = (
             <div className={classes.list}>
                 <List>
-                    <ListItem button key={0} onClick={this.gotoPage(this.homepage + 'index.html')}>
+                    <ListItem button key={0} onClick={this.gotoPage('index.html')}>
                         <ListItemText primary={'nekzor.github.io'} />
                     </ListItem>
                 </List>
