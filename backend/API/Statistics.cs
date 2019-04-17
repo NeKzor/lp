@@ -44,7 +44,6 @@ namespace nekzor.github.io.lp
             }
 
             var stats = JsonConvert.DeserializeObject<Statistics>(await File.ReadAllTextAsync(file));
-            TiedRecords = stats.TiedRecords;
             Cheaters = stats.Cheaters;
         }
     }
