@@ -38,7 +38,7 @@ namespace nekzor.github.io.lp
             }
             catch (Exception ex)
             {
-                Logger.Log(ex.Message);
+                Logger.Log(ex.ToString());
             }
 
             Logger.WriteLogFile();

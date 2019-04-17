@@ -88,7 +88,7 @@ namespace nekzor.github.io.lp
                     if (entries.Last().Score == wr)
                         logmsg += " [LIMITED] ";
 
-                    Logger.Log(logmsg + lb.Id);
+                    Logger.Log($"{logmsg}{lb.Id} ({lb.Name})");
 
                     foreach (var cheater in entries.Where(entry => entry.Score < wr))
                     {
@@ -227,7 +227,7 @@ namespace nekzor.github.io.lp
                     {
                         Rank = rank,
                         Id = player.Id,
-                        Score = current,
+                        Score = score,
                         Mode = mode
                     });
 
