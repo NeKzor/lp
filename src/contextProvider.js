@@ -77,7 +77,7 @@ class ContextProvider extends React.Component {
                 item.getStats = function () {
                     if (this._stats === undefined) {
                         this._stats = {
-                            delta: that.perfectScores.sp - this.score,
+                            delta: this.score - that.perfectScores.sp,
                             percentage: Math.round(that.perfectScores.sp / this.score * 100)
                         };
                     }
@@ -87,7 +87,7 @@ class ContextProvider extends React.Component {
                 item.getStats = function () {
                     if (this._stats === undefined) {
                         this._stats = {
-                            delta: that.perfectScores.coop - this.score,
+                            delta: this.score - that.perfectScores.coop,
                             percentage: Math.round(that.perfectScores.coop / this.score * 100)
                         };
                     }
@@ -97,7 +97,7 @@ class ContextProvider extends React.Component {
                 item.getStats = function () {
                     if (this._stats === undefined) {
                         this._stats = {
-                            delta: that.perfectScores.overall - this.score,
+                            delta: this.score - that.perfectScores.overall,
                             percentage: Math.round(that.perfectScores.overall / this.score * 100)
                         };
                     }
@@ -132,11 +132,11 @@ class ContextProvider extends React.Component {
 
             this.setState({ currentProfile });
 
-            let player = await this.api.getPlayer(profileId);
+            let { entries, sp_score, coop_score, overall_score } = await this.api.getPlayer(profileId);
 
-            let entries = [];
-            for (let entry of player.entries) {
-                entries.push({
+            let records = [];
+            for (let entry of entries) {
+                records.push({
                     id: entry.id,
                     name: this.state.findRecord(entry.id).name,
                     score: entry.score,
@@ -146,10 +146,22 @@ class ContextProvider extends React.Component {
 
             currentProfile = {
                 ...currentProfile,
-                sp: player.sp_score,
-                coop: player.coop_score,
-                overall: player.overall_score,
-                entries
+                sp: {
+                    score: sp_score,
+                    delta: sp_score - this.perfectScores.sp,
+                    percentage: (sp_score !== 0) ? Math.round(this.perfectScores.sp / sp_score * 100) : 0,
+                },
+                coop: {
+                    score: coop_score,
+                    delta: coop_score - this.perfectScores.coop,
+                    percentage: (coop_score !== 0) ? Math.round(this.perfectScores.coop / coop_score * 100) : 0,
+                },
+                overall: {
+                    score: overall_score,
+                    delta: overall_score - this.perfectScores.overall,
+                    percentage: (sp_score !== 0 && coop_score !== 0) ? Math.round(this.perfectScores.overall / overall_score * 100) : 0,
+                },
+                entries: records,
             };
 
             this.setState({ currentProfile });

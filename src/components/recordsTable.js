@@ -74,8 +74,11 @@ class RecordsTableHead extends React.Component {
 }
 
 const styles = _ => ({
-   helpLink: {
-       cursor: 'help'
+    root: {
+        overflowX: 'auto',
+    },
+    helpLink: {
+        cursor: 'help'
     },
 });
 
@@ -133,7 +136,7 @@ class RecordsTable extends React.Component {
         );
 
         return (
-            <>
+            <div className={classes.root}>
                 <Table aria-labelledby="tableTitle">
                     <RecordsTableHead
                         order={order}
@@ -192,7 +195,7 @@ class RecordsTable extends React.Component {
                     onChangePage={this.handleChangePage}
                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                 />
-            </>
+            </div>
         );
     }
 }

@@ -50,7 +50,7 @@ class AboutView extends React.Component {
             </ListItem>
         ));
 
-        const madeWithLink = <Link rel="noopener" href="https://nekzor.github.io/SteamCommunity.Net">SteamCommunity.Net</Link>;
+        const openSourceLink = <Link rel="noopener" href="https://github.com/NeKzor/lp">GitHub</Link>;
 
         const detectedCheaters = (
             <Tooltip
@@ -73,7 +73,7 @@ class AboutView extends React.Component {
                                 <ListItem><Typography component="h2" variant="h5">Who's the lp king?</Typography></ListItem>
                                 {description}
                                 <ListItem></ListItem>
-                                <ListItem><Typography variant="subtitle1">Made with {madeWithLink}</Typography></ListItem>
+                                <ListItem><Typography variant="subtitle1">Project is open source at {openSourceLink}.</Typography></ListItem>
                                 <ListItem><Typography variant="subtitle1">Number of detected cheaters: {detectedCheaters}</Typography></ListItem>
                                 <ListItem><Typography variant="subtitle1">Last Update: {data.export_date}</Typography></ListItem>
                             </List>

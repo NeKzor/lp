@@ -17,11 +17,18 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
-    gridView: {
+    stats: {
+        marginTop: theme.spacing.unit * 3,
+    },
+    records: {
         marginTop: theme.spacing.unit * 3,
     },
     flex: {
         flex: 1,
+    },
+    paper: {
+        padding: theme.spacing.unit * 5,
+        textAlign: 'center',
     },
 });
 
@@ -63,16 +70,50 @@ class ProfileDialog extends React.Component {
                             <Typography variant="h6" color="inherit" className={classes.flex}>
                                 &nbsp;&nbsp;&nbsp;{data.name}
                             </Typography>
-                            <IconButton color="inherit" onClick={handleClose} aria-label="Close">
-                                <CloseIcon />
-                            </IconButton>
+                            <Tooltip placement="bottom" title="Close profile" disableFocusListener disableTouchListener>
+                                <IconButton color="inherit" onClick={handleClose} aria-label="Close">
+                                    <CloseIcon />
+                                </IconButton>
+                            </Tooltip>
                         </Toolbar>
                     </AppBar>
-                    <Grid container className={classes.gridView}>
+                    {data.entries.length === 0 && <LinearProgress />}
+                    <Grid container className={classes.stats}>
+                        <Grid item xs={false} md={1} lg={3} />
+                        <Grid item xs={12} md={10} lg={6}>
+                            {data.entries.length !== 0
+                                && <Grid container spacing={24}>
+                                    <Grid item xs={12} md={4} lg={4}>
+                                        <Paper className={classes.paper}>
+                                            <Tooltip placement="top" title={data.sp.score !== 0 ? `${data.sp.score}+${-data.sp.delta}` : ''} disableFocusListener disableTouchListener>
+                                                <Typography variant="h3" gutterBottom>{(data.sp.percentage !== 0) ? data.sp.percentage : 0}%</Typography>
+                                            </Tooltip>
+                                            <Typography variant="subtitle1" gutterBottom>Single Player</Typography>
+                                        </Paper>
+                                    </Grid>
+                                    <Grid item xs={12} md={4} lg={4}>
+                                        <Paper className={classes.paper}>
+                                            <Tooltip placement="top" title={data.coop.score !== 0 ? `${data.coop.score}+${-data.coop.delta}` : ''} disableFocusListener disableTouchListener>
+                                                <Typography variant="h3" gutterBottom>{(data.coop.percentage !== 0) ? data.coop.percentage : 0}%</Typography>
+                                            </Tooltip>
+                                            <Typography variant="subtitle1" gutterBottom>Cooperative</Typography>
+                                        </Paper>
+                                    </Grid>
+                                    <Grid item xs={12} md={4} lg={4}>
+                                        <Paper className={classes.paper}>
+                                            <Tooltip placement="top" title={data.overall.score !== 0 ? `${data.overall.score}+${-data.overall.delta}` : ''} disableFocusListener disableTouchListener>
+                                                <Typography variant="h3" gutterBottom>{(data.overall.percentage !== 0) ? data.overall.percentage : 0}%</Typography>
+                                            </Tooltip>
+                                            <Typography variant="subtitle1" gutterBottom>Overall</Typography>
+                                        </Paper>
+                                    </Grid>
+                                </Grid>}
+                        </Grid>
+                    </Grid>
+                    <Grid container className={classes.records}>
                         <Grid item xs={false} md={1} lg={3} />
                         <Grid item xs={12} md={10} lg={6}>
                             <Paper>
-                                {data.entries.length === 0 && <LinearProgress />}
                                 <ProfileTable data={data.entries} />
                             </Paper>
                         </Grid>

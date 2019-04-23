@@ -9,6 +9,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Tooltip from '@material-ui/core/Tooltip';
+import { withStyles } from '@material-ui/core/styles';
 import stableSort from '../utils/stableSort';
 
 const rows = [
@@ -69,8 +70,15 @@ class ProfileTableHead extends React.Component {
     }
 }
 
+const styles = _ => ({
+    root: {
+        overflowX: 'auto',
+    },
+});
+
 class ProfileTable extends React.Component {
     static propTypes = {
+        classes: PropTypes.object.isRequired,
         data: PropTypes.array.isRequired,
     };
 
@@ -101,7 +109,7 @@ class ProfileTable extends React.Component {
     };
 
     render() {
-        const { data } = this.props;
+        const { classes, data } = this.props;
         const { order, orderBy, rowsPerPage, page } = this.state;
 
         const UnknownScoreInfo = () => (
@@ -111,12 +119,12 @@ class ProfileTable extends React.Component {
                 disableFocusListener
                 disableTouchListener
             >
-                <Link style={{cursor: 'help'}}>n/a</Link>
+                <Link style={{ cursor: 'help' }}>n/a</Link>
             </Tooltip>
         );
 
         return (
-            <>
+            <div className={classes.root}>
                 <Table aria-labelledby="tableTitle">
                     <ProfileTableHead
                         order={order}
@@ -133,7 +141,7 @@ class ProfileTable extends React.Component {
                                     : <UnknownScoreInfo />;
                                 let delta = record.score != null
                                     ? (record.wrDelta === 0)
-                                        ? '-'
+                                        ? ''
                                         : `+${record.wrDelta}`
                                     : <UnknownScoreInfo />;
 
@@ -172,9 +180,9 @@ class ProfileTable extends React.Component {
                     onChangePage={this.handleChangePage}
                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                 />
-            </>
+            </div>
         );
     }
 }
 
-export default ProfileTable;
+export default withStyles(styles)(ProfileTable);

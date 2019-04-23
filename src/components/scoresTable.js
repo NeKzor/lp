@@ -1,5 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { library as fa } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMedal } from '@fortawesome/free-solid-svg-icons';
 import Avatar from '@material-ui/core/Avatar';
 import Link from '@material-ui/core/Link';
 import Table from '@material-ui/core/Table';
@@ -12,6 +15,8 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Tooltip from '@material-ui/core/Tooltip';
 import { withStyles } from '@material-ui/core/styles';
 import stableSort from '../utils/stableSort';
+
+fa.add(faMedal);
 
 const rows = [
     { id: 'rank', numeric: true, sortable: false, label: 'Rank' },
@@ -70,6 +75,9 @@ class ScoresTableHead extends React.Component {
 }
 
 const styles = _ => ({
+    root: {
+        overflowX: 'auto',
+    },
     playerCell: {
         display: 'flex',
         alignItems: 'center',
@@ -117,7 +125,7 @@ class ScoresTable extends React.Component {
         const { order, orderBy, rowsPerPage, page } = this.state;
 
         return (
-            <>
+            <div className={classes.root}>
                 <Table>
                     <ScoresTableHead
                         order={order}
@@ -133,14 +141,23 @@ class ScoresTable extends React.Component {
                                 let stats = item.getStats();
                                 return (
                                     <TableRow hover tabIndex={-1} key={item.id}>
-                                        <TableCell align="center">{item.rank}</TableCell>
+                                        <TableCell align="center">
+                                            {(item.rank === 1)
+                                                ? <FontAwesomeIcon title="Rank 1" icon="medal" color="#ffd700" />
+                                                : (item.rank === 2)
+                                                    ? <FontAwesomeIcon title="Rank 2" icon="medal" color="#C0C0C0" />
+                                                    : (item.rank === 3)
+                                                        ? <FontAwesomeIcon title="Rank 3" icon="medal" color="#cd7f32" />
+                                                        : item.rank}
+                                        </TableCell>
                                         <TableCell>
                                             <div className={classes.playerCell}>
-                                            <Avatar src={profile && profile.avatar_link} />
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <Link className={classes.clickLink} onClick={() => handleClickOpen(item.id)} color="inherit">
-                                                {(profile && profile.profile_name) || item.id}
-                                            </Link>
+
+                                                <Avatar src={profile && profile.avatar_link} />
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <Link className={classes.clickLink} onClick={() => handleClickOpen(item.id)} color="inherit">
+                                                    {(profile && profile.profile_name) || item.id}
+                                                </Link>
                                             </div>
                                         </TableCell>
                                         <TableCell align="center">
@@ -174,7 +191,7 @@ class ScoresTable extends React.Component {
                     onChangePage={this.handleChangePage}
                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                 />
-            </>
+            </div>
         );
     }
 }
