@@ -396,7 +396,8 @@
         "name": "Smooth Jazz",
         "mode": 1,
         "wr": 0,
-        "excluded": true,
+        "limit": 1,
+        "excluded": false,
         "index": 3
     },
     {
@@ -436,7 +437,7 @@
         "name": "Jail Break",
         "mode": 1,
         "wr": 2,
-        "excluded": true,
+        "excluded": false,
         "index": 29
     },
     {
@@ -468,7 +469,7 @@
         "name": "Neurotoxin Sabotage",
         "mode": 1,
         "wr": 3,
-        "excluded": true,
+        "excluded": false,
         "index": 33
     },
     {
@@ -484,7 +485,7 @@
         "name": "Dual Lasers",
         "mode": 1,
         "wr": 2,
-        "excluded": true,
+        "excluded": false,
         "index": 11
     },
     {
@@ -492,7 +493,7 @@
         "name": "Fizzler Intro",
         "mode": 1,
         "wr": 2,
-        "excluded": true,
+        "excluded": false,
         "index": 16
     },
     {
@@ -524,7 +525,8 @@
         "name": "Laser Relays",
         "mode": 1,
         "wr": 0,
-        "excluded": true,
+        "limit": 2,
+        "excluded": false,
         "index": 22
     },
     {
@@ -604,7 +606,7 @@
         "name": "Turret Intro",
         "mode": 1,
         "wr": 0,
-        "excluded": true,
+        "excluded": false,
         "index": 21
     },
     {
@@ -619,7 +621,7 @@
         "id": 47785,
         "name": "Cave Johnson",
         "mode": 1,
-        "wr": 4,
+        "wr": 5,
         "excluded": false,
         "index": 38
     },

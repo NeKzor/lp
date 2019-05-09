@@ -16,6 +16,7 @@
 
   <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
     <Copy SourceFiles="wrs.json" DestinationFolder="$(OutDir)" />
+    <Copy SourceFiles="overrides.json" DestinationFolder="$(OutDir)" />
   </Target>
 
 </Project>

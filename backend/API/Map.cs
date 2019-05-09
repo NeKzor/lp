@@ -13,6 +13,8 @@ namespace nekzor.github.io.lp
         public Portal2MapType Mode { get; set; }
         [JsonProperty("wr")]
         public int WorldRecord { get; set; }
+        [JsonProperty("limit")]
+        public int RecordLimit { get; set; }
         [JsonProperty("excluded")]
         public bool Excluded { get; set; }
         [JsonProperty("index")]

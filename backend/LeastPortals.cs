@@ -16,6 +16,7 @@ namespace nekzor.github.io.lp
         private List<Player> _players2;
         private List<ScoreboardEntry> _scoreboard;
         private Statistics _stats;
+        private List<Override> _overrides;
 
         private readonly SteamCommunityClient _client;
 
@@ -31,6 +32,7 @@ namespace nekzor.github.io.lp
             _client.Log += Logger.LogSteamCommunityClient;
 
             _wrs = JsonConvert.DeserializeObject<List<Map>>(File.ReadAllText($"{App.CurDir}wrs.json"));
+            _overrides = JsonConvert.DeserializeObject<List<Override>>(File.ReadAllText($"{App.CurDir}overrides.json"));
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
@@ -64,19 +66,35 @@ namespace nekzor.github.io.lp
                 foreach (var lb in leaderboards)
                 {
                     var entries = new List<CacheItem>();
-                    var wr = _wrs.First(x => x.Id == (ulong)lb.Id).WorldRecord;
+                    var rec = _wrs.First(x => x.Id == (ulong)lb.Id);
+                    var wr = rec.WorldRecord;
+                    var limit = (rec.RecordLimit != 0) ? rec.RecordLimit : wr;
 
                     var cache = $"{App.Cache}{lb.Id}.json";
                     var logmsg = string.Empty;
                     if (!File.Exists(cache)
                         || (entries = JsonConvert.DeserializeObject<List<CacheItem>>(await File.ReadAllTextAsync(cache))) == null)
                     {
+                        var pages = 1;
                         var page = await _client.GetLeaderboardAsync("Portal 2", lb.Id);
                         foreach (var entry in page.Entries)
+                        {
                             entries.Add(new CacheItem() { Id = entry.Id, Score = entry.Score });
+                        }
+
+                        while (entries.Last().Score == limit)
+                        {
+                            page = await page.GetNextAsync();
+                            foreach (var entry in page.Entries)
+                            {
+                                entries.Add(new CacheItem() { Id = entry.Id, Score = entry.Score });
+                            }
+                            ++pages;
+                            await Task.Delay(1000);
+                        }
+
                         await File.WriteAllTextAsync(cache, JsonConvert.SerializeObject(entries, Formatting.Indented));
-                        await Task.Delay(1000);
-                        logmsg = "[DOWNLOADED] ";
+                        logmsg = $"[DOWNLOADED][{pages}] ";
                     }
                     else
                     {
@@ -84,11 +102,20 @@ namespace nekzor.github.io.lp
                         logmsg = "[FROM CACHE] ";
                     }
 
-                    // Check if we need a second page
-                    if (entries.Last().Score == wr)
-                        logmsg += " [LIMITED] ";
-
                     Logger.Log($"{logmsg}{lb.Id} ({lb.Name})");
+
+                    foreach (var ov in _overrides.Where(ov => ov.Id == lb.Id))
+                    {
+                        var player = entries.FirstOrDefault(e => e.Id == ov.Player);
+                        if (player != null)
+                        {
+                            player.Score = ov.Score;
+                        }
+                        else
+                        {
+                            Logger.Log($"[IGNORED] [{ov.Id}] {ov.Player} -> {ov.Score}");
+                        }
+                    }
 
                     foreach (var cheater in entries.Where(entry => entry.Score < wr))
                     {
@@ -173,6 +200,7 @@ namespace nekzor.github.io.lp
             await Ex($"{App.CurDir}players.json", _players);
 
             await Ex($"{App.Api}wrs.json", _wrs);
+            await Ex($"{App.Api}overrides.json", _overrides);
             await Ex($"{App.ApiBoards}sp.json", _scoreboard.Where(sb => sb.Mode == Portal2MapType.SinglePlayer));
             await Ex($"{App.ApiBoards}coop.json", _scoreboard.Where(sb => sb.Mode == Portal2MapType.Cooperative));
             await Ex($"{App.ApiBoards}overall.json", _scoreboard.Where(sb => sb.Mode == Portal2MapType.Unknown));

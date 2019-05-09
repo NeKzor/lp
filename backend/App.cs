@@ -33,7 +33,7 @@ namespace nekzor.github.io.lp
                     await lp.Filter();
                 }
 
-                await lp.CreateBoards(30);
+                await lp.CreateBoards(50);
                 await lp.Export();
             }
             catch (Exception ex)
