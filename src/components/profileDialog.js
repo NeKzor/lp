@@ -85,7 +85,7 @@ class ProfileDialog extends React.Component {
                                 && <Grid container spacing={24}>
                                     <Grid item xs={12} md={4} lg={4}>
                                         <Paper className={classes.paper}>
-                                            <Tooltip placement="top" title={data.sp.score !== 0 ? `${data.sp.score}+${-data.sp.delta}` : ''} disableFocusListener disableTouchListener>
+                                            <Tooltip placement="top" title={data.sp.score !== 0 ? `${data.sp.score - data.sp.delta}+${data.sp.delta}` : ''} disableFocusListener disableTouchListener>
                                                 <Typography variant="h3" gutterBottom>{(data.sp.percentage !== 0) ? data.sp.percentage : 0}%</Typography>
                                             </Tooltip>
                                             <Typography variant="subtitle1" gutterBottom>Single Player</Typography>
@@ -93,7 +93,7 @@ class ProfileDialog extends React.Component {
                                     </Grid>
                                     <Grid item xs={12} md={4} lg={4}>
                                         <Paper className={classes.paper}>
-                                            <Tooltip placement="top" title={data.coop.score !== 0 ? `${data.coop.score}+${-data.coop.delta}` : ''} disableFocusListener disableTouchListener>
+                                            <Tooltip placement="top" title={data.coop.score !== 0 ? `${data.coop.score - data.coop.delta}+${data.coop.delta}` : ''} disableFocusListener disableTouchListener>
                                                 <Typography variant="h3" gutterBottom>{(data.coop.percentage !== 0) ? data.coop.percentage : 0}%</Typography>
                                             </Tooltip>
                                             <Typography variant="subtitle1" gutterBottom>Cooperative</Typography>
@@ -101,7 +101,7 @@ class ProfileDialog extends React.Component {
                                     </Grid>
                                     <Grid item xs={12} md={4} lg={4}>
                                         <Paper className={classes.paper}>
-                                            <Tooltip placement="top" title={data.overall.score !== 0 ? `${data.overall.score}+${-data.overall.delta}` : ''} disableFocusListener disableTouchListener>
+                                            <Tooltip placement="top" title={data.overall.percentage !== 0 ? `${data.overall.score - data.overall.delta}+${data.overall.delta}` : ''} disableFocusListener disableTouchListener>
                                                 <Typography variant="h3" gutterBottom>{(data.overall.percentage !== 0) ? data.overall.percentage : 0}%</Typography>
                                             </Tooltip>
                                             <Typography variant="subtitle1" gutterBottom>Overall</Typography>

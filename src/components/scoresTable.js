@@ -98,7 +98,7 @@ class ScoresTable extends React.Component {
         order: 'asc',
         orderBy: 'score',
         page: 0,
-        rowsPerPage: 10,
+        rowsPerPage: 50,
     };
 
     handleRequestSort = (_, property) => {
@@ -163,7 +163,7 @@ class ScoresTable extends React.Component {
                                         <TableCell align="center">
                                             <Tooltip
                                                 placement="top"
-                                                title={`${stats.percentage}% (${item.score + stats.delta}+${stats.delta})`}
+                                                title={`${stats.percentage}% (${item.score - stats.delta}+${stats.delta})`}
                                                 disableFocusListener
                                                 disableTouchListener
                                             >
@@ -176,7 +176,7 @@ class ScoresTable extends React.Component {
                     </TableBody>
                 </Table>
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 20, 50, 100]}
+                    rowsPerPageOptions={[10, 20, 50, 100]}
                     component="div"
                     count={data.length}
                     rowsPerPage={rowsPerPage}

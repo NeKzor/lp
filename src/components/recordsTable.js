@@ -92,7 +92,7 @@ class RecordsTable extends React.Component {
         order: 'asc',
         orderBy: 'index',
         page: 0,
-        rowsPerPage: 10,
+        rowsPerPage: 50,
     };
 
     handleRequestSort = (_, property) => {
@@ -180,7 +180,7 @@ class RecordsTable extends React.Component {
                     </TableBody>
                 </Table>
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 20, 50, 100]}
+                    rowsPerPageOptions={[10, 20, 50, 100]}
                     component="div"
                     count={data.length}
                     rowsPerPage={rowsPerPage}

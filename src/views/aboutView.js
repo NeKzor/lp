@@ -30,11 +30,10 @@ class AboutView extends React.Component {
         this.description = [
             'This leaderboard includes all legit players who care about least portal records in Portal 2.',
             '',
-            'How it works:',
-            '- Page generator fetches 5k entries per leaderboard due to the limit for one API call',
-            '- Some leaderboards are excluded because too many players are tied for 1st, 2nd rank etc.',
-            '- Users who tied the world record will be prioritized',
-            '- Cheaters with invalid scores will be ignored'
+            'Ranking Requirements:',
+            '- Be in top 5000 on every single player or cooperative leaderboard.',
+            '- Tie as many records as possible or get at least very close to it.',
+            '- Do not cheat.'
         ];
         this.tooltip = 'Automatic ban system catches users who cheated at least once.';
     }

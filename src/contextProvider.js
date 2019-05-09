@@ -77,7 +77,7 @@ class ContextProvider extends React.Component {
                 item.getStats = function () {
                     if (this._stats === undefined) {
                         this._stats = {
-                            delta: this.score - that.perfectScores.sp,
+                            delta: Math.abs(this.score - that.perfectScores.sp),
                             percentage: Math.round(that.perfectScores.sp / this.score * 100)
                         };
                     }
@@ -87,7 +87,7 @@ class ContextProvider extends React.Component {
                 item.getStats = function () {
                     if (this._stats === undefined) {
                         this._stats = {
-                            delta: this.score - that.perfectScores.coop,
+                            delta: Math.abs(this.score - that.perfectScores.coop),
                             percentage: Math.round(that.perfectScores.coop / this.score * 100)
                         };
                     }
@@ -97,7 +97,7 @@ class ContextProvider extends React.Component {
                 item.getStats = function () {
                     if (this._stats === undefined) {
                         this._stats = {
-                            delta: this.score - that.perfectScores.overall,
+                            delta: Math.abs(this.score - that.perfectScores.overall),
                             percentage: Math.round(that.perfectScores.overall / this.score * 100)
                         };
                     }
@@ -148,17 +148,17 @@ class ContextProvider extends React.Component {
                 ...currentProfile,
                 sp: {
                     score: sp_score,
-                    delta: sp_score - this.perfectScores.sp,
+                    delta: Math.abs(sp_score - this.perfectScores.sp),
                     percentage: (sp_score !== 0) ? Math.round(this.perfectScores.sp / sp_score * 100) : 0,
                 },
                 coop: {
                     score: coop_score,
-                    delta: coop_score - this.perfectScores.coop,
+                    delta: Math.abs(coop_score - this.perfectScores.coop),
                     percentage: (coop_score !== 0) ? Math.round(this.perfectScores.coop / coop_score * 100) : 0,
                 },
                 overall: {
                     score: overall_score,
-                    delta: overall_score - this.perfectScores.overall,
+                    delta: Math.abs(overall_score - this.perfectScores.overall),
                     percentage: (sp_score !== 0 && coop_score !== 0) ? Math.round(this.perfectScores.overall / overall_score * 100) : 0,
                 },
                 entries: records,
