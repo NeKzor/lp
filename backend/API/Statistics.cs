@@ -23,7 +23,7 @@ namespace nekzor.github.io.lp
         public int GetRecordCount(ulong id)
             => TiedRecords.GetValueOrDefault(id);
         public void SetRecordCount(ulong id, int count)
-            => TiedRecords.Add(id, count);
+            => TiedRecords[id] = count;
         public void AddCheater(ulong id)
             => Cheaters.Add(id);
         public bool IsCheater(ulong id)
@@ -44,6 +44,7 @@ namespace nekzor.github.io.lp
             }
 
             var stats = JsonConvert.DeserializeObject<Statistics>(await File.ReadAllTextAsync(file));
+            TiedRecords = stats.TiedRecords;
             Cheaters = stats.Cheaters;
         }
     }
