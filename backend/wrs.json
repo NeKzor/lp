@@ -428,7 +428,7 @@
         "id": 47754,
         "name": "Bridge the Gap",
         "mode": 1,
-        "wr": 2,
+        "wr": 0,
         "excluded": false,
         "index": 20
     },
