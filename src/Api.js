@@ -11,7 +11,7 @@ class Api {
     }
     async getRecords() {
         let res = await this.request(`${this.baseApi}/records.json`);
-        return res.ok ? await res.json().data : {};
+        return res.ok ? (await res.json()).data : {};
     }
     async getBoard(board) {
         if (board !== 'sp' && board !== 'mp' && board !== 'overall')

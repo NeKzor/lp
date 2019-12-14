@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const App = () => {
-    const [currentTab, setCurrentTab] = React.useState(0);
+    const [currentTab, setCurrentTab] = React.useState(3);
     const [state, dispatch] = React.useReducer(...AppReducer);
 
     React.useEffect(() => {

@@ -6,8 +6,9 @@ const { Player, Score } = require('./models');
 const SteamWebClient = require('./steam');
 
 PouchDB.plugin(require('pouchdb-find'));
+require('dotenv').config();
 
-const { apiKey, apiFolder, mapFile, overridesFile, cacheFolder, maxFetchRank, maxBoardRank } = config;
+const { apiFolder, mapFile, overridesFile, showcasesFile, cacheFolder, maxFetchRank, maxBoardRank } = config;
 
 const maps = JSON.parse(fs.readFileSync(mapFile, 'utf-8'));
 
@@ -17,12 +18,12 @@ const perfectSpScore = maps.filter((m) => m.mode === 1).reduce((acc, val) => acc
 const perfectMpScore = maps.filter((m) => m.mode === 2).reduce((acc, val) => acc + val, 0);
 const perfectScore = perfectSpScore + perfectMpScore;
 
-const steam = new SteamWebClient(apiKey, 'nekzor.github.io.lp.2.0');
+const steam = new SteamWebClient(process.env.STEAM_API_KEY, 'nekzor.github.io.lp.2.0');
 const db = new PouchDB('database');
 
 let cheaters = [];
 
-const exportApi = (route, data) => fs.writeFileSync(path.join(apiFolder, route), JSON.stringify({ data }));
+const exportApi = (route, data) => fs.writeFileSync(path.join(apiFolder, route) + '.json', JSON.stringify({ data }));
 const goTheFuckToSleep = (ms) => new Promise((res) => setTimeout(res, ms));
 
 const resetAll = async () => {
@@ -82,17 +83,21 @@ const runUpdates = async () => {
             console.log(`[${map.id}] fetched`);
 
             let start = steamLb.entryEnd + 1;
-            let end = steamLb.resultCount;
+            let end = start + steamLb.resultCount;
 
-            while (steamLb.entries.entry[steamLb.entries.entry.length - 1].score !== map.wr) {
+            while (steamLb.entries.entry[steamLb.entries.entry.length - 1].score === map.wr) {
                 await goTheFuckToSleep(1000);
                 let nextPage = await steam.fetchLeaderboard('Portal2', map.id, start, end);
                 console.log(`[${map.id}] fetched another page`);
 
+                if (!nextPage.entries.entry.length) {
+                    break;
+                }
+
                 steamLb.entries.entry.push(...nextPage.entries.entry);
 
                 start = nextPage.entryEnd + 1;
-                end = nextPage.resultCount;
+                end = start + nextPage.resultCount;
             }
 
             fs.writeFileSync(cache, JSON.stringify({ data: steamLb }));
@@ -104,8 +109,9 @@ const runUpdates = async () => {
             // fast-xml-parser is weird sometimes :>
             let steamid = entry.steamid.toString();
 
-            let player = (await db.find({ selector: { _id } }))[0];
-            if (!player) player = new Player(steamid);
+            let result = await db.find({ selector: { _id: steamid } });
+            let doc = result.docs[0];
+            let player = doc ? doc : new Player(steamid);
 
             if (player.isBanned) {
                 console.log('ignoring banned player ' + steamid);
@@ -211,8 +217,38 @@ const createBoard = async (field) => {
     exportApi(field, players.docs);
 };
 
+const createShowcases = async () => {
+    const showcases = JSON.parse(fs.readFileSync(showcasesFile, 'utf-8'));
+
+    const profiles = await steam.fetchProfiles(Array.from(new Set(showcases.map((sc) => sc.player))));
+
+    maps.forEach((map) => {
+        map.showcases = [];
+
+        showcases.forEach(({ id, player, date, media }) => {
+            if (id === map.id) {
+                let profile = profiles.find((p) => p.steamid.toString() === player);
+                if (!profile) {
+                    console.log('unable to fetch profile of ' + player);
+                    return;
+                }
+
+                map.showcases.push({
+                    player: {
+                        name: profile.personaname,
+                        avatar: profile.avatar,
+                        country: profile.loccountrycode,
+                    },
+                    date,
+                    media,
+                });
+            }
+        });
+    });
+};
+
 const main = async () => {
-    try { fs.mkdirSync(cacheFolder); } catch {} // prettier-ignore
+    /* try { fs.mkdirSync(cacheFolder); } catch {} // prettier-ignore
     try { fs.mkdirSync(apiFolder); } catch {} // prettier-ignore
     try { fs.mkdirSync(path.join(apiFolder, '/profile')); } catch {} // prettier-ignore
 
@@ -224,9 +260,18 @@ const main = async () => {
     await createBoard('mp');
     await createBoard('overall');
 
-    await db.destroy();
+    await db.destroy(); */
+
+    await createShowcases();
 
     exportApi('records', { maps, cheaters });
 };
 
-main().catch((err) => console.error(err));
+if (process.env.UPDATE === 'yes') {
+    main().catch((err) => console.error(err));
+}
+
+module.exports = {
+    maps,
+    createShowcases,
+};

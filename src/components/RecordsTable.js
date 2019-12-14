@@ -1,26 +1,25 @@
 import React from 'react';
-import IconButton from '@material-ui/core/IconButton';
+import Collapse from '@material-ui/core/Collapse';
+import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
-import PlayArrow from '@material-ui/icons/PlayArrow';
+import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Tooltip from '@material-ui/core/Tooltip';
-import { makeStyles } from '@material-ui/core/styles';
 import stableSort from '../utils/stableSort';
+import Showcase from './Showcase';
 
 const rows = [
-    { id: 'name', numeric: false, sortable: true, label: 'Map' },
+    { id: 'name', numeric: false, sortable: false, label: 'Map' },
     { id: 'wr', numeric: true, sortable: true, label: 'Portals' },
     { id: 'ties', numeric: true, sortable: true, label: 'Ties' },
-    { id: 'video', numeric: true, sortable: false, label: 'Video' },
 ];
 
-const RecordsTableHead = ({ order, orderBy, onRequestSort}) => {
+const RecordsTableHead = ({ order, orderBy, onRequestSort }) => {
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
     };
@@ -53,12 +52,17 @@ const RecordsTableHead = ({ order, orderBy, onRequestSort}) => {
     );
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         overflowX: 'auto',
     },
     helpLink: {
         cursor: 'help',
+    },
+    showcase: {
+        backgroundColor: theme.palette.type === 'dark' ? theme.palette.grey['A400'] : theme.palette.grey['50'],
+        paddingBottom: 0,
+        paddingTop: 0,
     },
 }));
 
@@ -67,8 +71,9 @@ const RecordsTable = ({ data }) => {
         order: 'asc',
         orderBy: 'index',
         page: 0,
-        rowsPerPage: 50,
+        rowsPerPage: 100,
     });
+    const [curRecord, setCurRecord] = React.useState(0);
 
     const handleRequestSort = (_, property) => {
         const orderBy = property;
@@ -81,40 +86,31 @@ const RecordsTable = ({ data }) => {
         setState({ order, orderBy });
     };
 
-    const handleChangePage = (_, page) => {
-        setState({ page });
-    };
-
-    const handleChangeRowsPerPage = (ev) => {
-        setState({ rowsPerPage: ev.target.value });
-    };
-
-    const gotoYouTube = (record) => () => {
-        let query = `Portal+2+${record.name.replace(/ /g, '+')}+in+${record.wr}+Portals`;
-        let tab = window.open(`https://www.youtube.com/results?search_query=${query}`, '_blank');
-        tab.opener = null;
-    };
-
     const classes = useStyles();
-    const { order, orderBy, rowsPerPage, page } = state;
-
+    
     const ExcludedMapsInfo = () => (
         <Tooltip placement="right" title="Disabled tracking records for this map." disableFocusListener disableTouchListener>
             <Link className={classes.helpLink}>n/a</Link>
         </Tooltip>
     );
+    
+    
+    const handleRowClick = (id) => () => {
+        setCurRecord(curRecord !== id ? id : 0);
+    };
+
+    const { order, orderBy } = state;
 
     return (
         <div className={classes.root}>
-            <Table aria-labelledby="tableTitle">
+            <Table>
                 <RecordsTableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort} rowCount={data.length} />
                 <TableBody>
-                    {stableSort(data, order, orderBy)
-                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map((record) => {
-                            return (
-                                <TableRow hover tabIndex={-1} key={record.id}>
-                                    <TableCell>
+                    {stableSort(data, order, orderBy).map((record) => {
+                        return (
+                            <React.Fragment key={record.id}>
+                                <TableRow hover tabIndex={-1} onClick={handleRowClick(record.id)} style={{ cursor: 'pointer' }}>
+                                    <TableCell size="small">
                                         <Link
                                             target="_blank"
                                             rel="noopener"
@@ -124,41 +120,36 @@ const RecordsTable = ({ data }) => {
                                             {record.name}
                                         </Link>
                                     </TableCell>
-                                    <TableCell align="center">{record.wr}</TableCell>
-                                    <TableCell align="center">{record.excluded === true ? <ExcludedMapsInfo /> : record.ties}</TableCell>
-                                    <TableCell align="center">
-                                        <Tooltip
-                                            placement="right"
-                                            title="Search record on YouTube"
-                                            disableFocusListener
-                                            disableTouchListener
-                                        >
-                                            <IconButton color="primary" onClick={gotoYouTube(record)}>
-                                                <PlayArrow />
-                                            </IconButton>
-                                        </Tooltip>
+                                    <TableCell size="small" align="center">
+                                        {record.wr}
+                                    </TableCell>
+                                    <TableCell size="small" align="center">
+                                        {record.excluded === true ? <ExcludedMapsInfo /> : record.ties}
                                     </TableCell>
                                 </TableRow>
-                            );
-                        })}
+                                <TableRow>
+                                    <TableCell
+                                        size="small"
+                                        className={classes.showcase}
+                                        colSpan={3}
+                                        style={{ border: record.id !== curRecord ? 0 : undefined }}
+                                    >
+                                        <Collapse in={record.id === curRecord} timeout="auto" unmountOnExit>
+                                            <Grid container>
+                                                {record.showcases.map((showcase, idx) => (
+                                                    <Grid key={idx} item xs={12} md={6} lg={6}>
+                                                        <Showcase data={showcase} />
+                                                    </Grid>
+                                                ))}
+                                            </Grid>
+                                        </Collapse>
+                                    </TableCell>
+                                </TableRow>
+                            </React.Fragment>
+                        );
+                    })}
                 </TableBody>
             </Table>
-            <TablePagination
-                rowsPerPageOptions={[10, 20, 50, 100]}
-                component="div"
-                count={data.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                labelDisplayedRows={() => ''}
-                backIconButtonProps={{
-                    'aria-label': 'Previous Page',
-                }}
-                nextIconButtonProps={{
-                    'aria-label': 'Next Page',
-                }}
-                onChangePage={handleChangePage}
-                onChangeRowsPerPage={handleChangeRowsPerPage}
-            />
         </div>
     );
 };

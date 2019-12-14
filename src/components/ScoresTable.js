@@ -145,12 +145,6 @@ const ScoresTable = (data, handleClickOpen) => {
                 rowsPerPage={rowsPerPage}
                 page={page}
                 labelDisplayedRows={() => ''}
-                backIconButtonProps={{
-                    'aria-label': 'Previous Page',
-                }}
-                nextIconButtonProps={{
-                    'aria-label': 'Next Page',
-                }}
                 onChangePage={handleChangePage}
                 onChangeRowsPerPage={handleChangeRowsPerPage}
             />

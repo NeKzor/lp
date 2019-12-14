@@ -68,7 +68,7 @@ const ProfileDialog = () => {
                             &nbsp;&nbsp;&nbsp;{profile.name}
                         </Typography>
                         <Tooltip placement="bottom" title="Close profile" disableFocusListener disableTouchListener>
-                            <IconButton color="inherit" onClick={handleProfileClose} aria-label="Close">
+                            <IconButton color="inherit" onClick={handleProfileClose}>
                                 <CloseIcon />
                             </IconButton>
                         </Tooltip>

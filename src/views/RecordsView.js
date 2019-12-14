@@ -5,6 +5,7 @@ import Input from '@material-ui/core/Input';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import RecordsTable from '../components/RecordsTable';
+import RecordChart from '../components/RecordChart';
 import AppState from '../AppState';
 
 const useStyles = makeStyles((theme) => ({
@@ -15,16 +16,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const RecordsView = () => {
-    const { state: { records } } = React.useContext(AppState);
+    const {
+        state: { records },
+    } = React.useContext(AppState);
 
     const [searchTerm, setSearchTerm] = React.useState('');
 
     const filterRecords = (records) => {
         return records.filter((x) => {
-            return (
-                searchTerm.length === 0 ||
-                x.name.toUpperCase().startsWith(searchTerm.toUpperCase()) || x.wr === parseInt(searchTerm)
-            );
+            return searchTerm.length === 0 || x.name.toUpperCase().startsWith(searchTerm.toUpperCase()) || x.wr === parseInt(searchTerm);
         });
     };
 
@@ -33,19 +33,21 @@ const RecordsView = () => {
     };
 
     const classes = useStyles();
+
     return (
         <>
             <Grid container>
                 <Grid item xs={false} md={1} lg={3} />
                 <Grid item xs={12} md={10} lg={6}>
+                    <Paper style={{ marginBottom: '50px' }}>
+                        <RecordChart data={records} mode={1} title="Single Player" color="#2E93fA" />
+                    </Paper>
+                    <Paper style={{marginBottom: '50px' }}>
+                        <RecordChart data={records} mode={2} title="Cooperative" color="#FF9800" />
+                    </Paper>
                     <Paper className={classes.searchBox}>
                         <FormGroup>
-                            <Input
-                                placeholder="Search"
-                                inputProps={{ 'aria-label': 'Description' }}
-                                onChange={handleInputChange}
-                                disableUnderline={true}
-                            />
+                            <Input placeholder="Search" onChange={handleInputChange} disableUnderline={true} />
                         </FormGroup>
                     </Paper>
                     <Paper>

@@ -94,7 +94,7 @@ const ProfileTable = ({ data }) => {
 
     return (
         <div className={classes.root}>
-            <Table aria-labelledby="tableTitle">
+            <Table>
                 <ProfileTableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort} rowCount={data.length} />
                 <TableBody>
                     {stableSort(data, order, orderBy)
@@ -129,12 +129,6 @@ const ProfileTable = ({ data }) => {
                 rowsPerPage={rowsPerPage}
                 page={page}
                 labelDisplayedRows={() => ''}
-                backIconButtonProps={{
-                    'aria-label': 'Previous Page',
-                }}
-                nextIconButtonProps={{
-                    'aria-label': 'Next Page',
-                }}
                 onChangePage={handleChangePage}
                 onChangeRowsPerPage={handleChangeRowsPerPage}
             />

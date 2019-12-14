@@ -3,7 +3,7 @@ class Score {
         this._id = map.id;
         this.mode = map.mode;
         this.score = score;
-        entry.delta = Math.abs(map.wr - score);
+        this.delta = Math.abs(map.wr - score);
     }
 }
 

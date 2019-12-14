@@ -68,7 +68,7 @@ const AppBarWithDrawer = ({ currentTab, onTabChange }) => {
         <div className={classes.root}>
             <AppBar position="fixed">
                 <Toolbar>
-                    <IconButton onClick={showDrawer(true)} className={classes.menuButton} color="inherit" aria-label="Menu">
+                    <IconButton onClick={showDrawer(true)} className={classes.menuButton} color="inherit">
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" color="inherit">
