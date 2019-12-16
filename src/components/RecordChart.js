@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactApexCharts from 'react-apexcharts';
+import { useTheme } from '@material-ui/styles';
 
 const chartOptions = {
     plotOptions: {
@@ -29,7 +30,7 @@ const chartOptions = {
     tooltip: {
         y: {
             formatter: function(val) {
-                return val + ' portals';
+                return val + ' portal' + (val === 1 ? '' : 's');
             },
         },
     },
@@ -44,6 +45,8 @@ const RecordChart = ({ data, mode, title, color }) => {
             data: sorted.map((m) => m.wr),
         },
     ];
+
+    const theme = useTheme();
 
     const options = {
         ...chartOptions,
@@ -62,6 +65,12 @@ const RecordChart = ({ data, mode, title, color }) => {
             },
         },
         colors: [color],
+        chart: {
+            background: theme.palette.type === 'dark' ? theme.palette.grey['800'] : theme.palette.common.white,
+        },
+        theme: {
+            mode: theme.palette.type,
+        },
     };
 
     return <ReactApexCharts options={options} series={series} type="bar" height="350" />;

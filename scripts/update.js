@@ -8,14 +8,14 @@ const SteamWebClient = require('./steam');
 PouchDB.plugin(require('pouchdb-find'));
 require('dotenv').config();
 
-const { apiFolder, mapFile, overridesFile, showcasesFile, cacheFolder, maxFetchRank, maxBoardRank } = config;
+const { apiFolder, mapFile, overridesFile, cacheFolder, maxFetchRank, maxBoardRank } = config;
 
 const maps = JSON.parse(fs.readFileSync(mapFile, 'utf-8'));
 
 const spMapCount = maps.filter((m) => m.mode === 1).length;
 const mpMapCount = maps.filter((m) => m.mode === 2).length;
-const perfectSpScore = maps.filter((m) => m.mode === 1).reduce((acc, val) => acc + val, 0);
-const perfectMpScore = maps.filter((m) => m.mode === 2).reduce((acc, val) => acc + val, 0);
+const perfectSpScore = maps.filter((m) => m.mode === 1).map((m) => m.wr).reduce((acc, val) => acc + val, 0); // prettier-ignore
+const perfectMpScore = maps.filter((m) => m.mode === 2).map((m) => m.wr).reduce((acc, val) => acc + val, 0); // prettier-ignore
 const perfectScore = perfectSpScore + perfectMpScore;
 
 const steam = new SteamWebClient(process.env.STEAM_API_KEY, 'nekzor.github.io.lp.2.0');
@@ -78,15 +78,17 @@ const runUpdates = async () => {
         } catch {}
 
         if (!steamLb) {
-            await goTheFuckToSleep(1000);
+            await goTheFuckToSleep(500);
             steamLb = await steam.fetchLeaderboard('Portal2', map.id, 1, maxFetchRank);
             console.log(`[${map.id}] fetched`);
 
             let start = steamLb.entryEnd + 1;
             let end = start + steamLb.resultCount;
 
-            while (steamLb.entries.entry[steamLb.entries.entry.length - 1].score === map.wr) {
-                await goTheFuckToSleep(1000);
+            let limit = map.limit !== undefined ? map.limit : map.wr;
+
+            while (steamLb.entries.entry[steamLb.entries.entry.length - 1].score === limit) {
+                await goTheFuckToSleep(500);
                 let nextPage = await steam.fetchLeaderboard('Portal2', map.id, start, end);
                 console.log(`[${map.id}] fetched another page`);
 
@@ -114,7 +116,7 @@ const runUpdates = async () => {
             let player = doc ? doc : new Player(steamid);
 
             if (player.isBanned) {
-                console.log('ignoring banned player ' + steamid);
+                //console.log('ignoring banned player ' + steamid);
                 continue;
             }
 
@@ -150,6 +152,7 @@ const filterAll = async () => {
 
     let result = await db.allDocs();
 
+    console.log(result);
     for (let row of result.rows) {
         let player = await db.get(row.id);
 
@@ -159,11 +162,13 @@ const filterAll = async () => {
             continue;
         }
 
-        if (sp.spCount !== spMapCount) {
+        console.log(`${player._id} : ${player.spCount}/${spMapCount} : ${player.mpCount}/${mpMapCount}`);
+
+        if (player.spCount !== spMapCount) {
             player.sp = 0;
             player.overall = 0;
         }
-        if (mp.length !== mpMapCount) {
+        if (player.mpCount !== mpMapCount) {
             player.mp = 0;
             player.overall = 0;
         }
@@ -190,10 +195,9 @@ const createBoard = async (field) => {
             continue;
         }
 
-        let { personaname, avatar, loccountrycode } = profile;
-        player.name = personaname;
-        player.avatar = avatar;
-        player.country = loccountrycode;
+        player.name = profile.personaname;
+        player.avatar = profile.avatar;
+        player.country = profile.loccountrycode;
 
         player.stats = {
             sp: {
@@ -212,33 +216,35 @@ const createBoard = async (field) => {
 
         console.log(player._id + ' -> ' + player.name);
         exportApi('/profile/' + player._id, player);
+
+        delete player.entries;
     }
 
     exportApi(field, players.docs);
 };
 
 const createShowcases = async () => {
-    const showcases = JSON.parse(fs.readFileSync(showcasesFile, 'utf-8'));
+    const showcases = require('../community');
 
-    const profiles = await steam.fetchProfiles(Array.from(new Set(showcases.map((sc) => sc.player))));
+    const profiles = await steam.fetchProfiles(Array.from(new Set(showcases.filter((sc) => sc.steam).map((sc) => sc.steam))));
 
     maps.forEach((map) => {
         map.showcases = [];
 
-        showcases.forEach(({ id, player, date, media }) => {
+        showcases.forEach(({ id, steam, player, date, media }) => {
             if (id === map.id) {
-                let profile = profiles.find((p) => p.steamid.toString() === player);
-                if (!profile) {
-                    console.log('unable to fetch profile of ' + player);
-                    return;
-                }
+                let profile = profiles.find((p) => p.steamid.toString() === steam);
 
                 map.showcases.push({
-                    player: {
-                        name: profile.personaname,
-                        avatar: profile.avatar,
-                        country: profile.loccountrycode,
-                    },
+                    player: profile
+                        ? {
+                              name: profile.personaname,
+                              avatar: profile.avatar,
+                              country: profile.loccountrycode,
+                          }
+                        : {
+                              name: player,
+                          },
                     date,
                     media,
                 });
@@ -248,11 +254,11 @@ const createShowcases = async () => {
 };
 
 const main = async () => {
-    /* try { fs.mkdirSync(cacheFolder); } catch {} // prettier-ignore
+    try { fs.mkdirSync(cacheFolder); } catch {} // prettier-ignore
     try { fs.mkdirSync(apiFolder); } catch {} // prettier-ignore
     try { fs.mkdirSync(path.join(apiFolder, '/profile')); } catch {} // prettier-ignore
 
-    await resetAll();
+   /*  await resetAll();
     await runUpdates();
     await filterAll();
 
@@ -260,7 +266,7 @@ const main = async () => {
     await createBoard('mp');
     await createBoard('overall');
 
-    await db.destroy(); */
+    await db.close(); */
 
     await createShowcases();
 
@@ -270,8 +276,3 @@ const main = async () => {
 if (process.env.UPDATE === 'yes') {
     main().catch((err) => console.error(err));
 }
-
-module.exports = {
-    maps,
-    createShowcases,
-};

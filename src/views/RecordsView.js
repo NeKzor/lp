@@ -39,10 +39,10 @@ const RecordsView = () => {
             <Grid container>
                 <Grid item xs={false} md={1} lg={3} />
                 <Grid item xs={12} md={10} lg={6}>
-                    <Paper style={{ marginBottom: '50px' }}>
+                    <Paper style={{ marginBottom: '24px' }}>
                         <RecordChart data={records} mode={1} title="Single Player" color="#2E93fA" />
                     </Paper>
-                    <Paper style={{marginBottom: '50px' }}>
+                    <Paper style={{marginBottom: '24px' }}>
                         <RecordChart data={records} mode={2} title="Cooperative" color="#FF9800" />
                     </Paper>
                     <Paper className={classes.searchBox}>
@@ -50,7 +50,7 @@ const RecordsView = () => {
                             <Input placeholder="Search" onChange={handleInputChange} disableUnderline={true} />
                         </FormGroup>
                     </Paper>
-                    <Paper>
+                    <Paper style={{marginBottom: '50px' }}>
                         <RecordsTable data={filterRecords(records)} />
                     </Paper>
                 </Grid>

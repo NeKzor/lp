@@ -16,20 +16,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const watch = (id) => () => {
-    let tab = window.open(`https://www.youtube.com/watch?v=${id}`, '_blank');
+    let tab = window.open(`https://youtu.be/${id}`, '_blank');
     tab.opener = null;
 };
 
 const Showcase = ({ data }) => {
     const classes = useStyles();
 
+    const avatar = (
+        <Avatar alt={data.player.name} src={data.player.avatar}>
+            {!data.player.avatar ? data.player.name[0] : undefined}
+        </Avatar>
+    );
+
     return (
         <Card className={classes.card}>
-            <CardHeader
-                avatar={<Avatar alt={data.player.name} src={data.player.avatar} />}
-                title={data.player.name}
-                subheader={data.date}
-            />
+            <CardHeader avatar={avatar} title={data.player.name} subheader={data.date} />
             <Tooltip
                 title="Watch on YouTube"
                 onClick={watch(data.media)}
@@ -39,7 +41,7 @@ const Showcase = ({ data }) => {
                 disableFocusListener
                 disableTouchListener
             >
-                <CardMedia className={classes.media} image={`https://i.ytimg.com/vi/${data.media}/maxresdefault.jpg`} />
+                <CardMedia className={classes.media} image={`https://i.ytimg.com/vi/${data.media.split('?')[0]}/sddefault.jpg`} />
             </Tooltip>
         </Card>
     );
