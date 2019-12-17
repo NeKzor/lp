@@ -1,4 +1,5 @@
 import React from 'react';
+import Flag from 'react-world-flags';
 import AppBar from '@material-ui/core/AppBar';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -72,6 +73,12 @@ const ProfileDialog = () => {
                         </Tooltip>
                         <Typography variant="h6" color="inherit" className={classes.flex}>
                             &nbsp;&nbsp;&nbsp;{profile.name}
+                            {profile.country && (
+                                <>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <Flag code={profile.country} style={{ position: 'relative', top: '2px'}} height="15" alt={profile.country} />
+                                </>
+                            )}
                         </Typography>
                         <Tooltip placement="bottom" title="Close profile" disableFocusListener disableTouchListener>
                             <IconButton color="inherit" onClick={handleProfileClose}>

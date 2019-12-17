@@ -8,9 +8,20 @@ const SteamWebClient = require('./steam');
 PouchDB.plugin(require('pouchdb-find'));
 require('dotenv').config();
 
-const { apiFolder, mapFile, overridesFile, cacheFolder, maxFetchRank, maxBoardRank } = config;
+const { apiFolder, mapFile, statsFile, overridesFile, cacheFolder, maxFetchRank, maxBoardRank } = config;
 
 const maps = JSON.parse(fs.readFileSync(mapFile, 'utf-8'));
+
+const { ties, cheaters } = (() => {
+    try {
+        return JSON.parse(fs.readFileSync(statsFile, 'utf-8'));
+    } catch {
+        let stats = { ties: {}, cheaters: [] };
+        maps.forEach((m) => stats.ties[m.id] = 0);
+        fs.writeFileSync(statsFile, JSON.stringify(stats, null, 4), 'utf-8');
+        return stats;
+    }
+})();
 
 const spMapCount = maps.filter((m) => m.mode === 1).length;
 const mpMapCount = maps.filter((m) => m.mode === 2).length;
@@ -21,8 +32,6 @@ const perfectScore = perfectSpScore + perfectMpScore;
 const steam = new SteamWebClient(process.env.STEAM_API_KEY, 'nekzor.github.io.lp.2.0');
 const db = new PouchDB('database');
 
-let cheaters = [];
-
 const exportApi = (route, data) => fs.writeFileSync(path.join(apiFolder, route) + '.json', JSON.stringify({ data }));
 const goTheFuckToSleep = (ms) => new Promise((res) => setTimeout(res, ms));
 
@@ -31,6 +40,9 @@ const resetAll = async () => {
 
     for (let row of result.rows) {
         let player = await db.get(row.id);
+        player.spOld = player.sp;
+        player.mpOld = player.mp;
+        player.overallOld = player.overall;
         player.sp = 0;
         player.spCount = 0;
         player.mp = 0;
@@ -47,8 +59,8 @@ const resetAll = async () => {
 const update = (player, map, score) => {
     let entry = player.entries.find((e) => e._id === map.id);
     if (entry) {
+        entry.scoreOld = entry.score;
         entry.score = score;
-        entry.delta = Math.abs(map.wr - score);
     } else {
         player.entries.push(new Score(map, score));
     }
@@ -68,7 +80,7 @@ const runUpdates = async () => {
     const overrides = JSON.parse(fs.readFileSync(overridesFile, 'utf-8'));
     const total = spMapCount + mpMapCount;
 
-    maps.forEach((m) => (m.ties = 0));
+    maps.forEach((m) => ties[m.id] = 0);
 
     let count = 0;
     for (let map of maps) {
@@ -128,7 +140,7 @@ const runUpdates = async () => {
                 update(player, map, score);
 
                 if (score === map.wr) {
-                    ++map.ties;
+                    ++ties[map.id];
                 }
             } else {
                 let ovr = overrides.find((x) => x.id === map.id && x.player === steamid);
@@ -137,7 +149,7 @@ const runUpdates = async () => {
                     update(player, map, ovr.score);
 
                     if (score === map.wr) {
-                        ++map.ties;
+                        ++ties[map.id];
                     }
                 } else {
                     console.log(`banned player ${steamid} with score ${score}`);
@@ -148,19 +160,22 @@ const runUpdates = async () => {
             await db.put(player);
         }
     }
+
+    fs.writeFileSync(statsFile, JSON.stringify({ ties, cheaters }, null, 4), 'utf-8');
 };
 
 // Delete all players who did not complete all maps in sp OR coop
 const filterAll = async () => {
-    cheaters = [];
-
     let result = await db.allDocs();
 
     for (let row of result.rows) {
         let player = await db.get(row.id);
 
         if (player.isBanned) {
-            cheaters.push(player._id);
+            if (!cheaters.includes((c) => c === player._id)) {
+                cheaters.push(player._id);
+            }
+
             await db.remove(player);
             continue;
         }
@@ -182,6 +197,8 @@ const filterAll = async () => {
             await db.remove(player);
         }
     }
+
+    fs.writeFileSync(statsFile, JSON.stringify({ ties, cheaters }, null, 4), 'utf-8');
 };
 
 const createBoard = async (field) => {
@@ -244,10 +261,14 @@ const createBoard = async (field) => {
 
         player.stats = player.stats[field];
         player.score = player[field];
+        player.scoreOld = player[field + 'Old'];
 
         delete player.sp;
         delete player.mp;
         delete player.overall;
+        delete player.spOld;
+        delete player.mpOld;
+        delete player.overallOld;
 
         if (current !== player.score) {
             current = player.score;
@@ -298,15 +319,17 @@ const main = async () => {
 
     /* await resetAll();
     await runUpdates();
-    await filterAll(); */
+    await filterAll();
 
-   /*  await createBoard('sp');
+    await createBoard('sp');
     await createBoard('mp');
     await createBoard('overall');
 
     await db.close(); */
 
     await createShowcases();
+
+    maps.forEach((m) => m.ties = ties[m.id]);
 
     exportApi('records', { maps, cheaters });
 };

@@ -1,6 +1,7 @@
 module.exports = {
     apiFolder: './api',
     mapFile: './wrs.json',
+    statsFile: './stats.json',
     overridesFile: './overrides.json',
     showcasesFile: './community.json',
     cacheFolder: './cache',

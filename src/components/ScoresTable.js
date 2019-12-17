@@ -1,4 +1,5 @@
 import React from 'react';
+import Flag from 'react-world-flags';
 import { library as fa } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMedal } from '@fortawesome/free-solid-svg-icons';
@@ -85,43 +86,48 @@ const ScoresTable = ({ data, handleClickOpen }) => {
             <Table>
                 <ScoresTableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort} rowCount={data.length} />
                 <TableBody>
-                    {stableSort(data, order, orderBy)
-                        .map((item) => {
-                            return (
-                                <TableRow hover tabIndex={-1} key={item._id}>
-                                    <TableCell size="small" align="center">
-                                        {item.rank === 1 ? (
-                                            <FontAwesomeIcon title="Rank 1" icon="medal" color="#ffd700" />
-                                        ) : item.rank === 2 ? (
-                                            <FontAwesomeIcon title="Rank 2" icon="medal" color="#C0C0C0" />
-                                        ) : item.rank === 3 ? (
-                                            <FontAwesomeIcon title="Rank 3" icon="medal" color="#cd7f32" />
-                                        ) : (
-                                            item.rank
+                    {stableSort(data, order, orderBy).map((item) => {
+                        return (
+                            <TableRow hover tabIndex={-1} key={item._id}>
+                                <TableCell size="small" align="center">
+                                    {item.rank === 1 ? (
+                                        <FontAwesomeIcon title="Rank 1" icon="medal" color="#ffd700" />
+                                    ) : item.rank === 2 ? (
+                                        <FontAwesomeIcon title="Rank 2" icon="medal" color="#C0C0C0" />
+                                    ) : item.rank === 3 ? (
+                                        <FontAwesomeIcon title="Rank 3" icon="medal" color="#cd7f32" />
+                                    ) : (
+                                        item.rank
+                                    )}
+                                </TableCell>
+                                <TableCell size="small">
+                                    <div className={classes.playerCell}>
+                                        <Avatar src={item.avatar} />
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <Link className={classes.clickLink} onClick={handleClickOpen(item._id)} color="inherit">
+                                            {item.name}
+                                        </Link>
+                                        {item.country && (
+                                            <>
+                                                &nbsp;&nbsp;&nbsp;
+                                                <Flag code={item.country} height="12" alt={item.country} />
+                                            </>
                                         )}
-                                    </TableCell>
-                                    <TableCell size="small">
-                                        <div className={classes.playerCell}>
-                                            <Avatar src={item.avatar} />
-                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <Link className={classes.clickLink} onClick={handleClickOpen(item._id)} color="inherit">
-                                                {item.name}
-                                            </Link>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell size="small" align="center">
-                                        <Tooltip
-                                            placement="top"
-                                            title={`${item.stats.percentage}% (${item.score - item.stats.delta}+${item.stats.delta})`}
-                                            disableFocusListener
-                                            disableTouchListener
-                                        >
-                                            <div>{item.score}</div>
-                                        </Tooltip>
-                                    </TableCell>
-                                </TableRow>
-                            );
-                        })}
+                                    </div>
+                                </TableCell>
+                                <TableCell size="small" align="center">
+                                    <Tooltip
+                                        placement="top"
+                                        title={`${item.stats.percentage}% (${item.score - item.stats.delta}+${item.stats.delta})`}
+                                        disableFocusListener
+                                        disableTouchListener
+                                    >
+                                        <div>{item.score}</div>
+                                    </Tooltip>
+                                </TableCell>
+                            </TableRow>
+                        );
+                    })}
                 </TableBody>
             </Table>
         </div>
