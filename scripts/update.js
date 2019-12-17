@@ -36,6 +36,10 @@ const resetAll = async () => {
         player.mp = 0;
         player.mpCount = 0;
         player.overall = 0;
+        player.name = undefined;
+        player.avatar = undefined;
+        player.country = undefined;
+        player.stats = undefined;
         await db.put(player);
     }
 };
@@ -152,7 +156,6 @@ const filterAll = async () => {
 
     let result = await db.allDocs();
 
-    console.log(result);
     for (let row of result.rows) {
         let player = await db.get(row.id);
 
@@ -162,7 +165,7 @@ const filterAll = async () => {
             continue;
         }
 
-        console.log(`${player._id} : ${player.spCount}/${spMapCount} : ${player.mpCount}/${mpMapCount}`);
+        //console.log(`${player._id} : ${player.spCount}/${spMapCount} : ${player.mpCount}/${mpMapCount}`);
 
         if (player.spCount !== spMapCount) {
             player.sp = 0;
@@ -182,45 +185,79 @@ const filterAll = async () => {
 };
 
 const createBoard = async (field) => {
-    await db.createIndex({ index: { fields: [field] } });
+    let players = await db.find({ selector: { [field]: { $gt: 0 } }, limit: maxBoardRank });
 
-    let players = await db.find({ selector: { [field]: { $gt: 0 } }, limit: maxBoardRank, sort: [field] });
+    players = players.docs.sort((a, b) => {
+        if (a[field] === b[field]) {
+            return a._id - b._id;
+        }
+        return a[field] - b[field];
+    });
 
-    let profiles = await steam.fetchProfiles(players.docs.map((p) => p._id));
+    let profiles = await steam.fetchProfiles(players.filter((p) => p.name === undefined).map((p) => p._id));
 
-    for (let player of players.docs) {
-        let profile = profiles.find((p) => p.steamid.toString() === player._id);
-        if (!profile) {
-            console.log('unable to fetch profile of ' + player._id);
-            continue;
+    let rank = 0;
+    let current = 0;
+
+    for (let player of players) {
+        if (player.name === undefined) {
+            let profile = profiles.find((p) => p.steamid.toString() === player._id);
+            if (!profile) {
+                throw Error('unable to fetch profile of ' + player._id);
+            }
+
+            player.name = profile.personaname;
+            player.avatar = profile.avatar;
+            player.country = profile.loccountrycode;
+
+            player.stats = {
+                sp: {
+                    delta: Math.abs(player.sp - perfectSpScore),
+                    percentage: player.sp !== 0 ? Math.round((perfectSpScore / player.sp) * 100) : 0,
+                },
+                mp: {
+                    delta: Math.abs(player.mp - perfectMpScore),
+                    percentage: player.mp !== 0 ? Math.round((perfectMpScore / player.mp) * 100) : 0,
+                },
+                overall: {
+                    delta: Math.abs(player.overall - perfectScore),
+                    percentage: player.sp !== 0 && player.mp !== 0 ? Math.round((perfectScore / player.overall) * 100) : 0,
+                },
+            };
+
+            await db.put(player);
+
+            delete player._rev;
+            delete player.spCount;
+            delete player.mpCount;
+            delete player.isBanned;
+
+            console.log(player._id + ' -> ' + player.name);
+            exportApi('/profile/' + player._id, player);
         }
 
-        player.name = profile.personaname;
-        player.avatar = profile.avatar;
-        player.country = profile.loccountrycode;
-
-        player.stats = {
-            sp: {
-                delta: Math.abs(player.sp - perfectSpScore),
-                percentage: player.sp !== 0 ? Math.round((perfectSpScore / player.sp) * 100) : 0,
-            },
-            mp: {
-                delta: Math.abs(player.mp - perfectMpScore),
-                percentage: player.mp !== 0 ? Math.round((perfectMpScore / player.mp) * 100) : 0,
-            },
-            overall: {
-                delta: Math.abs(player.overall - perfectScore),
-                percentage: player.sp !== 0 && player.mp !== 0 ? Math.round((perfectScore / player.overall) * 100) : 0,
-            },
-        };
-
-        console.log(player._id + ' -> ' + player.name);
-        exportApi('/profile/' + player._id, player);
-
         delete player.entries;
+        delete player._rev;
+        delete player.spCount;
+        delete player.mpCount;
+        delete player.isBanned;
+
+        player.stats = player.stats[field];
+        player.score = player[field];
+
+        delete player.sp;
+        delete player.mp;
+        delete player.overall;
+
+        if (current !== player.score) {
+            current = player.score;
+            ++rank;
+        }
+
+        player.rank = rank;
     }
 
-    exportApi(field, players.docs);
+    exportApi(field, players);
 };
 
 const createShowcases = async () => {
@@ -238,6 +275,7 @@ const createShowcases = async () => {
                 map.showcases.push({
                     player: profile
                         ? {
+                              id: steam,
                               name: profile.personaname,
                               avatar: profile.avatar,
                               country: profile.loccountrycode,
@@ -258,11 +296,11 @@ const main = async () => {
     try { fs.mkdirSync(apiFolder); } catch {} // prettier-ignore
     try { fs.mkdirSync(path.join(apiFolder, '/profile')); } catch {} // prettier-ignore
 
-   /*  await resetAll();
+    /* await resetAll();
     await runUpdates();
-    await filterAll();
+    await filterAll(); */
 
-    await createBoard('sp');
+   /*  await createBoard('sp');
     await createBoard('mp');
     await createBoard('overall');
 
@@ -273,6 +311,4 @@ const main = async () => {
     exportApi('records', { maps, cheaters });
 };
 
-if (process.env.UPDATE === 'yes') {
-    main().catch((err) => console.error(err));
-}
+main().catch((err) => console.error(err));

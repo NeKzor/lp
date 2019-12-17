@@ -16,13 +16,17 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import AppState from '../AppState';
 import { useIsMounted } from '../Hooks';
+import RecordDeltaChart from './RecordDeltaChart';
 
 const useStyles = makeStyles((theme) => ({
     stats: {
-        marginTop: theme.spacing(3),
+        paddingTop: theme.spacing(3),
+        paddingBottom: theme.spacing(3),
+        background: theme.palette.type === 'dark' ? theme.palette.grey['A400'] : theme.palette.grey['50'],
     },
     records: {
-        marginTop: theme.spacing(3),
+        paddingTop: theme.spacing(3),
+        background: theme.palette.type === 'dark' ? theme.palette.grey['A400'] : theme.palette.grey['50'],
     },
     flex: {
         flex: 1,
@@ -33,9 +37,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Transition = (props) => {
-    return <Slide direction="up" {...props} />;
-};
+const Transition = React.forwardRef((props, ref) => {
+    return <Slide direction="up" {...props} ref={ref} />;
+});
 
 const gotoSteamProfile = (id) => {
     let tab = window.open(`https://steamcommunity.com/profiles/${id}`, '_blank');
@@ -44,13 +48,15 @@ const gotoSteamProfile = (id) => {
 
 const ProfileDialog = () => {
     const isMounted = useIsMounted();
-    const { state: { profile }, dispatch } = React.useContext(AppState);
+    const { state, dispatch } = React.useContext(AppState);
 
     const handleProfileClose = () => isMounted.current && dispatch({ action: 'clearProfile' });
 
+    const profile = state.profile.get();
+
     const classes = useStyles();
 
-    if (!profile.get()) {
+    if (!profile) {
         return <React.Fragment />;
     }
 
@@ -79,15 +85,13 @@ const ProfileDialog = () => {
                     <Grid item xs={false} md={1} lg={3} />
                     <Grid item xs={12} md={10} lg={6}>
                         {profile.entries.length !== 0 && (
-                            <Grid container spacing={24}>
+                            <Grid container spacing={10}>
                                 <Grid item xs={12} md={4} lg={4}>
                                     <Paper className={classes.paper}>
                                         <Tooltip
                                             placement="top"
                                             title={
-                                                profile.sp !== 0
-                                                    ? `${profile.stats.sp.profile - profile.stats.sp.delta}+${profile.stats.sp.delta}`
-                                                    : ''
+                                                profile.sp !== 0 ? `${profile.sp - profile.stats.sp.delta}+${profile.stats.sp.delta}` : ''
                                             }
                                             disableFocusListener
                                             disableTouchListener
@@ -106,15 +110,13 @@ const ProfileDialog = () => {
                                         <Tooltip
                                             placement="top"
                                             title={
-                                                profile.mp !== 0
-                                                    ? `${profile.stats.mp.score - profile.stats.mp.delta}+${profile.stats.mp.delta}`
-                                                    : ''
+                                                profile.mp !== 0 ? `${profile.mp - profile.stats.mp.delta}+${profile.stats.mp.delta}` : ''
                                             }
                                             disableFocusListener
                                             disableTouchListener
                                         >
                                             <Typography variant="h3" gutterBottom>
-                                                {profile.stats.mp.percentage !== 0 ? profile.mp.percentage : 0}%
+                                                {profile.stats.mp.percentage !== 0 ? profile.stats.mp.percentage : 0}%
                                             </Typography>
                                         </Tooltip>
                                         <Typography variant="subtitle1" gutterBottom>
@@ -150,8 +152,14 @@ const ProfileDialog = () => {
                 <Grid container className={classes.records}>
                     <Grid item xs={false} md={1} lg={3} />
                     <Grid item xs={12} md={10} lg={6}>
-                        <Paper>
+                        <Paper style={{ marginBottom: '50px' }}>
                             <ProfileTable data={profile.entries} />
+                        </Paper>
+                        <Paper style={{ paddingTop: '10px', marginBottom: '50px' }}>
+                            <RecordDeltaChart data={profile.entries} mode={1} title="Single Player" color="#2E93fA" />
+                        </Paper>
+                        <Paper style={{ paddingTop: '10px', marginBottom: '50px' }}>
+                            <RecordDeltaChart data={profile.entries} mode={2} title="Cooperative" color="#FF9800" />
                         </Paper>
                     </Grid>
                 </Grid>

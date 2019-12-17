@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const App = () => {
-    const [currentTab, setCurrentTab] = React.useState(3);
+    const [currentTab, setCurrentTab] = React.useState(0);
     const [state, dispatch] = React.useReducer(...AppReducer);
 
     React.useEffect(() => {
@@ -68,7 +68,7 @@ const App = () => {
                 {state.records.length !== 0 ? (
                     <div className={classes.views}>
                         {currentTab === 0 && <ScoreboardView boardType="sp" />}
-                        {currentTab === 1 && <ScoreboardView boardType="coop" />}
+                        {currentTab === 1 && <ScoreboardView boardType="mp" />}
                         {currentTab === 2 && <ScoreboardView boardType="overall" />}
                         {currentTab === 3 && <RecordsView />}
                         {currentTab === 4 && <AboutView />}

@@ -8,7 +8,6 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -61,12 +60,10 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const ScoresTable = (data, handleClickOpen) => {
+const ScoresTable = ({ data, handleClickOpen }) => {
     const [state, setState] = React.useState({
         order: 'asc',
         orderBy: 'score',
-        page: 0,
-        rowsPerPage: 50,
     });
 
     const handleRequestSort = (_, property) => {
@@ -80,16 +77,8 @@ const ScoresTable = (data, handleClickOpen) => {
         setState({ order, orderBy });
     };
 
-    const handleChangePage = (_, page) => {
-        setState({ page });
-    };
-
-    const handleChangeRowsPerPage = (ev) => {
-        setState({ rowsPerPage: ev.target.value });
-    };
-
     const classes = useStyles();
-    const { order, orderBy, rowsPerPage, page } = state;
+    const { order, orderBy } = state;
 
     return (
         <div className={classes.root}>
@@ -97,13 +86,10 @@ const ScoresTable = (data, handleClickOpen) => {
                 <ScoresTableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort} rowCount={data.length} />
                 <TableBody>
                     {stableSort(data, order, orderBy)
-                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         .map((item) => {
-                            let profile = item.getProfile();
-                            let stats = item.getStats();
                             return (
-                                <TableRow hover tabIndex={-1} key={item.id}>
-                                    <TableCell align="center">
+                                <TableRow hover tabIndex={-1} key={item._id}>
+                                    <TableCell size="small" align="center">
                                         {item.rank === 1 ? (
                                             <FontAwesomeIcon title="Rank 1" icon="medal" color="#ffd700" />
                                         ) : item.rank === 2 ? (
@@ -114,19 +100,19 @@ const ScoresTable = (data, handleClickOpen) => {
                                             item.rank
                                         )}
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell size="small">
                                         <div className={classes.playerCell}>
-                                            <Avatar src={profile && profile.avatar_link} />
+                                            <Avatar src={item.avatar} />
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <Link className={classes.clickLink} onClick={() => handleClickOpen(item.id)} color="inherit">
-                                                {(profile && profile.profile_name) || item.id}
+                                            <Link className={classes.clickLink} onClick={handleClickOpen(item._id)} color="inherit">
+                                                {item.name}
                                             </Link>
                                         </div>
                                     </TableCell>
-                                    <TableCell align="center">
+                                    <TableCell size="small" align="center">
                                         <Tooltip
                                             placement="top"
-                                            title={`${stats.percentage}% (${item.score - stats.delta}+${stats.delta})`}
+                                            title={`${item.stats.percentage}% (${item.score - item.stats.delta}+${item.stats.delta})`}
                                             disableFocusListener
                                             disableTouchListener
                                         >
@@ -138,16 +124,6 @@ const ScoresTable = (data, handleClickOpen) => {
                         })}
                 </TableBody>
             </Table>
-            <TablePagination
-                rowsPerPageOptions={[10, 20, 50, 100]}
-                component="div"
-                count={data.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                labelDisplayedRows={() => ''}
-                onChangePage={handleChangePage}
-                onChangeRowsPerPage={handleChangeRowsPerPage}
-            />
         </div>
     );
 };

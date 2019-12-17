@@ -4,7 +4,6 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -12,12 +11,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import stableSort from '../utils/stableSort';
 
 const rows = [
-    { id: 'name', numeric: false, sortable: true, label: 'Map' },
+    { id: 'index', numeric: false, sortable: true, label: 'Map' },
     { id: 'score', numeric: true, sortable: true, label: 'Portals' },
-    { id: 'wrDelta', numeric: true, sortable: true, label: 'ΔWR' },
+    { id: 'delta', numeric: true, sortable: true, label: 'ΔWR' },
 ];
 
-const ProfileTableHead = ({order, orderBy, onRequestSort}) => {
+const ProfileTableHead = ({ order, orderBy, onRequestSort }) => {
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
     };
@@ -60,8 +59,6 @@ const ProfileTable = ({ data }) => {
     const [state, setState] = React.useState({
         order: 'asc',
         orderBy: 'index',
-        page: 0,
-        rowsPerPage: 100,
     });
 
     const handleRequestSort = (_, property) => {
@@ -75,16 +72,8 @@ const ProfileTable = ({ data }) => {
         setState({ order, orderBy });
     };
 
-    const handleChangePage = (_, page) => {
-        setState({ page });
-    };
-
-    const handleChangeRowsPerPage = (event) => {
-        setState({ rowsPerPage: event.target.value });
-    };
-
     const classes = useStyles();
-    const { order, orderBy, rowsPerPage, page } = state;
+    const { order, orderBy } = state;
 
     const UnknownScoreInfo = () => (
         <Tooltip placement="right" title="Unknown score." disableFocusListener disableTouchListener>
@@ -97,41 +86,51 @@ const ProfileTable = ({ data }) => {
             <Table>
                 <ProfileTableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort} rowCount={data.length} />
                 <TableBody>
-                    {stableSort(data, order, orderBy)
-                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map((record) => {
-                            let score = record.score != null ? record.score : <UnknownScoreInfo />;
-                            let delta = record.score != null ? record.wrDelta === 0 ? '' : `+${record.wrDelta}` : <UnknownScoreInfo />;
-
-                            return (
-                                <TableRow hover tabIndex={-1} key={record.id}>
-                                    <TableCell align="center">
+                    {stableSort(data, order, orderBy).map((record) => {
+                        let score =
+                            record.score != null ? (
+                                record.showcase ? (
+                                    <Tooltip placement="right" title="Watch on YouTube" disableFocusListener disableTouchListener>
                                         <Link
                                             target="_blank"
                                             rel="noopener"
-                                            color="inherit"
-                                            href={`https://steamcommunity.com/stats/Portal2/leaderboards/${record.id}`}
+                                            
+                                            href={`https://youtu.be/${record.showcase.media}`}
                                         >
-                                            {record.name}
+                                            <b>{record.score}</b>
                                         </Link>
-                                    </TableCell>
-                                    <TableCell align="center">{score}</TableCell>
-                                    <TableCell align="center">{delta}</TableCell>
-                                </TableRow>
+                                    </Tooltip>
+                                ) : (
+                                    record.score
+                                )
+                            ) : (
+                                <UnknownScoreInfo />
                             );
-                        })}
+                        let delta = record.score != null ? record.delta === 0 ? '' : `+${record.delta}` : <UnknownScoreInfo />;
+
+                        return (
+                            <TableRow hover tabIndex={-1} key={record._id}>
+                                <TableCell size="small" align="center">
+                                    <Link
+                                        target="_blank"
+                                        rel="noopener"
+                                        color="inherit"
+                                        href={`https://steamcommunity.com/stats/Portal2/leaderboards/${record._id}`}
+                                    >
+                                        {record.name}
+                                    </Link>
+                                </TableCell>
+                                <TableCell size="small" align="center">
+                                    {score}
+                                </TableCell>
+                                <TableCell size="small" align="center">
+                                    {delta}
+                                </TableCell>
+                            </TableRow>
+                        );
+                    })}
                 </TableBody>
             </Table>
-            <TablePagination
-                rowsPerPageOptions={[5, 10, 20, 50, 100]}
-                component="div"
-                count={data.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                labelDisplayedRows={() => ''}
-                onChangePage={handleChangePage}
-                onChangeRowsPerPage={handleChangeRowsPerPage}
-            />
         </div>
     );
 };

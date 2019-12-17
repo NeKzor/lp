@@ -16,15 +16,15 @@ const ScoreboardView = ({ boardType }) => {
     React.useEffect(() => {
         if (board.length === 0) {
             Api.getBoard(boardType)
-                .then(board => isMounted.current && setBoard(board))
-                .catch(err => console.error(err));
+                .then((board) => isMounted.current && setBoard(board))
+                .catch((err) => console.error(err));
         }
     }, []);
 
-    const handleProfileOpen = (_, id) => {
-        Api.getPlayer(id)
-            .then(data => isMounted.current && dispatch({ action: 'setProfile', data: { id, data } }))
-            .catch(err => console.error(err));
+    const handleProfileOpen = (id) => () => {
+        Api.getProfile(id)
+            .then((data) => isMounted.current && dispatch({ action: 'setProfile', data: { id, data } }))
+            .catch((err) => console.error(err));
     };
 
     return (
@@ -32,7 +32,7 @@ const ScoreboardView = ({ boardType }) => {
             <Grid container>
                 <Grid item xs={false} md={1} lg={3} />
                 <Grid item xs={12} md={10} lg={6}>
-                    <Paper>
+                    <Paper style={{ marginBottom: '50px' }}>
                         {board.length === 0 && <LinearProgress />}
                         <ScoresTable data={board} handleClickOpen={handleProfileOpen} />
                     </Paper>

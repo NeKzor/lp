@@ -32,7 +32,7 @@
         "test": "mocha",
         "eject": "react-scripts eject",
         "rmcache": "rm -rf cache/",
-        "update": "UPDATE=yes node scripts/update.js",
+        "update": "node scripts/update.js",
         "dev": "hs ./api --cors"
     },
     "browserslist": [

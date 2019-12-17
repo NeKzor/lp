@@ -21,7 +21,7 @@ class Api {
         return res.ok ? (await res.json()).data : {};
     }
     async getProfile(id) {
-        let res = await this.get(`${this.baseApi}/profiles/${id}`);
+        let res = await this.request(`${this.baseApi}/profile/${id}.json`);
         return res.ok ? (await res.json()).data : {};
     }
 }

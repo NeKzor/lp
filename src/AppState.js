@@ -39,6 +39,7 @@ const inititalState = {
 
 export const AppReducer = [
     (state, { action, data }) => {
+        console.log('[DISPATCH] ' + action);
         switch (action) {
             case 'setRecords':
                 return {
@@ -47,6 +48,13 @@ export const AppReducer = [
                     cheaters: data.cheaters || [],
                 };
             case 'setProfile':
+                data.data.entries.forEach((e) => {
+                    let map = state.records.find((r) => r.id === e._id);
+                    e.name = map.name;
+                    e.index = map.index;
+                    e.delta = Math.abs(map.wr - e.score);
+                    e.showcase = map.showcases.find((sc) => sc.player.id === data.data._id);
+                });
                 return {
                     ...state,
                     profile: state.profile.set(data),

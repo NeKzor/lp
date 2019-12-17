@@ -1,6 +1,7 @@
 import React from 'react';
 import Collapse from '@material-ui/core/Collapse';
 import Grid from '@material-ui/core/Grid';
+import Hidden from '@material-ui/core/Hidden';
 import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -14,7 +15,7 @@ import stableSort from '../utils/stableSort';
 import Showcase from './Showcase';
 
 const rows = [
-    { id: 'name', numeric: false, sortable: false, label: 'Map' },
+    { id: 'index', numeric: false, sortable: true, label: 'Map' },
     { id: 'wr', numeric: true, sortable: true, label: 'Portals' },
     { id: 'ties', numeric: true, sortable: true, label: 'Ties' },
 ];
@@ -87,14 +88,13 @@ const RecordsTable = ({ data }) => {
     };
 
     const classes = useStyles();
-    
+
     const ExcludedMapsInfo = () => (
         <Tooltip placement="right" title="Disabled tracking records for this map." disableFocusListener disableTouchListener>
             <Link className={classes.helpLink}>n/a</Link>
         </Tooltip>
     );
-    
-    
+
     const handleRowClick = (id) => () => {
         setCurRecord(curRecord !== id ? id : 0);
     };
@@ -136,11 +136,22 @@ const RecordsTable = ({ data }) => {
                                     >
                                         <Collapse in={record.id === curRecord} timeout="auto" unmountOnExit>
                                             <Grid container>
-                                                {record.showcases.map((showcase, idx) => (
-                                                    <Grid key={idx} item xs={12} md={6} lg={6}>
-                                                        <Showcase data={showcase} />
-                                                    </Grid>
-                                                ))}
+                                                {record.showcases.length === 1 && (
+                                                    <>
+                                                        <Hidden smDown>
+                                                            <Grid item md={2} lg={2} />
+                                                        </Hidden>
+                                                        <Grid item xs={12} md={8} lg={8}>
+                                                            <Showcase data={record.showcases[0]} />
+                                                        </Grid>
+                                                    </>
+                                                )}
+                                                {record.showcases.length > 1 &&
+                                                    record.showcases.map((showcase, idx) => (
+                                                        <Grid key={idx} item xs={12} md={6} lg={6}>
+                                                            <Showcase data={showcase} />
+                                                        </Grid>
+                                                    ))}
                                             </Grid>
                                         </Collapse>
                                     </TableCell>

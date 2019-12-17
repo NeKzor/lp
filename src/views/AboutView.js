@@ -56,7 +56,6 @@ const AboutView = () => {
             .then((results) => {
                 Promise.all(results.map((res) => res.json()))
                     .then((branches) => {
-                        console.log('fetched');
                         if (isMounted.current) {
                             setGitHub(
                                 branches.map((branch) => ({

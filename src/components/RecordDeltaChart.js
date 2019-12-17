@@ -22,7 +22,6 @@ const chartOptions = {
         title: {
             text: 'Portals',
         },
-        max: 12,
     },
     fill: {
         opacity: 1,
@@ -36,13 +35,14 @@ const chartOptions = {
     },
 };
 
-const RecordChart = ({ data, mode, title, color }) => {
+const RecordDeltaChart = ({ data, mode, title, color }) => {
     const sorted = data.filter((m) => m.mode === mode).sort((a, b) => a.index - b.index);
+    const max = Math.max(...sorted.map((m) => m.score));
 
     const series = [
         {
-            name: 'World Record',
-            data: sorted.map((m) => m.wr),
+            name: 'WR Delta',
+            data: sorted.map((m) => m.delta),
         },
     ];
 
@@ -55,6 +55,11 @@ const RecordChart = ({ data, mode, title, color }) => {
             labels: {
                 show: false,
             },
+        },
+        yaxis: {
+            ...chartOptions.yaxis,
+            max: max + (max % 2),
+            tickAmount: (max + (max % 2)) / 2
         },
         title: {
             text: title,
@@ -76,4 +81,4 @@ const RecordChart = ({ data, mode, title, color }) => {
     return <ReactApexCharts options={options} series={series} type="bar" height="350" />;
 };
 
-export default RecordChart;
+export default RecordDeltaChart;
