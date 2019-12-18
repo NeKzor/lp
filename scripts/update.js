@@ -288,28 +288,38 @@ const createBoard = async (field) => {
 const createShowcases = async () => {
     const showcases = require('../community');
 
-    const profiles = await steam.fetchProfiles(Array.from(new Set(showcases.filter((sc) => sc.steam).map((sc) => sc.steam))));
+    let ids = [];
+    showcases.forEach((sc) => {
+        if (sc.steam) ids.push(sc.steam);
+        if (sc.steam2) ids.push(sc.steam2);
+    });
+
+    const profiles = await steam.fetchProfiles(Array.from(new Set(ids)));
+
+    const findProfile = (id, name) => {
+        let profile = profiles.find((p) => p.steamid.toString() === id);
+        return profile
+            ? {
+                  id,
+                  name: profile.personaname,
+                  avatar: profile.avatar,
+                  country: profile.loccountrycode,
+              }
+            : {
+                  name,
+              };
+    };
 
     maps.forEach((map) => {
         map.showcases = [];
 
-        showcases.forEach(({ id, steam, player, date, media }) => {
-            if (id === map.id) {
-                let profile = profiles.find((p) => p.steamid.toString() === steam);
-
+        showcases.forEach((sc) => {
+            if (sc.id === map.id) {
                 map.showcases.push({
-                    player: profile
-                        ? {
-                              id: steam,
-                              name: profile.personaname,
-                              avatar: profile.avatar,
-                              country: profile.loccountrycode,
-                          }
-                        : {
-                              name: player,
-                          },
-                    date,
-                    media,
+                    player: findProfile(sc.steam, sc.player),
+                    player2: map.mode === 2 ? findProfile(sc.steam2, sc.player2) : undefined,
+                    date: sc.date,
+                    media: sc.media,
                 });
             }
         });
@@ -321,21 +331,21 @@ const main = async () => {
     try { fs.mkdirSync(apiFolder); } catch {} // prettier-ignore
     try { fs.mkdirSync(path.join(apiFolder, '/profile')); } catch {} // prettier-ignore
 
-    /* await resetAll();
+    await resetAll();
     await runUpdates();
-    await filterAll(); */
+    await filterAll();
 
     await createBoard('sp');
     await createBoard('mp');
     await createBoard('overall');
 
-    /* await db.close();
+    await db.close();
 
     await createShowcases();
 
     maps.forEach((m) => (m.ties = ties[m.id]));
 
-    exportApi('records', { maps, cheaters }); */
+    exportApi('records', { maps, cheaters });
 };
 
 main().catch((err) => console.error(err));

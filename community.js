@@ -371,337 +371,385 @@ module.exports = [
     // Doors
     {
         'id': 47740,
-        'player': 'Stimich',
+        'steam': '76561197994202252',
+        'player2': 'Pitkakorva',
         'date': 'Oct. 2011',
         'media': 'rHV8Qk8Ynfw',
     },
     // Buttons
     {
         'id': 47826,
-        'player': 'DoctorChub',
+        'steam': '76561197980620221',
+        'steam2': '76561197978601137',
         'date': 'Nov. 2011',
         'media': 'VLpHM4iXUsM',
     },
     // Lasers
     {
         'id': 47827,
-        'player': 'DoctorChub',
+        'steam': '76561197980620221',
+        'steam2': '76561197978601137',
         'date': 'Oct. 2011',
         'media': 'df4vy3X-w4U',
     },
     // Rat Maze
     {
         'id': 47830,
-        'player': 'Schlepian',
+        'steam': '76561198021734854',
+        'steam2': '76561197980620221',
         'date': 'Oct. 2011',
         'media': 'brxBWe8A7aE',
     },
     // Laser Crusher
     {
         'id': 45466,
-        'player': 'Stimich',
+        'steam': '76561197994202252',
+        'player2': 'Pitkakorva',
         'date': 'Oct. 2011',
         'media': 'CbgbcxbouRk',
     },
     // Behind The Scenes
     {
         'id': 46361,
-        'player': 'Schlepian',
+        'steam': '76561198021734854',
+        'player2': 'gopherdude',
         'date': 'Oct. 2011',
         'media': '9SsGzVn8cc0',
     },
     // Flings
     {
         'id': 47832,
-        'player': 'TODO',
+        'steam': '76561197994202252',
+        'player2': 'Pitkakorva',
         'date': 'Oct. 2011',
         'media': 'kD4vFI6fvuU',
     },
     // Infinifling
     {
         'id': 47834,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561198003598363',
+        'player2': 'VEGA',
+        'date': 'Oct. 2017',
         'media': 'BUQgo4h_ng8',
     },
     // Team Retrieval
     {
         'id': 47836,
-        'player': 'TODO',
+        'steam': '76561197994202252',
+        'player2': 'Pitkakorva',
         'date': 'Oct. 2011',
         'media': 'UoyoRy7eOXo',
     },
     // Vertical Flings
     {
         'id': 47838,
-        'player': 'TODO',
+        'steam': '76561198021734854',
+        'player2': 'LongJohnDickWeed',
         'date': 'Oct. 2011',
         'media': '6kJE_xwm_Nc',
     },
     // Catapults
     {
         'id': 47839,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561198096446735',
+        'steam2': '76561198015678746',
+        'date': 'Nov. 2018',
         'media': 'bROpO6PxP68',
     },
     // Multifling
     {
         'id': 47842,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561197974616889',
+        'steam2': '76561198015678746',
+        'date': 'Nov. 2013',
         'media': 'NIHewLnPQzk',
     },
     // Fling Crushers
     {
         'id': 47843,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561198003598363',
+        'steam2': '76561198024055942',
+        'date': 'Apr. 2015',
         'media': 'hNBXRfNZCUc',
     },
     // Industrial Fan
     {
         'id': 47846,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561197980620221',
+        'steam': '76561197978601137',
+        'date': 'Dec. 2011',
         'media': 'Dd3rIqTnPzI',
     },
     // Cooperative Bridges
     {
         'id': 47847,
-        'player': 'TODO',
+        'player': 'sickamentz1',
+        'player2': 'Geez',
         'date': 'Oct. 2011',
         'media': 'tZ-C26pQbJo',
     },
     // Bridge Swap
     {
         'id': 47850,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561198003598363',
+        'player2': 'marK',
+        'date': 'Nov. 2016',
         'media': 'etrSUZTNjJ4',
     },
     // Fling Block
     {
         'id': 47855,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561197980620221',
+        'steam2': '76561197978601137',
+        'date': 'Aug. 2012',
         'media': 'wb_htOqnrdk',
     },
     // Catapult Block
     {
         'id': 47857,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'player': 'DotorChub',
+        'steam2': '76561197978601137',
+        'date': 'Dec. 2011',
         'media': 'MmtN4jsgi_E',
     },
     // Bridge Fling
     {
         'id': 47859,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561198021734854',
+        'player2': 'dEx',
+        'date': 'Jan. 2012',
         'media': 'fxVSdHlRyuo',
     },
     // Turret Walls
     {
         'id': 47860,
-        'player': 'TODO',
+        'player': 'sickamentz1',
+        'player2': 'Geez',
         'date': 'Oct. 2011',
         'media': 'IDqv3LrBqlM',
     },
     // Turret Assassin
     {
         'id': 52641,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561197980620221',
+        'steam2': '76561197978601137',
+        'date': 'Dec. 2011',
         'media': 'xwMVb_YoSWU',
     },
     // Bridge Testing
     {
         'id': 52659,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561198003598363',
+        'player2': 'wS',
+        'date': 'May 2015',
         'media': 's0MjSGBrunU',
     },
     // Cooperative Funnels
     {
         'id': 52661,
-        'player': 'TODO',
+        'steam': '76561197980620221',
+        'steam2': '76561197978601137',
         'date': 'Oct. 2011',
         'media': 'BJ0D7LpLEqo',
     },
     // Funnel Drill
     {
         'id': 52664,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561197980620221',
+        'steam2': '76561197978601137',
+        'date': 'Dec. 2011',
         'media': 'LvElWMD-Zec',
     },
     // Funnel Catch
     {
         'id': 52666,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561198003598363',
+        'steam2': '76561198024055942',
+        'date': 'Apr. 2015',
         'media': 'tSgR0FwCEEQ',
     },
     // Funnel Laser
     {
         'id': 52668,
-        'player': 'TODO',
+        'steam': '76561198021734854',
+        'player2': 'gopherdude',
         'date': 'Oct. 2011',
         'media': 'jExO1JmE8ik',
     },
     // Cooperative Polarity
     {
         'id': 52672,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561198015678746',
+        'player2': 'Betsruner',
+        'date': 'Nov. 2018',
         'media': 'LsBsh9AYlMc',
     },
     // Funnel Hop
     {
         'id': 52688,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561198015678746',
+        'steam2': '76561198043899549',
+        'date': 'Aug. 2016',
         'media': 'V0xSr_GXtsA',
     },
     // Advanced Polarity
     {
         'id': 52690,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561198045034733',
+        'steam2': '76561198039230536',
+        'date': 'May 2013',
         'media': 'K0Fz7EO0fQ0',
     },
     // Funnel Maze
     {
         'id': 52692,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561198043770492',
+        'player2': 'takz',
+        'date': 'Feb. 2012',
         'media': 'HZbZBXExn3g',
     },
     // Turret Warehouse
     {
         'id': 52778,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561198043899549',
+        'player2': 'tanger2b',
+        'date': 'Mar. 2018',
         'media': '5CdvdChrSAc',
     },
     // Repulsion Jumps
     {
         'id': 52693,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561198015678746',
+        'steam2': '76561197974616889',
+        'date': 'Aug. 2013',
         'media': 'XPJDH3QYOn4',
     },
     // Double Bounce
     {
         'id': 52712,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561197981001131',
+        'steam2': '76561198043770492',
+        'date': 'Dec. 2011',
         'media': '63kOL7VVKRY',
     },
     // Bridge Repulsion
     {
         'id': 52713,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'player': 'sparkle1princess',
+        'steam2': '76561198039230536',
+        'date': 'Jan. 2014',
         'media': 'A18ndnmEyf8',
     },
     // Wall Repulsion
     {
         'id': 52716,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561198003598363',
+        'player2': 'wS',
+        'date': 'May 2014',
         'media': 'K-xwADkZCKA',
     },
     // Propulsion Crushers
     {
         'id': 52718,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561197974616889',
+        'player2': '00Svo',
+        'date': 'Nov. 2011',
         'media': 'NFBJYTmjyU8',
     },
     // Turret Ninja
     {
         'id': 52736,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561198003598363',
+        'player2': 'wS',
+        'date': 'May 2015',
         'media': 'CQJ6zGF7dKg',
     },
     // Propulsion Retrieval
     {
         'id': 52737,
-        'player': 'TODO',
+        'steam': '76561198021734854',
+        'steam2': '76561197981001131',
         'date': 'Oct. 2011',
         'media': 'xmqOQKOeHz0',
     },
     // Vault Entrance
     {
         'id': 52739,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561198003598363',
+        'steam2': '76561198024055942',
+        'date': 'Apr. 2015',
         'media': '70DWCp-ynlA',
     },
     // Separation
     {
         'id': 49342,
-        'player': '76561197974616889',
-        'date': 'Oct. 2011',
+        'steam': '76561197974616889',
+        'steam2': '76561197974616889',
+        'date': 'Aug. 2013',
         'media': 'ojlBlWnTGpk',
     },
     // Triple Axis
     {
         'id': 49344,
-        'player': 'TODO',
+        'steam': '76561198021734854',
+        'steam2': '76561198042995537',
         'date': 'Oct. 2011',
         'media': 'glvtYOxyVi8',
     },
     // Catapult Catch
     {
         'id': 49346,
-        'player': 'TODO',
+        'steam': '76561198021734854',
+        'steam2': '76561198042995537',
         'date': 'Oct. 2011',
         'media': 'bLVa8OoXKFk',
     },
     // Bridge Gels
     {
         'id': 49348,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561198003598363',
+        'steam2': '76561198024055942',
+        'date': 'Apr. 2015',
         'media': 'JG0ul1jN7VU',
     },
     // Maintenance
     {
         'id': 49350,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561197974616889',
+        'steam2': '76561198015678746',
+        'date': 'Jun. 2013',
         'media': '2M3CzBT-hac',
     },
     // Bridge Catch
     {
         'id': 49352,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561198003598363',
+        'steam2': '76561198024055942',
+        'date': 'Apr. 2015',
         'media': 'z_qQh5Rro9M',
     },
     // Double Lift
     {
         'id': 52758,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561198021734854',
+        'steam2': '76561198042995537',
+        'date': 'Jan. 2012',
         'media': 'X_gP21fqnA0',
     },
     // Gel Maze
     {
         'id': 52760,
-        'player': 'TODO',
+        'steam': '76561197980620221',
+        'steam2': '76561197978601137',
         'date': 'Oct. 2011',
         'media': '3gHJ2aQ__qU',
     },
     // Crazier Box
     {
         'id': 48288,
-        'player': 'TODO',
-        'date': 'Oct. 2011',
+        'steam': '76561198003598363',
+        'steam2': '76561198024055942',
+        'date': 'Apr. 2015',
         'media': '5iX3LTzKL-8',
     },
 ];

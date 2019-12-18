@@ -21,12 +21,12 @@ const ScoreboardView = ({ boardType, profileId }) => {
 
     const prepareProfile = (profile) => {
         if (profile) {
-            profile.entries.forEach((e) => {
-                let map = records.find((r) => r.id === e._id);
-                e.name = map.name;
-                e.index = map.index;
-                e.delta = Math.abs(map.wr - e.score);
-                e.showcase = map.showcases.find((sc) => sc.player.id === profile._id);
+            profile.entries.forEach((entry) => {
+                let map = records.find((record) => record.id === entry._id);
+                entry.name = map.name;
+                entry.index = map.index;
+                entry.delta = Math.abs(map.wr - entry.score);
+                entry.showcase = map.showcases.find((sc) => sc.player.id === profile._id || (sc.player2 && sc.player2.id === profile._id));
             });
         }
         return profile;
