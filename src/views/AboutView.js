@@ -77,7 +77,12 @@ const AboutView = () => {
     };
 
     const detectedCheaters = (
-        <Tooltip placement="right" title="Automatic ban system catches users who cheated at least once." disableFocusListener disableTouchListener>
+        <Tooltip
+            placement="right"
+            title="Automatic ban system catches users who cheated at least once."
+            disableFocusListener
+            disableTouchListener
+        >
             <Link className={classes.help}>{cheaters.length}</Link>
         </Tooltip>
     );
@@ -92,7 +97,9 @@ const AboutView = () => {
                             Who's the lp king?
                         </Typography>
                         <br />
-                        <Typography variant="body1">This leaderboard includes all legit players who care about least portal records in Portal 2.</Typography>
+                        <Typography variant="body1">
+                            This leaderboard includes all legit players who care about least portal records in Portal 2.
+                        </Typography>
 
                         <Padding />
 

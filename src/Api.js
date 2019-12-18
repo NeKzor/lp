@@ -1,8 +1,6 @@
 class Api {
     constructor() {
-        this.baseApi = (process.env.NODE_ENV === 'development')
-            ? 'http://localhost:8080'
-            : 'https://raw.githubusercontent.com/NeKzor/lp/api';
+        this.baseApi = process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://raw.githubusercontent.com/NeKzor/lp/api';
     }
     async request(route) {
         let res = await fetch(route);
@@ -14,8 +12,7 @@ class Api {
         return res.ok ? (await res.json()).data : {};
     }
     async getBoard(board) {
-        if (board !== 'sp' && board !== 'mp' && board !== 'overall')
-            throw new Error('Invalid board!');
+        if (board !== 'sp' && board !== 'mp' && board !== 'overall') throw new Error('Invalid board!');
 
         let res = await this.request(`${this.baseApi}/${board}.json`);
         return res.ok ? (await res.json()).data : {};

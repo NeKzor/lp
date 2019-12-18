@@ -59,7 +59,7 @@ const RecordDeltaChart = ({ data, mode, title, color }) => {
         yaxis: {
             ...chartOptions.yaxis,
             max: max + (max % 2),
-            tickAmount: (max + (max % 2)) / 2
+            tickAmount: (max + (max % 2)) / 2,
         },
         title: {
             text: title,

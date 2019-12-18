@@ -91,12 +91,7 @@ const ProfileTable = ({ data }) => {
                             record.score != null ? (
                                 record.showcase ? (
                                     <Tooltip placement="right" title="Watch on YouTube" disableFocusListener disableTouchListener>
-                                        <Link
-                                            target="_blank"
-                                            rel="noopener"
-                                            
-                                            href={`https://youtu.be/${record.showcase.media}`}
-                                        >
+                                        <Link target="_blank" rel="noopener" href={`https://youtu.be/${record.showcase.media}`}>
                                             <b>{record.score}</b>
                                         </Link>
                                     </Tooltip>

@@ -17,7 +17,7 @@ const { ties, cheaters } = (() => {
         return JSON.parse(fs.readFileSync(statsFile, 'utf-8'));
     } catch {
         let stats = { ties: {}, cheaters: [] };
-        maps.forEach((m) => stats.ties[m.id] = 0);
+        maps.forEach((m) => (stats.ties[m.id] = 0));
         fs.writeFileSync(statsFile, JSON.stringify(stats, null, 4), 'utf-8');
         return stats;
     }
@@ -80,7 +80,7 @@ const runUpdates = async () => {
     const overrides = JSON.parse(fs.readFileSync(overridesFile, 'utf-8'));
     const total = spMapCount + mpMapCount;
 
-    maps.forEach((m) => ties[m.id] = 0);
+    maps.forEach((m) => (ties[m.id] = 0));
 
     let count = 0;
     for (let map of maps) {
@@ -329,7 +329,7 @@ const main = async () => {
 
     await createShowcases();
 
-    maps.forEach((m) => m.ties = ties[m.id]);
+    maps.forEach((m) => (m.ties = ties[m.id]));
 
     exportApi('records', { maps, cheaters });
 };
