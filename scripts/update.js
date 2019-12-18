@@ -202,7 +202,7 @@ const filterAll = async () => {
 };
 
 const createBoard = async (field) => {
-    let players = await db.find({ selector: { [field]: { $gt: 0 } }, limit: maxBoardRank });
+    let players = await db.find({ selector: { [field]: { $gt: 0 } } });
 
     players = players.docs.sort((a, b) => {
         if (a[field] === b[field]) {
@@ -217,6 +217,15 @@ const createBoard = async (field) => {
     let current = 0;
 
     for (let player of players) {
+        if (current !== player[field]) {
+            current = player[field];
+            ++rank;
+        }
+
+        if (rank > maxBoardRank) {
+            break;
+        }
+
         if (player.name === undefined) {
             let profile = profiles.find((p) => p.steamid.toString() === player._id);
             if (!profile) {
@@ -270,15 +279,10 @@ const createBoard = async (field) => {
         delete player.mpOld;
         delete player.overallOld;
 
-        if (current !== player.score) {
-            current = player.score;
-            ++rank;
-        }
-
         player.rank = rank;
     }
 
-    exportApi(field, players);
+    exportApi(field, players.filter((p) => p.rank));
 };
 
 const createShowcases = async () => {
@@ -319,19 +323,19 @@ const main = async () => {
 
     /* await resetAll();
     await runUpdates();
-    await filterAll();
+    await filterAll(); */
 
     await createBoard('sp');
     await createBoard('mp');
     await createBoard('overall');
 
-    await db.close(); */
+    /* await db.close();
 
     await createShowcases();
 
     maps.forEach((m) => (m.ties = ties[m.id]));
 
-    exportApi('records', { maps, cheaters });
+    exportApi('records', { maps, cheaters }); */
 };
 
 main().catch((err) => console.error(err));
