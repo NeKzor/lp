@@ -9,14 +9,13 @@ import Dialog from '@material-ui/core/Dialog';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
+import Skeleton from '@material-ui/lab/Skeleton';
 import ProfileTable from './ProfileTable';
 import Slide from '@material-ui/core/Slide';
 import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import AppState from '../AppState';
-import { useIsMounted } from '../Hooks';
 import RecordDeltaChart from './RecordDeltaChart';
 
 const useStyles = makeStyles((theme) => ({
@@ -47,129 +46,133 @@ const gotoSteamProfile = (id) => {
     tab.opener = null;
 };
 
-const ProfileDialog = () => {
-    const isMounted = useIsMounted();
-    const { state, dispatch } = React.useContext(AppState);
+const ProfileStat = ({ title, score, delta, percentage }) => (
+    <>
+        <Tooltip placement="top" title={score !== 0 ? `${score - delta}+${delta}` : ''} disableFocusListener disableTouchListener>
+            <Typography variant="h3" gutterBottom>
+                {percentage !== 0 ? percentage : 0}%
+            </Typography>
+        </Tooltip>
+        <Typography variant="subtitle1" gutterBottom>
+            {title}
+        </Typography>
+    </>
+);
 
-    const handleProfileClose = () => isMounted.current && dispatch({ action: 'clearProfile' });
-
-    const profile = state.profile.get();
-
+const ProfileDialog = ({ active, profile, handleClickClose }) => {
     const classes = useStyles();
-
-    if (!profile) {
-        return <React.Fragment />;
-    }
 
     return (
         <>
-            <Dialog fullScreen open={true} onClose={handleProfileClose} TransitionComponent={Transition}>
+            <Dialog fullScreen open={active} onClose={handleClickClose} TransitionComponent={Transition}>
                 <AppBar position="sticky">
                     <Toolbar>
                         <Tooltip placement="bottom" title="Open Steam profile" disableFocusListener disableTouchListener>
-                            <Button color="inherit" onClick={() => gotoSteamProfile(profile._id)}>
-                                <Avatar src={profile.avatar} />
-                            </Button>
-                        </Tooltip>
-                        <Typography variant="h6" color="inherit" className={classes.flex}>
-                            &nbsp;&nbsp;&nbsp;{profile.name}
-                            {profile.country && (
+                            {profile ? (
                                 <>
-                                    &nbsp;&nbsp;&nbsp;
-                                    <Flag code={profile.country} style={{ position: 'relative', top: '2px'}} height="15" alt={profile.country} />
+                                    <Button color="inherit" onClick={() => gotoSteamProfile(profile._id)}>
+                                        <Avatar src={profile.avatar} />
+                                    </Button>
+                                    <Typography variant="h6" color="inherit" className={classes.flex}>
+                                        &nbsp;&nbsp;&nbsp;{profile.name}
+                                        {profile.country && (
+                                            <>
+                                                &nbsp;&nbsp;&nbsp;
+                                                <Flag
+                                                    code={profile.country}
+                                                    style={{ position: 'relative', top: '2px' }}
+                                                    height="15"
+                                                    alt={profile.country}
+                                                />
+                                            </>
+                                        )}
+                                    </Typography>
+                                </>
+                            ) : (
+                                <>
+                                    <Skeleton variant="circle" width={40} height={40} />
+                                    <Skeleton style={{ marginLeft: '10px' }} variant="text" width={200} />
+                                    <Typography className={classes.flex} />
                                 </>
                             )}
-                        </Typography>
+                        </Tooltip>
                         <Tooltip placement="bottom" title="Close profile" disableFocusListener disableTouchListener>
-                            <IconButton color="inherit" onClick={handleProfileClose}>
+                            <IconButton color="inherit" onClick={handleClickClose}>
                                 <CloseIcon />
                             </IconButton>
                         </Tooltip>
                     </Toolbar>
                 </AppBar>
-                {(!profile.entries || profile.entries.length) === 0 && <LinearProgress />}
-                <Grid container className={classes.stats}>
-                    <Grid item xs={false} md={1} lg={3} />
-                    <Grid item xs={12} md={10} lg={6}>
-                        {profile.entries.length !== 0 && (
-                            <Grid container spacing={10}>
-                                <Grid item xs={12} md={4} lg={4}>
-                                    <Paper className={classes.paper}>
-                                        <Tooltip
-                                            placement="top"
-                                            title={
-                                                profile.sp !== 0 ? `${profile.sp - profile.stats.sp.delta}+${profile.stats.sp.delta}` : ''
-                                            }
-                                            disableFocusListener
-                                            disableTouchListener
-                                        >
-                                            <Typography variant="h3" gutterBottom>
-                                                {profile.stats.sp.percentage !== 0 ? profile.stats.sp.percentage : 0}%
-                                            </Typography>
-                                        </Tooltip>
-                                        <Typography variant="subtitle1" gutterBottom>
-                                            Single Player
-                                        </Typography>
-                                    </Paper>
-                                </Grid>
-                                <Grid item xs={12} md={4} lg={4}>
-                                    <Paper className={classes.paper}>
-                                        <Tooltip
-                                            placement="top"
-                                            title={
-                                                profile.mp !== 0 ? `${profile.mp - profile.stats.mp.delta}+${profile.stats.mp.delta}` : ''
-                                            }
-                                            disableFocusListener
-                                            disableTouchListener
-                                        >
-                                            <Typography variant="h3" gutterBottom>
-                                                {profile.stats.mp.percentage !== 0 ? profile.stats.mp.percentage : 0}%
-                                            </Typography>
-                                        </Tooltip>
-                                        <Typography variant="subtitle1" gutterBottom>
-                                            Cooperative
-                                        </Typography>
-                                    </Paper>
-                                </Grid>
-                                <Grid item xs={12} md={4} lg={4}>
-                                    <Paper className={classes.paper}>
-                                        <Tooltip
-                                            placement="top"
-                                            title={
-                                                profile.stats.overall.percentage !== 0
-                                                    ? `${profile.overall - profile.stats.overall.delta}+${profile.stats.overall.delta}`
-                                                    : ''
-                                            }
-                                            disableFocusListener
-                                            disableTouchListener
-                                        >
-                                            <Typography variant="h3" gutterBottom>
-                                                {profile.stats.overall.percentage !== 0 ? profile.stats.overall.percentage : 0}%
-                                            </Typography>
-                                        </Tooltip>
-                                        <Typography variant="subtitle1" gutterBottom>
-                                            Overall
-                                        </Typography>
-                                    </Paper>
-                                </Grid>
+                {profile ? (
+                    <>
+                        <Grid container className={classes.stats}>
+                            <Grid item xs={false} md={1} lg={3} />
+                            <Grid item xs={12} md={10} lg={6}>
+                                {profile.entries.length !== 0 && (
+                                    <Grid container spacing={10}>
+                                        <Grid item xs={12} md={4} lg={4}>
+                                            <Paper className={classes.paper}>
+                                                <ProfileStat
+                                                    title="Single Player"
+                                                    score={profile.sp}
+                                                    delta={profile.stats.sp.delta}
+                                                    percentage={profile.stats.sp.percentage}
+                                                />
+                                            </Paper>
+                                        </Grid>
+                                        <Grid item xs={12} md={4} lg={4}>
+                                            <Paper className={classes.paper}>
+                                                <ProfileStat
+                                                    title="Cooperative"
+                                                    score={profile.mp}
+                                                    delta={profile.stats.mp.delta}
+                                                    percentage={profile.stats.mp.percentage}
+                                                />
+                                            </Paper>
+                                        </Grid>
+                                        <Grid item xs={12} md={4} lg={4}>
+                                            <Paper className={classes.paper}>
+                                                <ProfileStat
+                                                    title="Overall"
+                                                    score={profile.overall}
+                                                    delta={profile.stats.overall.delta}
+                                                    percentage={profile.stats.overall.percentage}
+                                                />
+                                            </Paper>
+                                        </Grid>
+                                    </Grid>
+                                )}
                             </Grid>
-                        )}
+                        </Grid>
+                        <Grid container className={classes.records}>
+                            <Grid item xs={false} md={1} lg={3} />
+                            <Grid item xs={12} md={10} lg={6}>
+                                <Paper style={{ marginBottom: '50px' }}>
+                                    <ProfileTable data={profile.entries} />
+                                </Paper>
+                                <Paper style={{ paddingTop: '10px', marginBottom: '50px' }}>
+                                    <RecordDeltaChart data={profile.entries} mode={1} title="Single Player" color="#2E93fA" />
+                                </Paper>
+                                <Paper style={{ paddingTop: '10px', marginBottom: '50px' }}>
+                                    <RecordDeltaChart data={profile.entries} mode={2} title="Cooperative" color="#FF9800" />
+                                </Paper>
+                            </Grid>
+                        </Grid>
+                    </>
+                ) : profile === undefined ? (
+                    <LinearProgress />
+                ) : (
+                    <Grid style={{ height: '100%' }} container className={classes.records}>
+                        <Grid item xs={false} md={1} lg={2} />
+                        <Grid item xs={12} md={10} lg={9}>
+                            <Paper>
+                                <Typography variant="h5" gutterBottom style={{ padding: '50px 0px 50px 50px' }}>
+                                    Profile not found :(
+                                </Typography>
+                            </Paper>
+                        </Grid>
                     </Grid>
-                </Grid>
-                <Grid container className={classes.records}>
-                    <Grid item xs={false} md={1} lg={3} />
-                    <Grid item xs={12} md={10} lg={6}>
-                        <Paper style={{ marginBottom: '50px' }}>
-                            <ProfileTable data={profile.entries} />
-                        </Paper>
-                        <Paper style={{ paddingTop: '10px', marginBottom: '50px' }}>
-                            <RecordDeltaChart data={profile.entries} mode={1} title="Single Player" color="#2E93fA" />
-                        </Paper>
-                        <Paper style={{ paddingTop: '10px', marginBottom: '50px' }}>
-                            <RecordDeltaChart data={profile.entries} mode={2} title="Cooperative" color="#FF9800" />
-                        </Paper>
-                    </Grid>
-                </Grid>
+                )}
             </Dialog>
         </>
     );

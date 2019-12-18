@@ -6,15 +6,40 @@ import ScoresTable from '../components/ScoresTable';
 import AppState from '../AppState';
 import Api from '../Api';
 import { useIsMounted } from '../Hooks';
+import ProfileDialog from '../components/ProfileDialog';
 
-const ScoreboardView = ({ boardType }) => {
+const ScoreboardView = ({ boardType, profileId }) => {
     const isMounted = useIsMounted();
 
     const [board, setBoard] = React.useState([]);
-    const { dispatch } = React.useContext(AppState);
+    const [profile, setProfile] = React.useState(undefined);
+    const [dialogOpen, setDialogOpen] = React.useState(false);
+
+    const {
+        state: { records },
+    } = React.useContext(AppState);
+
+    const prepareProfile = (profile) => {
+        if (profile) {
+            profile.entries.forEach((e) => {
+                let map = records.find((r) => r.id === e._id);
+                e.name = map.name;
+                e.index = map.index;
+                e.delta = Math.abs(map.wr - e.score);
+                e.showcase = map.showcases.find((sc) => sc.player.id === profile._id);
+            });
+        }
+        return profile;
+    };
 
     React.useEffect(() => {
-        if (board.length === 0) {
+        if (profile === undefined && profileId) {
+            setDialogOpen(true);
+
+            Api.getProfile(profileId)
+                .then((profile) => isMounted.current && setProfile(prepareProfile(profile)))
+                .catch((err) => console.error(err));
+        } else if (board.length === 0) {
             Api.getBoard(boardType)
                 .then((board) => isMounted.current && setBoard(board))
                 .catch((err) => console.error(err));
@@ -22,9 +47,21 @@ const ScoreboardView = ({ boardType }) => {
     }, []);
 
     const handleProfileOpen = (id) => () => {
+        setDialogOpen(true);
+
         Api.getProfile(id)
-            .then((data) => isMounted.current && dispatch({ action: 'setProfile', data: { id, data } }))
+            .then((profile) => isMounted.current && setProfile(prepareProfile(profile)))
             .catch((err) => console.error(err));
+    };
+
+    const handleProfileClose = () => {
+        setDialogOpen(false);
+
+        if (board.length === 0) {
+            Api.getBoard(boardType)
+                .then((board) => isMounted.current && setBoard(board))
+                .catch((err) => console.error(err));
+        }
     };
 
     return (
@@ -38,6 +75,7 @@ const ScoreboardView = ({ boardType }) => {
                     </Paper>
                 </Grid>
             </Grid>
+            <ProfileDialog active={dialogOpen} profile={profile} handleClickClose={handleProfileClose} />
         </>
     );
 };

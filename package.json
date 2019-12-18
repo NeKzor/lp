@@ -21,6 +21,7 @@
         "react": "^16.12.0",
         "react-apexcharts": "^1.3.3",
         "react-dom": "^16.12.0",
+        "react-router-dom": "^5.1.2",
         "react-scripts": "^2.1.5",
         "react-world-flags": "^1.3.0"
     },
@@ -34,7 +35,8 @@
         "eject": "react-scripts eject",
         "rmcache": "rm -rf cache/",
         "update": "node scripts/update.js",
-        "dev": "hs ./api --cors"
+        "dev": "hs ./api --cors",
+        "prettier": "prettier --config ./prettier.config.js --write './src/**/*.js' './scripts/**/*.js'"
     },
     "browserslist": [
         ">0.2%",
