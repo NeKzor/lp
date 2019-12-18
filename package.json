@@ -1,18 +1,29 @@
 {
     "name": "lp",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "private": true,
     "dependencies": {
         "@fortawesome/fontawesome-svg-core": "^1.2.17",
         "@fortawesome/free-solid-svg-icons": "^5.8.1",
         "@fortawesome/react-fontawesome": "^0.1.4",
-        "@material-ui/core": "^3.9.1",
-        "@material-ui/icons": "^3.0.2",
+        "@material-ui/core": "latest",
+        "@material-ui/icons": "latest",
+        "@material-ui/lab": "^4.0.0-alpha.35",
+        "apexcharts": "^3.11.0",
+        "cross-fetch": "^3.0.4",
+        "dotenv": "^8.2.0",
+        "fast-xml-parser": "^3.15.1",
         "gh-pages": "^2.0.1",
-        "prop-types": "latest",
-        "react": "latest",
-        "react-dom": "latest",
-        "react-scripts": "^2.1.5"
+        "mocha": "^6.2.2",
+        "moment": "^2.24.0",
+        "pouchdb": "^7.1.1",
+        "pouchdb-find": "^7.1.1",
+        "react": "^16.12.0",
+        "react-apexcharts": "^1.3.3",
+        "react-dom": "^16.12.0",
+        "react-router-dom": "^5.1.2",
+        "react-scripts": "^2.1.5",
+        "react-world-flags": "^1.3.0"
     },
     "scripts": {
         "predeploy": "npm run build",
@@ -20,11 +31,12 @@
         "api": "gh-pages -b api -d api -m Update -u \"NeKzBot <44978126+NeKzBot@users.noreply.github.com>\"",
         "start": "react-scripts start",
         "build": "react-scripts build",
-        "test": "react-scripts test --env=jsdom",
+        "test": "mocha",
         "eject": "react-scripts eject",
-        "bbuild": "dotnet restore backend/leastportals.csproj && dotnet build backend/leastportals.csproj -c Release",
-        "brun": "dotnet run --project backend/leastportals.csproj  -c Release --no-rebuild",
-        "rmcache": "rm -rf bin/cache/"
+        "rmcache": "rm -rf cache/",
+        "update": "node scripts/update.js",
+        "dev": "hs ./api --cors",
+        "prettier": "prettier --config ./prettier.config.js --write './src/**/*.js' './scripts/**/*.js'"
     },
     "browserslist": [
         ">0.2%",

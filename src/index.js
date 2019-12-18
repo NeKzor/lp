@@ -1,15 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './app';
-import ContextProvider from './contextProvider';
-import registerServiceWorker from './registerServiceWorker';
+import App from './App';
+import * as serviceWorker from './utils/registerServiceWorker';
 
-const app = (
-    <ContextProvider>
-        <App />
-    </ContextProvider>
-);
+ReactDOM.render(<App />, document.querySelector('#root'));
 
-ReactDOM.render(app, document.querySelector('#root'));
-
-registerServiceWorker();
+serviceWorker.unregister();
