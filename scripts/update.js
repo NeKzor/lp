@@ -1,4 +1,5 @@
 const fs = require('fs');
+const moment = require('moment');
 const path = require('path');
 const PouchDB = require('pouchdb');
 const config = require('./config');
@@ -8,11 +9,18 @@ const SteamWebClient = require('./steam');
 PouchDB.plugin(require('pouchdb-find'));
 require('dotenv').config();
 
-const { apiFolder, mapFile, statsFile, overridesFile, cacheFolder, maxFetchRank, maxBoardRank } = config;
+const log = (msg) => console.log(`[${moment().format('YYYY-MM-DD HH:mm:ss')}] ${msg}`);
+
+const { apiFolder, mapFile, overridesFile, cacheFolder, maxFetchRank, maxBoardRank } = config;
 
 const maps = JSON.parse(fs.readFileSync(mapFile, 'utf-8'));
+const statsFile = path.join(cacheFolder, 'stats.json');
 
-const { ties, cheaters } = (() => {
+try { fs.mkdirSync(cacheFolder); } catch {} // prettier-ignore
+try { fs.mkdirSync(apiFolder); } catch {} // prettier-ignore
+try { fs.mkdirSync(path.join(apiFolder, '/profile')); } catch {} // prettier-ignore
+
+const stats = (() => {
     try {
         return JSON.parse(fs.readFileSync(statsFile, 'utf-8'));
     } catch {
@@ -22,6 +30,8 @@ const { ties, cheaters } = (() => {
         return stats;
     }
 })();
+
+const updateStats = () => fs.writeFileSync(statsFile, JSON.stringify(stats, null, 4), 'utf-8');
 
 const spMapCount = maps.filter((m) => m.mode === 1).length;
 const mpMapCount = maps.filter((m) => m.mode === 2).length;
@@ -80,23 +90,23 @@ const runUpdates = async () => {
     const overrides = JSON.parse(fs.readFileSync(overridesFile, 'utf-8'));
     const total = spMapCount + mpMapCount;
 
-    maps.forEach((m) => (ties[m.id] = 0));
+    maps.forEach((m) => (stats.ties[m.id] = 0));
 
     let count = 0;
     for (let map of maps) {
-        console.log(`[${map.id}] ${map.name} (${++count}/${total})`);
+        log(`[${map.id}] ${map.name} (${++count}/${total})`);
         const cache = `${cacheFolder}/${map.id}.json`;
 
         let steamLb = null;
         try {
             steamLb = JSON.parse(fs.readFileSync(cache, 'utf-8')).data;
-            console.log(`[${map.id}] from cache`);
+            log(`from cache`);
         } catch {}
 
         if (!steamLb) {
             await goTheFuckToSleep(500);
             steamLb = await steam.fetchLeaderboard('Portal2', map.id, 1, maxFetchRank);
-            console.log(`[${map.id}] fetched`);
+            log(`fetched`);
 
             let start = steamLb.entryEnd + 1;
             let end = start + steamLb.resultCount;
@@ -106,7 +116,13 @@ const runUpdates = async () => {
             while (steamLb.entries.entry[steamLb.entries.entry.length - 1].score === limit) {
                 await goTheFuckToSleep(500);
                 let nextPage = await steam.fetchLeaderboard('Portal2', map.id, start, end);
-                console.log(`[${map.id}] fetched another page`);
+                log(`fetched another page (${start}-${end})`);
+
+                if (!nextPage) {
+                    log(`fetch failed, retry in 30 seconds`);
+                    goTheFuckToSleep(30000);
+                    continue;
+                }
 
                 if (!nextPage.entries.entry.length) {
                     break;
@@ -122,8 +138,6 @@ const runUpdates = async () => {
         }
 
         for (let entry of steamLb.entries.entry) {
-            let score = entry.score;
-
             // fast-xml-parser is weird sometimes :>
             let steamid = entry.steamid.toString();
 
@@ -132,56 +146,50 @@ const runUpdates = async () => {
             let player = doc ? doc : new Player(steamid);
 
             if (player.isBanned) {
-                //console.log('ignoring banned player ' + steamid);
                 continue;
             }
 
-            if (score >= map.wr) {
-                update(player, map, score);
+            let score = entry.score;
 
-                if (score === map.wr) {
-                    ++ties[map.id];
-                }
-            } else {
+            if (score < map.wr) {
                 let ovr = overrides.find((x) => x.id === map.id && x.player === steamid);
                 if (ovr) {
-                    console.log(`override player ${steamid} with score ${score}`);
-                    update(player, map, ovr.score);
-
-                    if (score === map.wr) {
-                        ++ties[map.id];
-                    }
+                    log(`override score ${score} -> ${ovr.score} : ${steamid}`);
+                    score = ovr.score;
                 } else {
-                    console.log(`banned player ${steamid} with score ${score}`);
+                    log(`invalid score ${score} : ${steamid}`);
                     player.isBanned = true;
+                    await db.put(player);
+                    continue;
                 }
+            }
+
+            update(player, map, score);
+
+            if (score === map.wr) {
+                ++stats.ties[map.id];
             }
 
             await db.put(player);
         }
     }
 
-    fs.writeFileSync(statsFile, JSON.stringify({ ties, cheaters }, null, 4), 'utf-8');
+    updateStats();
 };
 
-// Delete all players who did not complete all maps in sp OR coop
 const filterAll = async () => {
     let result = await db.allDocs();
 
+    stats.cheaters = [];
     for (let row of result.rows) {
         let player = await db.get(row.id);
 
         if (player.isBanned) {
-            if (!cheaters.includes((c) => c === player._id)) {
-                cheaters.push(player._id);
-            }
-
-            await db.remove(player);
+            stats.cheaters.push(player._id);
             continue;
         }
 
-        //console.log(`${player._id} : ${player.spCount}/${spMapCount} : ${player.mpCount}/${mpMapCount}`);
-
+        // Complete all maps in sp or coop
         if (player.spCount !== spMapCount) {
             player.sp = 0;
             player.overall = 0;
@@ -198,7 +206,7 @@ const filterAll = async () => {
         }
     }
 
-    fs.writeFileSync(statsFile, JSON.stringify({ ties, cheaters }, null, 4), 'utf-8');
+    updateStats();
 };
 
 const createBoard = async (field) => {
@@ -258,7 +266,7 @@ const createBoard = async (field) => {
             delete player.mpCount;
             delete player.isBanned;
 
-            console.log(player._id + ' -> ' + player.name);
+            log(`exported ${player._id} : ${player.name}`);
             exportApi('/profile/' + player._id, player);
         }
 
@@ -282,7 +290,10 @@ const createBoard = async (field) => {
         player.rank = rank;
     }
 
-    exportApi(field, players.filter((p) => p.rank));
+    exportApi(
+        field,
+        players.filter((p) => p.rank),
+    );
 };
 
 const createShowcases = async () => {
@@ -327,10 +338,6 @@ const createShowcases = async () => {
 };
 
 const main = async () => {
-    try { fs.mkdirSync(cacheFolder); } catch {} // prettier-ignore
-    try { fs.mkdirSync(apiFolder); } catch {} // prettier-ignore
-    try { fs.mkdirSync(path.join(apiFolder, '/profile')); } catch {} // prettier-ignore
-
     await resetAll();
     await runUpdates();
     await filterAll();
@@ -343,9 +350,9 @@ const main = async () => {
 
     await createShowcases();
 
-    maps.forEach((m) => (m.ties = ties[m.id]));
+    maps.forEach((m) => (m.ties = stats.ties[m.id]));
 
-    exportApi('records', { maps, cheaters });
+    exportApi('records', { maps, cheaters: stats.cheaters });
 };
 
 main().catch((err) => console.error(err));

@@ -3,12 +3,11 @@ import { Link } from 'react-router-dom';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 
-const SiteTabs = ({ currentTab, handleTabChange }) => {
+const SiteTabs = ({ currentTab }) => {
     return (
         <>
             <Tabs
                 value={currentTab !== -1 ? currentTab : 0}
-                onChange={handleTabChange}
                 variant="scrollable"
                 textColor="inherit"
                 color="inherit"

@@ -37,7 +37,7 @@ const gotoPage = (page) => () => {
     window.open(homepage + page, '_self');
 };
 
-const AppBarWithDrawer = ({ currentTab, onTabChange }) => {
+const AppBarWithDrawer = ({ currentTab }) => {
     const [open, setOpen] = React.useState(false);
 
     const showDrawer = (state) => () => {
@@ -75,7 +75,7 @@ const AppBarWithDrawer = ({ currentTab, onTabChange }) => {
                         Least Portals
                     </Typography>
                 </Toolbar>
-                <SiteTabs currentTab={currentTab} handleTabChange={onTabChange} />
+                <SiteTabs currentTab={currentTab} />
             </AppBar>
             <SwipeableDrawer open={open} onClose={showDrawer(false)} onOpen={showDrawer(true)}>
                 <div tabIndex={0} role="button" onClick={showDrawer(false)} onKeyDown={showDrawer(false)}>

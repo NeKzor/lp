@@ -56,10 +56,6 @@ const App = () => {
     const classes = useStyles();
     const context = React.useMemo(() => ({ state, dispatch }), [state, dispatch]);
 
-    const handleTabChange = (_, currentTab) => {
-        //setCurrentTab(currentTab);
-    };
-
     const tabs = ['/single-player', '/cooperative', '/overall', '/records', '/about'];
 
     return (
@@ -71,21 +67,21 @@ const App = () => {
                         path="/"
                         render={({ location: { pathname } }) => (
                             <>
-                                <AppBar currentTab={tabs.findIndex((x) => x === pathname)} onTabChange={handleTabChange} />
+                                <AppBar currentTab={tabs.findIndex((x) => x === pathname)} />
                                 {state.records.length !== 0 ? (
                                     <div className={classes.views}>
                                         <Switch>
-                                            <Redirect exact from="/" to="/single-player" />
-                                            <Redirect exact from="/sp" to="/single-player" />
-                                            <Redirect exact from="/mp" to="/cooperative" />
+                                            <Redirect exact from="/"     to="/single-player" />
+                                            <Redirect exact from="/sp"   to="/single-player" />
+                                            <Redirect exact from="/mp"   to="/cooperative" />
                                             <Redirect exact from="/coop" to="/cooperative" />
-                                            <Redirect exact from="/ov" to="/overall" />
-                                            <Redirect exact from="/wrs" to="/records" />
+                                            <Redirect exact from="/ov"   to="/overall" />
+                                            <Redirect exact from="/wrs"  to="/records" />
                                             <Route exact path="/single-player" component={() => <ScoreboardView boardType="sp" />} />
-                                            <Route exact path="/cooperative" component={() => <ScoreboardView boardType="mp" />} />
-                                            <Route exact path="/overall" component={() => <ScoreboardView boardType="overall" />} />
-                                            <Route exact path="/records" component={RecordsView} />
-                                            <Route exact path="/about" component={AboutView} />
+                                            <Route exact path="/cooperative"   component={() => <ScoreboardView boardType="mp" />} />
+                                            <Route exact path="/overall"       component={() => <ScoreboardView boardType="overall" />} />
+                                            <Route exact path="/records"       component={RecordsView} />
+                                            <Route exact path="/about"         component={AboutView} />
                                             <Route
                                                 exact
                                                 from="/@/:id"

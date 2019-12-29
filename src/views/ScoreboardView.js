@@ -2,11 +2,11 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Paper from '@material-ui/core/Paper';
-import ScoresTable from '../components/ScoresTable';
-import AppState from '../AppState';
-import Api from '../Api';
-import { useIsMounted } from '../Hooks';
 import ProfileDialog from '../components/ProfileDialog';
+import ScoresTable from '../components/ScoresTable';
+import Api from '../Api';
+import AppState from '../AppState';
+import { useIsMounted } from '../Hooks';
 
 const ScoreboardView = ({ boardType, profileId }) => {
     const isMounted = useIsMounted();
@@ -28,6 +28,20 @@ const ScoreboardView = ({ boardType, profileId }) => {
                 entry.delta = Math.abs(map.wr - entry.score);
                 entry.showcase = map.showcases.find((sc) => sc.player.id === profile._id || (sc.player2 && sc.player2.id === profile._id));
             });
+
+            let missing = [];
+            records.forEach((record) => {
+                let entry = profile.entries.find((entry) => entry._id === record.id);
+                if (!entry) {
+                    missing.push({
+                        _id: record.id,
+                        name: record.name,
+                        index: record.index,
+                    });
+                }
+            });
+
+            profile.entries.push(...missing);
         }
         return profile;
     };

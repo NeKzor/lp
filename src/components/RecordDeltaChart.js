@@ -37,7 +37,7 @@ const chartOptions = {
 
 const RecordDeltaChart = ({ data, mode, title, color }) => {
     const sorted = data.filter((m) => m.mode === mode).sort((a, b) => a.index - b.index);
-    const max = Math.max(...sorted.map((m) => m.score));
+    const max = Math.max(1, ...sorted.map((m) => m.score));
 
     const series = [
         {

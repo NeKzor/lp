@@ -34,7 +34,7 @@
         "test": "mocha",
         "eject": "react-scripts eject",
         "rmcache": "rm -rf cache/",
-        "update": "node scripts/update.js",
+        "update": "node scripts/update.js > ./logs/\"$(date --iso-8601)\".log",
         "dev": "hs ./api --cors",
         "prettier": "prettier --config ./prettier.config.js --write './src/**/*.js' './scripts/**/*.js'"
     },

@@ -46,18 +46,39 @@ const gotoSteamProfile = (id) => {
     tab.opener = null;
 };
 
-const ProfileStat = ({ title, score, delta, percentage }) => (
-    <>
-        <Tooltip placement="top" title={score !== 0 ? `${score - delta}+${delta}` : ''} disableFocusListener disableTouchListener>
-            <Typography variant="h3" gutterBottom>
-                {percentage !== 0 ? percentage : 0}%
+const ProfileStat = ({ title, type, data }) => {
+    const score = data[type];
+    const oldScore = data[type + 'Old'];
+    const delta = data.stats[type].delta;
+    const percentage = data.stats[type].percentage;
+    return (
+        <>
+            <Tooltip
+                placement="top"
+                title={
+                    <div>
+                        {score !== 0 ? `${score - delta}+${delta}` : ''}
+                        {score !== oldScore && (
+                            <>
+                                <br />
+                                {oldScore + ' 🠊 ' + score}
+                            </>
+                        )}
+                    </div>
+                }
+                disableFocusListener
+                disableTouchListener
+            >
+                <Typography variant="h3" gutterBottom>
+                    {percentage !== 0 ? percentage : 0}%
+                </Typography>
+            </Tooltip>
+            <Typography variant="subtitle1" gutterBottom>
+                {title}
             </Typography>
-        </Tooltip>
-        <Typography variant="subtitle1" gutterBottom>
-            {title}
-        </Typography>
-    </>
-);
+        </>
+    );
+};
 
 const ProfileDialog = ({ active, profile, handleClickClose }) => {
     const classes = useStyles();
@@ -112,32 +133,17 @@ const ProfileDialog = ({ active, profile, handleClickClose }) => {
                                     <Grid container spacing={10}>
                                         <Grid item xs={12} md={4} lg={4}>
                                             <Paper className={classes.paper}>
-                                                <ProfileStat
-                                                    title="Single Player"
-                                                    score={profile.sp}
-                                                    delta={profile.stats.sp.delta}
-                                                    percentage={profile.stats.sp.percentage}
-                                                />
+                                                <ProfileStat title="Single Player" type="sp" data={profile} />
                                             </Paper>
                                         </Grid>
                                         <Grid item xs={12} md={4} lg={4}>
                                             <Paper className={classes.paper}>
-                                                <ProfileStat
-                                                    title="Cooperative"
-                                                    score={profile.mp}
-                                                    delta={profile.stats.mp.delta}
-                                                    percentage={profile.stats.mp.percentage}
-                                                />
+                                                <ProfileStat title="Cooperative" type="mp" data={profile} />
                                             </Paper>
                                         </Grid>
                                         <Grid item xs={12} md={4} lg={4}>
                                             <Paper className={classes.paper}>
-                                                <ProfileStat
-                                                    title="Overall"
-                                                    score={profile.overall}
-                                                    delta={profile.stats.overall.delta}
-                                                    percentage={profile.stats.overall.percentage}
-                                                />
+                                                <ProfileStat title="Overall" type="overall" data={profile} />
                                             </Paper>
                                         </Grid>
                                     </Grid>

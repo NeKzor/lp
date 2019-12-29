@@ -118,7 +118,17 @@ const ScoresTable = ({ data, handleClickOpen }) => {
                                 <TableCell size="small" align="center">
                                     <Tooltip
                                         placement="top"
-                                        title={`${item.stats.percentage}% (${item.score - item.stats.delta}+${item.stats.delta})`}
+                                        title={
+                                            <div>
+                                                {`${item.stats.percentage}% (${item.score - item.stats.delta}+${item.stats.delta})`}
+                                                {item.scoreOld !== item.score && (
+                                                    <>
+                                                        <br />
+                                                        {item.scoreOld + ' 🠊 ' + item.score}
+                                                    </>
+                                                )}
+                                            </div>
+                                        }
                                         disableFocusListener
                                         disableTouchListener
                                     >

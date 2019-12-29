@@ -22,6 +22,7 @@ export const AppReducer = [
         console.log('[DISPATCH] ' + action);
         switch (action) {
             case 'setRecords':
+                window.expose = () => data.cheaters;
                 return {
                     ...state,
                     records: data.maps || [],
