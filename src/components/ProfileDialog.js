@@ -55,9 +55,9 @@ const ProfileStat = ({ title, type, data }) => {
         <>
             <Tooltip
                 placement="top"
-                title={
+                title={score === 0 ? '' :
                     <div>
-                        {score !== 0 ? `${score - delta}+${delta}` : ''}
+                        {`${score - delta}+${delta}`}
                         {score !== oldScore && (
                             <>
                                 <br />
