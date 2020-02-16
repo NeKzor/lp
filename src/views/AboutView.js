@@ -27,7 +27,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const branches = ['master', 'api', 'gh-pages'];
+const branches = [
+    { repo: 'NeKzor/lp', branch: 'master' },
+    { repo: 'NeKzBot/lp', branch: 'api' },
+    { repo: 'NeKzor/lp', branch: 'gh-pages' },
+];
 
 const noWrap = { whiteSpace: 'nowrap' };
 const MinTableCell = (props) => <TableCell size="small" {...props} />;
@@ -52,7 +56,7 @@ const AboutView = () => {
             }
         };
 
-        Promise.all(branches.map((branch) => fetch('https://api.github.com/repos/NeKzor/lp/commits/' + branch)))
+        Promise.all(branches.map(({ repo, branch }) => fetch(`https://api.github.com/repos/${repo}/commits/${branch}`)))
             .then((results) => {
                 Promise.all(results.map((res) => res.json()))
                     .then((branches) => {
@@ -60,7 +64,7 @@ const AboutView = () => {
                             setGitHub(
                                 branches.map((branch) => ({
                                     sha: branch.sha,
-                                    author: branch.author,
+                                    author: branch.author ? branch.author : branch.commit.author,
                                     message: branch.commit.message,
                                     date: branch.commit.author.date,
                                 })),
@@ -140,14 +144,14 @@ const AboutView = () => {
                                     </TableHead>
                                     <TableBody>
                                         {gitHub.map((commit, idx) => {
-                                            const branch = branches[idx];
+                                            const { repo, branch } = branches[idx];
                                             return (
                                                 <TableRow tabIndex={-1} key={idx} style={noWrap}>
                                                     <MinTableCell align="left">
                                                         <Link
                                                             color="inherit"
                                                             rel="noopener"
-                                                            href={'https://github.com/NeKzor/lp/tree/' + branch}
+                                                            href={`https://github.com/${repo}/tree/${branch}`}
                                                         >
                                                             {branch}
                                                         </Link>
@@ -158,12 +162,12 @@ const AboutView = () => {
                                                         </Tooltip>
                                                     </MinTableCell>
                                                     <MinTableCell align="left">
-                                                        {commit.author ? (
+                                                        {commit.author.html_url ? (
                                                             <Link color="inherit" rel="noopener" href={commit.author.html_url}>
                                                                 {commit.author.login}
                                                             </Link>
                                                         ) : (
-                                                            'n/a'
+                                                            commit.author.name || 'n/a'
                                                         )}
                                                     </MinTableCell>
                                                     <MinTableCell align="left" style={noWrap}>

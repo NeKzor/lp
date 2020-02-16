@@ -1,6 +1,7 @@
 class Api {
     constructor() {
-        this.baseApi = process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://raw.githubusercontent.com/NeKzor/lp/api';
+        this.baseApi =
+            process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://raw.githubusercontent.com/NeKzBot/lp/api';
     }
     async request(route) {
         let res = await fetch(route);

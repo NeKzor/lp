@@ -55,16 +55,20 @@ const ProfileStat = ({ title, type, data }) => {
         <>
             <Tooltip
                 placement="top"
-                title={score === 0 ? '' :
-                    <div>
-                        {`${score - delta}+${delta}`}
-                        {score !== oldScore && (
-                            <>
-                                <br />
-                                {oldScore + ' 🠊 ' + score}
-                            </>
-                        )}
-                    </div>
+                title={
+                    score === 0 ? (
+                        ''
+                    ) : (
+                        <div>
+                            {`${score - delta}+${delta}`}
+                            {score !== oldScore && (
+                                <>
+                                    <br />
+                                    {oldScore + ' 🠊 ' + score}
+                                </>
+                            )}
+                        </div>
+                    )
                 }
                 disableFocusListener
                 disableTouchListener

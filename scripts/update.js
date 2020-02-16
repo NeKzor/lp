@@ -1,52 +1,27 @@
-const fs = require('fs');
-const moment = require('moment');
-const path = require('path');
 const PouchDB = require('pouchdb');
+const crontab = require('node-cron');
+const api = require('./api');
+const globalCache = require('./cache');
 const config = require('./config');
-const { Player, Score } = require('./models');
+const { Player, Score, Portal2 } = require('./models');
 const SteamWebClient = require('./steam');
+const { log, goTheFuckToSleep } = require('./utils');
 
 PouchDB.plugin(require('pouchdb-find'));
 require('dotenv').config();
 
-const log = (msg) => console.log(`[${moment().format('YYYY-MM-DD HH:mm:ss')}] ${msg}`);
+if (!process.env.STEAM_API_KEY) {
+    throw new Error('Steam API key not defined!');
+}
 
-const { apiFolder, mapFile, overridesFile, cacheFolder, maxFetchRank, maxBoardRank } = config;
-
-const maps = JSON.parse(fs.readFileSync(mapFile, 'utf-8'));
-const statsFile = path.join(cacheFolder, 'stats.json');
-
-try { fs.mkdirSync(cacheFolder); } catch {} // prettier-ignore
-try { fs.mkdirSync(apiFolder); } catch {} // prettier-ignore
-try { fs.mkdirSync(path.join(apiFolder, '/profile')); } catch {} // prettier-ignore
-
-const stats = (() => {
-    try {
-        return JSON.parse(fs.readFileSync(statsFile, 'utf-8'));
-    } catch {
-        let stats = { ties: {}, cheaters: [] };
-        maps.forEach((m) => (stats.ties[m.id] = 0));
-        fs.writeFileSync(statsFile, JSON.stringify(stats, null, 4), 'utf-8');
-        return stats;
-    }
-})();
-
-const updateStats = () => fs.writeFileSync(statsFile, JSON.stringify(stats, null, 4), 'utf-8');
-
-const spMapCount = maps.filter((m) => m.mode === 1).length;
-const mpMapCount = maps.filter((m) => m.mode === 2).length;
-const perfectSpScore = maps.filter((m) => m.mode === 1).map((m) => m.wr).reduce((acc, val) => acc + val, 0); // prettier-ignore
-const perfectMpScore = maps.filter((m) => m.mode === 2).map((m) => m.wr).reduce((acc, val) => acc + val, 0); // prettier-ignore
-const perfectScore = perfectSpScore + perfectMpScore;
+const { maxFetchRank, maxBoardRank } = config;
 
 const steam = new SteamWebClient(process.env.STEAM_API_KEY, 'nekzor.github.io.lp.2.0');
 const db = new PouchDB('database');
-
-const exportApi = (route, data) => fs.writeFileSync(path.join(apiFolder, route) + '.json', JSON.stringify({ data }));
-const goTheFuckToSleep = (ms) => new Promise((res) => setTimeout(res, ms));
+const game = new Portal2();
 
 const resetAll = async () => {
-    let result = await db.allDocs();
+    const result = await db.allDocs();
 
     for (let row of result.rows) {
         let player = await db.get(row.id);
@@ -66,7 +41,7 @@ const resetAll = async () => {
     }
 };
 
-const update = (player, map, score) => {
+const updatePlayer = (player, map, score) => {
     let entry = player.entries.find((e) => e._id === map.id);
     if (entry) {
         entry.scoreOld = entry.score;
@@ -87,26 +62,28 @@ const update = (player, map, score) => {
 };
 
 const runUpdates = async () => {
-    const overrides = JSON.parse(fs.readFileSync(overridesFile, 'utf-8'));
-    const total = spMapCount + mpMapCount;
-
-    maps.forEach((m) => (stats.ties[m.id] = 0));
+    const maps = game.maps.read();
+    const overrides = game.overrides.read();
+    const ties = game.ties.readOrCreate({});
 
     let count = 0;
     for (let map of maps) {
-        log(`[${map.id}] ${map.name} (${++count}/${total})`);
-        const cache = `${cacheFolder}/${map.id}.json`;
+        log.info(`{blueBright [${map.id}]} ${map.name} (${++count}/${maps.length})`);
+
+        ties[map.id] = 0;
+
+        const cache = globalCache.create(`lb/${map.id}.json`);
 
         let steamLb = null;
         try {
-            steamLb = JSON.parse(fs.readFileSync(cache, 'utf-8')).data;
-            log(`from cache`);
+            steamLb = cache.read();
+            log.info('from cache');
         } catch {}
 
         if (!steamLb) {
             await goTheFuckToSleep(500);
             steamLb = await steam.fetchLeaderboard('Portal2', map.id, 1, maxFetchRank);
-            log(`fetched`);
+            log.success('fetched');
 
             let start = steamLb.entryEnd + 1;
             let end = start + steamLb.resultCount;
@@ -116,11 +93,11 @@ const runUpdates = async () => {
             while (steamLb.entries.entry[steamLb.entries.entry.length - 1].score === limit) {
                 await goTheFuckToSleep(500);
                 let nextPage = await steam.fetchLeaderboard('Portal2', map.id, start, end);
-                log(`fetched another page (${start}-${end})`);
+                log.success(`fetched another page (${start}-${end})`);
 
                 if (!nextPage) {
-                    log(`fetch failed, retry in 30 seconds`);
-                    goTheFuckToSleep(30000);
+                    log.warn('fetch failed, retry in 30 seconds');
+                    await goTheFuckToSleep(30000);
                     continue;
                 }
 
@@ -134,7 +111,7 @@ const runUpdates = async () => {
                 end = start + nextPage.resultCount;
             }
 
-            fs.writeFileSync(cache, JSON.stringify({ data: steamLb }));
+            cache.save(steamLb);
         }
 
         for (let entry of steamLb.entries.entry) {
@@ -154,38 +131,45 @@ const runUpdates = async () => {
             if (score < map.wr) {
                 let ovr = overrides.find((x) => x.id === map.id && x.player === steamid);
                 if (ovr) {
-                    log(`override score ${score} -> ${ovr.score} : ${steamid}`);
+                    log.warn(`override score ${score} -> ${ovr.score} : ${steamid}`);
                     score = ovr.score;
                 } else {
-                    log(`invalid score ${score} : ${steamid}`);
+                    log.warn(`invalid score ${score} : ${steamid}`);
                     player.isBanned = true;
                     await db.put(player);
                     continue;
                 }
             }
 
-            update(player, map, score);
+            updatePlayer(player, map, score);
 
             if (score === map.wr) {
-                ++stats.ties[map.id];
+                ++ties[map.id];
             }
 
             await db.put(player);
         }
     }
 
-    updateStats();
+    delete maps;
+
+    game.ties.save(ties);
 };
 
 const filterAll = async () => {
-    let result = await db.allDocs();
+    const cheaters = game.cheaters.readOrCreate([]);
 
-    stats.cheaters = [];
+    const maps = game.maps.read();
+    const spMapCount = maps.filter((m) => m.mode === 1).length;
+    const mpMapCount = maps.filter((m) => m.mode === 2).length;
+    delete maps;
+
+    const result = await db.allDocs();
     for (let row of result.rows) {
         let player = await db.get(row.id);
 
         if (player.isBanned) {
-            stats.cheaters.push(player._id);
+            cheaters.push(player._id);
             continue;
         }
 
@@ -206,10 +190,11 @@ const filterAll = async () => {
         }
     }
 
-    updateStats();
+    game.cheaters.save(cheaters);
+    delete cheaters;
 };
 
-const createBoard = async (field) => {
+const createBoard = async (field, stats) => {
     let players = await db.find({ selector: { [field]: { $gt: 0 } } });
 
     players = players.docs.sort((a, b) => {
@@ -223,6 +208,9 @@ const createBoard = async (field) => {
 
     let rank = 0;
     let current = 0;
+
+    const { perfectSpScore, perfectMpScore } = stats;
+    const perfectScore = perfectSpScore + perfectMpScore;
 
     for (let player of players) {
         if (current !== player[field]) {
@@ -266,8 +254,7 @@ const createBoard = async (field) => {
             delete player.mpCount;
             delete player.isBanned;
 
-            log(`exported ${player._id} : ${player.name}`);
-            exportApi('/profile/' + player._id, player);
+            api.export('/profile/' + player._id, player);
         }
 
         delete player.entries;
@@ -290,14 +277,25 @@ const createBoard = async (field) => {
         player.rank = rank;
     }
 
-    exportApi(
+    api.export(
         field,
         players.filter((p) => p.rank),
     );
 };
 
-const createShowcases = async () => {
-    const showcases = require('../community');
+const exportAll = async () => {
+    const maps = game.maps.read();
+
+    const stats = {
+        perfectSpScore: maps.filter((m) => m.mode === 1).map((m) => m.wr).reduce((acc, val) => acc + val, 0), // prettier-ignore
+        perfectMpScore: maps.filter((m) => m.mode === 2).map((m) => m.wr).reduce((acc, val) => acc + val, 0), // prettier-ignore
+    };
+
+    await createBoard('sp', stats);
+    await createBoard('mp', stats);
+    await createBoard('overall', stats);
+
+    const showcases = game.community.read();
 
     let ids = [];
     showcases.forEach((sc) => {
@@ -321,7 +319,10 @@ const createShowcases = async () => {
               };
     };
 
+    const ties = game.ties.read();
+
     maps.forEach((map) => {
+        map.ties = ties[map.id];
         map.showcases = [];
 
         showcases.forEach((sc) => {
@@ -335,24 +336,42 @@ const createShowcases = async () => {
             }
         });
     });
+
+    delete ties;
+    delete showcases;
+
+    const cheaters = game.cheaters.read();
+    api.export('records', { maps, cheaters });
+
+    delete maps;
+    delete cheaters;
 };
 
 const main = async () => {
-    await resetAll();
-    await runUpdates();
-    await filterAll();
+    try {
+        await globalCache.reload();
+        await resetAll();
+        await runUpdates();
+        await filterAll();
+        await exportAll();
 
-    await createBoard('sp');
-    await createBoard('mp');
-    await createBoard('overall');
-
-    await db.close();
-
-    await createShowcases();
-
-    maps.forEach((m) => (m.ties = stats.ties[m.id]));
-
-    exportApi('records', { maps, cheaters: stats.cheaters });
+        ghPages.publish(
+            output,
+            {
+                repo: `https://${process.env.GITHUB_TOKEN}@github.com/NeKzBot/lp.git`,
+                silent: true,
+                branch: 'api',
+                message: 'Update',
+                user: {
+                    name: 'NeKzBot',
+                    email: '44978126+NeKzBot@users.noreply.github.com',
+                },
+            },
+            (err) => (err ? log.error(err) : log.success('Published')),
+        );
+    } catch (err) {
+        log.error(err);
+    }
 };
 
-main().catch((err) => console.error(err));
+crontab.scheduleJob('0 12 * * *', main);

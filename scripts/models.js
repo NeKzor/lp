@@ -1,3 +1,5 @@
+const cache = require('./cache');
+
 class Score {
     constructor(map, score) {
         this._id = map.id;
@@ -19,4 +21,14 @@ class Player {
     }
 }
 
-module.exports = { Score, Player };
+class Portal2 {
+    constructor() {
+        this.maps = cache.create('records.yaml');
+        this.overrides = cache.create('overrides.yaml');
+        this.community = cache.create('community.yaml');
+        this.ties = cache.create('ties.json');
+        this.cheaters = cache.create('cheaters.json');
+    }
+}
+
+module.exports = { Score, Player, Portal2 };
