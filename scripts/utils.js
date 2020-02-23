@@ -3,7 +3,7 @@ const moment = require('moment');
 
 const goTheFuckToSleep = (ms) => new Promise((res) => setTimeout(res, ms));
 const tryCatch = (callback) => { try { callback(); } catch (err) { log.error(err); } }; // prettier-ignore
-const tryCatchIgnore = (callback) => { try { callback(); } catch {} }; // prettier-ignore
+const tryCatchIgnore = (callback) => { try { callback(); } catch (err) {} }; // prettier-ignore
 
 const datePrefix = () => `[${moment().format('YYYY-MM-DD')}] [${moment().format('HH:mm:ss')}]`;
 const log = {
