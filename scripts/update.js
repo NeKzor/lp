@@ -79,7 +79,7 @@ const runUpdates = async () => {
         try {
             steamLb = cache.read();
             log.info('from cache');
-        } catch {}
+        } catch (err) {}
 
         if (!steamLb) {
             await goTheFuckToSleep(500);
@@ -363,4 +363,12 @@ const main = async () => {
     }
 };
 
-crontab.scheduleJob('0 12 * * *', main);
+const schedule = () => {
+    crontab.scheduleJob('0 12 * * *', main);
+};
+
+if (process.argv[2] === 'now') {
+    main().then(schedule);
+} else {
+    schedule();
+}

@@ -28,7 +28,7 @@ class CacheItem {
         try {
             const content = fs.readFileSync(path.join(cacheFolder, this.file));
             return JSON.parse(content, 'utf-8').data;
-        } catch {
+        } catch (err) {
             fs.writeFileSync(path.join(cacheFolder, this.file), JSON.stringify({ data }));
             return data;
         }

@@ -3,12 +3,12 @@ name: CD
 on:
   push:
     paths:
-      - 'scripts/**/*.js'
-      - '*.yaml'
+    - 'scripts/**/*.js'
+    - '*.yaml'
   pull_request:
     paths:
-      - 'scripts/**/*.js'
-      - '*.yaml'
+    - 'scripts/**/*.js'
+    - '*.yaml'
 
 jobs:
   gh-pages:
