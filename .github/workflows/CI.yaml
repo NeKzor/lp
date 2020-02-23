@@ -1,9 +1,14 @@
 name: CD
 
-on: [push, pull_request]
-  paths:
-    - 'scripts/**/*.js'
-    - '*.yaml'
+on:
+  push:
+    paths:
+      - 'scripts/**/*.js'
+      - '*.yaml'
+  pull_request:
+    paths:
+      - 'scripts/**/*.js'
+      - '*.yaml'
 
 jobs:
   gh-pages:
