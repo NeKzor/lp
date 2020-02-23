@@ -1,13 +1,17 @@
 {
-  "dependencies": {
-    "chalk": "^3.0.0",
-    "cross-fetch": "^3.0.4",
-    "dotenv": "^8.2.0",
-    "fast-xml-parser": "^3.16.0",
-    "gh-pages": "^2.2.0",
-    "js-yaml": "^3.13.1",
-    "node-cron": "^2.0.3",
-    "pouchdb": "^7.1.1",
-    "pouchdb-find": "^7.1.1"
-  }
+    "dependencies": {
+        "chalk": "^3.0.0",
+        "cross-fetch": "^3.0.4",
+        "dotenv": "^8.2.0",
+        "fast-xml-parser": "^3.16.0",
+        "gh-pages": "^2.2.0",
+        "js-yaml": "^3.13.1",
+        "mocha": "^7.0.1",
+        "node-cron": "^2.0.3",
+        "pouchdb": "^7.1.1",
+        "pouchdb-find": "^7.1.1"
+    },
+    "scripts": {
+        "test": "mocha"
+    }
 }

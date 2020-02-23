@@ -1,0 +1,24 @@
+name: CD
+
+on:
+  [push, pull_request]
+    paths:
+      - 'scripts/**/*.js'
+      - '*.yaml'
+
+jobs:
+  gh-pages:
+    name: GitHub Pages
+    runs-on: ubuntu-16.04
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Install Dependencies
+      run: |
+        cd scripts
+        npm install
+    - name: Test
+      run: npm test
+      env:
+        STEAM_API_KEY: ${{ secrets.STEAM_API_KEY }}

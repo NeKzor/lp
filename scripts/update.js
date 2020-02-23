@@ -23,8 +23,8 @@ const game = new Portal2();
 const resetAll = async () => {
     const result = await db.allDocs();
 
-    for (let row of result.rows) {
-        let player = await db.get(row.id);
+    for (const row of result.rows) {
+        const player = await db.get(row.id);
         player.spOld = player.sp;
         player.mpOld = player.mp;
         player.overallOld = player.overall;
@@ -42,7 +42,7 @@ const resetAll = async () => {
 };
 
 const updatePlayer = (player, map, score) => {
-    let entry = player.entries.find((e) => e._id === map.id);
+    const entry = player.entries.find((e) => e._id === map.id);
     if (entry) {
         entry.scoreOld = entry.score;
         entry.score = score;
@@ -62,13 +62,14 @@ const updatePlayer = (player, map, score) => {
 };
 
 const runUpdates = async () => {
-    const maps = game.maps.read();
     const overrides = game.overrides.read();
     const ties = game.ties.readOrCreate({});
 
+    const amount = game.maps.length;
     let count = 0;
-    for (let map of maps) {
-        log.info(`{blueBright [${map.id}]} ${map.name} (${++count}/${maps.length})`);
+
+    for (const map of game.maps) {
+        log.info(`{blueBright [${map.id}]} ${map.name} (${++count}/${amount})`);
 
         ties[map.id] = 0;
 
@@ -82,24 +83,34 @@ const runUpdates = async () => {
 
         if (!steamLb) {
             await goTheFuckToSleep(500);
-            steamLb = await steam.fetchLeaderboard('Portal2', map.id, 1, maxFetchRank);
+
+            let steamLb = null;
+            while (!steamLb) {
+                steamLb = await steam.fetchLeaderboard('Portal2', map.id, 1, maxFetchRank);
+                if (!steamLb) {
+                    log.warn('fetch failed, retry in 30 seconds');
+                    await goTheFuckToSleep(30000);
+                }
+            }
+
             log.success('fetched');
 
             let start = steamLb.entryEnd + 1;
             let end = start + steamLb.resultCount;
 
-            let limit = map.limit !== undefined ? map.limit : map.wr;
+            const limit = map.limit !== undefined ? map.limit : map.wr;
 
             while (steamLb.entries.entry[steamLb.entries.entry.length - 1].score === limit) {
                 await goTheFuckToSleep(500);
-                let nextPage = await steam.fetchLeaderboard('Portal2', map.id, start, end);
-                log.success(`fetched another page (${start}-${end})`);
+                const nextPage = await steam.fetchLeaderboard('Portal2', map.id, start, end);
 
                 if (!nextPage) {
                     log.warn('fetch failed, retry in 30 seconds');
                     await goTheFuckToSleep(30000);
                     continue;
                 }
+
+                log.success(`fetched another page (${start}-${end})`);
 
                 if (!nextPage.entries.entry.length) {
                     break;
@@ -114,22 +125,22 @@ const runUpdates = async () => {
             cache.save(steamLb);
         }
 
-        for (let entry of steamLb.entries.entry) {
+        for (const entry of steamLb.entries.entry) {
             // fast-xml-parser is weird sometimes :>
-            let steamid = entry.steamid.toString();
+            const steamid = entry.steamid.toString();
 
-            let result = await db.find({ selector: { _id: steamid } });
-            let doc = result.docs[0];
-            let player = doc ? doc : new Player(steamid);
+            const result = await db.find({ selector: { _id: steamid } });
+            const doc = result.docs[0];
+            const player = doc ? doc : new Player(steamid);
 
             if (player.isBanned) {
                 continue;
             }
 
-            let score = entry.score;
+            const score = entry.score;
 
             if (score < map.wr) {
-                let ovr = overrides.find((x) => x.id === map.id && x.player === steamid);
+                const ovr = overrides.find((x) => x.id === map.id && x.player === steamid);
                 if (ovr) {
                     log.warn(`override score ${score} -> ${ovr.score} : ${steamid}`);
                     score = ovr.score;
@@ -151,22 +162,15 @@ const runUpdates = async () => {
         }
     }
 
-    delete maps;
-
     game.ties.save(ties);
 };
 
 const filterAll = async () => {
     const cheaters = game.cheaters.readOrCreate([]);
 
-    const maps = game.maps.read();
-    const spMapCount = maps.filter((m) => m.mode === 1).length;
-    const mpMapCount = maps.filter((m) => m.mode === 2).length;
-    delete maps;
-
-    const result = await db.allDocs();
-    for (let row of result.rows) {
-        let player = await db.get(row.id);
+    const { rows } = await db.allDocs();
+    for (const row of rows) {
+        const player = await db.get(row.id);
 
         if (player.isBanned) {
             cheaters.push(player._id);
@@ -174,11 +178,11 @@ const filterAll = async () => {
         }
 
         // Complete all maps in sp or coop
-        if (player.spCount !== spMapCount) {
+        if (player.spCount !== game.spMapCount) {
             player.sp = 0;
             player.overall = 0;
         }
-        if (player.mpCount !== mpMapCount) {
+        if (player.mpCount !== game.mpMapCount) {
             player.mp = 0;
             player.overall = 0;
         }
@@ -191,30 +195,26 @@ const filterAll = async () => {
     }
 
     game.cheaters.save(cheaters);
-    delete cheaters;
 };
 
-const createBoard = async (field, stats) => {
-    let players = await db.find({ selector: { [field]: { $gt: 0 } } });
-
-    players = players.docs.sort((a, b) => {
-        if (a[field] === b[field]) {
+const createBoard = async (board) => {
+    const players = (await db.find({ selector: { [board]: { $gt: 0 } } })).docs.sort((a, b) => {
+        if (a[board] === b[board]) {
             return a._id - b._id;
         }
-        return a[field] - b[field];
+        return a[board] - b[board];
     });
 
-    let profiles = await steam.fetchProfiles(players.filter((p) => p.name === undefined).map((p) => p._id));
+    const profiles = await steam.fetchProfiles(players.filter((p) => p.name === undefined).map((p) => p._id));
 
     let rank = 0;
     let current = 0;
 
-    const { perfectSpScore, perfectMpScore } = stats;
-    const perfectScore = perfectSpScore + perfectMpScore;
+    const { perfectScore, perfectSpScore, perfectMpScore } = game;
 
-    for (let player of players) {
-        if (current !== player[field]) {
-            current = player[field];
+    for (const player of players) {
+        if (current !== player[board]) {
+            current = player[board];
             ++rank;
         }
 
@@ -223,7 +223,7 @@ const createBoard = async (field, stats) => {
         }
 
         if (player.name === undefined) {
-            let profile = profiles.find((p) => p.steamid.toString() === player._id);
+            const profile = profiles.find((p) => p.steamid.toString() === player._id);
             if (!profile) {
                 throw Error('unable to fetch profile of ' + player._id);
             }
@@ -263,9 +263,9 @@ const createBoard = async (field, stats) => {
         delete player.mpCount;
         delete player.isBanned;
 
-        player.stats = player.stats[field];
-        player.score = player[field];
-        player.scoreOld = player[field + 'Old'];
+        player.stats = player.stats[board];
+        player.score = player[board];
+        player.scoreOld = player[board + 'Old'];
 
         delete player.sp;
         delete player.mp;
@@ -278,35 +278,28 @@ const createBoard = async (field, stats) => {
     }
 
     api.export(
-        field,
+        board,
         players.filter((p) => p.rank),
     );
 };
 
 const exportAll = async () => {
-    const maps = game.maps.read();
-
-    const stats = {
-        perfectSpScore: maps.filter((m) => m.mode === 1).map((m) => m.wr).reduce((acc, val) => acc + val, 0), // prettier-ignore
-        perfectMpScore: maps.filter((m) => m.mode === 2).map((m) => m.wr).reduce((acc, val) => acc + val, 0), // prettier-ignore
-    };
-
-    await createBoard('sp', stats);
-    await createBoard('mp', stats);
-    await createBoard('overall', stats);
+    await createBoard('sp');
+    await createBoard('mp');
+    await createBoard('overall');
 
     const showcases = game.community.read();
 
-    let ids = [];
-    showcases.forEach((sc) => {
-        if (sc.steam) ids.push(sc.steam);
-        if (sc.steam2) ids.push(sc.steam2);
-    });
+    const ids = [];
+    for (const { steam, steam2 } of showcases) {
+        if (steam) ids.push(steam);
+        if (steam2) ids.push(steam2);
+    }
 
     const profiles = await steam.fetchProfiles(Array.from(new Set(ids)));
 
     const findProfile = (id, name) => {
-        let profile = profiles.find((p) => p.steamid.toString() === id);
+        const profile = profiles.find((p) => p.steamid.toString() === id);
         return profile
             ? {
                   id,
@@ -321,35 +314,31 @@ const exportAll = async () => {
 
     const ties = game.ties.read();
 
-    maps.forEach((map) => {
+    for (const map of game.maps) {
         map.ties = ties[map.id];
         map.showcases = [];
 
-        showcases.forEach((sc) => {
-            if (sc.id === map.id) {
+        for (const showcase of showcases) {
+            if (showcase.id === map.id) {
                 map.showcases.push({
-                    player: findProfile(sc.steam, sc.player),
-                    player2: map.mode === 2 ? findProfile(sc.steam2, sc.player2) : undefined,
-                    date: sc.date,
-                    media: sc.media,
+                    player: findProfile(showcase.steam, showcase.player),
+                    player2: map.mode === 2 ? findProfile(showcase.steam2, showcase.player2) : undefined,
+                    date: showcase.date,
+                    media: showcase.media,
                 });
             }
-        });
-    });
+        }
+    }
 
-    delete ties;
-    delete showcases;
-
-    const cheaters = game.cheaters.read();
-    api.export('records', { maps, cheaters });
-
-    delete maps;
-    delete cheaters;
+    api.export('records', { maps: game.maps, cheaters: game.cheaters.read() });
 };
 
 const main = async () => {
     try {
         await globalCache.reload();
+
+        game.update();
+
         await resetAll();
         await runUpdates();
         await filterAll();

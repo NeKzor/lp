@@ -1,19 +1,28 @@
 const assert = require('assert');
-const SteamWebClient = require('../scripts/steam');
+const fs = require('fs');
+const path = require('path');
+const yaml = require('js-yaml');
+const SteamWebClient = require('../steam');
 
 require('dotenv').config();
+
+if (!process.env.STEAM_API_KEY) {
+    console.log('[INFO] STEAM_API_KEY is missing');
+    return;
+}
 
 const steam = new SteamWebClient(process.env.STEAM_API_KEY, 'nekzor.github.io.lp.2.0');
 
 describe('Test valid steam ids in showcase file', () => {
     it('should fetch all profiles correctly', async () => {
-        const showcases = require('../community');
+        const file = fs.readFileSync(path.join(__dirname, '/../../community.yaml'), 'utf-8');
+        const showcases = yaml.safeLoad(file);
 
-        let ids = [];
-        showcases.forEach((sc) => {
-            if (sc.steam) ids.push(sc.steam);
-            if (sc.steam2) ids.push(sc.steam2);
-        });
+        const ids = [];
+        for (const { steam, steam2 } of showcases) {
+            if (steam) ids.push(steam);
+            if (steam2) ids.push(steam2);
+        }
 
         const expected = Array.from(new Set(ids));
 
