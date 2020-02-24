@@ -1,3 +1,4 @@
+const chalk = require('chalk');
 const PouchDB = require('pouchdb');
 const crontab = require('node-cron');
 const api = require('./api');
@@ -69,7 +70,7 @@ const runUpdates = async () => {
     let count = 0;
 
     for (const map of game.maps) {
-        log.info(`{blueBright [${map.id}]} ${map.name} (${++count}/${amount})`);
+        log.info(chalk`{blueBright [${map.id}]} ${map.name} (${++count}/${amount})`);
 
         ties[map.id] = 0;
 
@@ -85,13 +86,13 @@ const runUpdates = async () => {
             await goTheFuckToSleep(500);
 
             let steamLb = null;
-            while (!steamLb) {
+            do {
                 steamLb = await steam.fetchLeaderboard('Portal2', map.id, 1, maxFetchRank);
                 if (!steamLb) {
                     log.warn('fetch failed, retry in 30 seconds');
                     await goTheFuckToSleep(30000);
                 }
-            }
+            } while (!steamLb);
 
             log.success('fetched');
 
@@ -364,7 +365,7 @@ const main = async () => {
 };
 
 const schedule = () => {
-    crontab.scheduleJob('0 12 * * *', main);
+    crontab.schedule('0 12 * * *', main);
 };
 
 if (process.argv[2] === 'now') {
