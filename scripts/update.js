@@ -85,7 +85,6 @@ const runUpdates = async () => {
         if (!steamLb) {
             await goTheFuckToSleep(500);
 
-            let steamLb = null;
             do {
                 steamLb = await steam.fetchLeaderboard('Portal2', map.id, 1, maxFetchRank);
                 if (!steamLb) {
@@ -138,7 +137,7 @@ const runUpdates = async () => {
                 continue;
             }
 
-            const score = entry.score;
+            let score = entry.score;
 
             if (score < map.wr) {
                 const ovr = overrides.find((x) => x.id === map.id && x.player === steamid);
