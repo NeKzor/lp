@@ -42,26 +42,27 @@ class CacheItem {
     }
 }
 
+const repository = 'https://raw.githubusercontent.com/NeKzor/lp/master/';
+const toFetch = ['community.yaml', 'overrides.yaml', 'records.yaml'];
+
 class Cache {
     async reload() {
         tryCatchIgnore(() => fs.mkdirSync(cacheFolder));
         tryCatchIgnore(() => fs.rmdirSync(path.join(cacheFolder, 'lb')));
         tryCatchIgnore(() => fs.mkdirSync(path.join(cacheFolder, 'lb')));
 
-        const repository = 'https://raw.githubusercontent.com/NeKzor/lp/master/';
-
-        const toFetch = ['community.yaml', 'overrides.yaml', 'records.yaml'];
-
         const responses = await Promise.all(toFetch.map((file) => fetch(repository + file)));
 
-        responses.forEach(async (res, idx) => {
+        let idx = 0;
+        for (const res of responses) {
             if (res.status >= 400) {
                 throw new Error('failed to fetch')
             }
 
             const text = await res.text();
             fs.writeFileSync(path.join(cacheFolder, toFetch[idx]), text);
-        });
+            ++idx;
+        }
     }
     create(file) {
         return new CacheItem(file);
