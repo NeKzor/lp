@@ -10,7 +10,10 @@ const log = {
     info:    (msg) => console.log(chalk`{bold.white ${datePrefix()}} ${msg}`), // prettier-ignore
     success: (msg) => console.log(chalk`{bold.white ${datePrefix()}} {greenBright ${msg}}`), // prettier-ignore
     warn:    (msg) => console.log(chalk`{bold.white ${datePrefix()}} {yellowBright ${msg}}`), // prettier-ignore
-    error:   (msg) => console.log(chalk`{bold.white ${datePrefix()}} {redBright ${msg}}`) // prettier-ignore
+    error:   (msg) => {
+        console.log(chalk`{bold.white ${datePrefix()}} {redBright ${msg}}`);
+        console.error(msg);
+    },
 };
 
 module.exports = {
