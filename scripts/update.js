@@ -1,6 +1,5 @@
 const chalk = require('chalk');
 const crontab = require('node-cron');
-const ghPages = require('gh-pages');
 const PouchDB = require('pouchdb');
 const api = require('./api');
 const globalCache = require('./cache');
@@ -345,20 +344,7 @@ const main = async () => {
         await filterAll();
         await exportAll();
 
-        ghPages.publish(
-            output,
-            {
-                repo: `https://${process.env.GITHUB_TOKEN}@github.com/NeKzBot/lp.git`,
-                silent: true,
-                branch: 'api',
-                message: 'Update',
-                user: {
-                    name: 'NeKzBot',
-                    email: '44978126+NeKzBot@users.noreply.github.com',
-                },
-            },
-            (err) => (err ? log.error(err) : log.success('Published')),
-        );
+        Api.publish();
     } catch (err) {
         log.error(err);
     }
