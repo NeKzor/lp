@@ -41,7 +41,7 @@ class Portal2 {
         this.perfectSpScore = 0;
         this.perfectMpScore = 0;
 
-        for (const map in this.maps) {
+        for (const map of this.maps) {
             if (map.mode === 1) {
                 ++this.spMapCount;
                 this.perfectSpScore += map.wr;
