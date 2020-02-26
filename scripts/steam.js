@@ -24,6 +24,10 @@ class SteamWebClient {
     async fetchLeaderboards(gameName) {
         try {
             const res = await fetch(`${steamWebApi}/stats/${gameName}/leaderboards?xml=1`, this.config);
+            if (res.status >= 400) {
+                return null;
+            }
+
             const txt = await res.text();
             const xml = await parseXml(txt);
             return xml.response;
@@ -35,6 +39,10 @@ class SteamWebClient {
     async fetchLeaderboard(gameName, id, start = '', end = '') {
         try {
             const res = await fetch(`${steamWebApi}/stats/${gameName}/leaderboards/${id}?xml=1&start=${start}&end=${end}`, this.config);
+            if (res.status >= 400) {
+                return null;
+            }
+
             const txt = await res.text();
             const xml = await parseXml(txt);
             return xml.response;
@@ -44,9 +52,16 @@ class SteamWebClient {
         }
     }
     async fetchProfiles(profileIds) {
+        if (profileIds.length === 0) throw new Error('argument contains no ids');
+        if (profileIds.length > 100) throw new Error('cannot fetch more than 100 ids');
+
         try {
             const ids = profileIds.join(',');
             const res = await fetch(`${steamBaseApi}/ISteamUser/GetPlayerSummaries/v0002/?key=${this.apiKey}&steamids=${ids}`, this.config);
+            if (res.status >= 400) {
+                return null;
+            }
+
             const json = await res.json();
             return json.response.players;
         } catch (err) {
