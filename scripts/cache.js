@@ -47,9 +47,10 @@ const toFetch = ['community.yaml', 'overrides.yaml', 'records.yaml'];
 
 class Cache {
     async reload() {
+        const lbCache = path.join(cacheFolder, '/lb');
         tryCatchIgnore(() => fs.mkdirSync(cacheFolder));
-        tryCatchIgnore(() => fs.rmdirSync(path.join(cacheFolder, 'lb')));
-        tryCatchIgnore(() => fs.mkdirSync(path.join(cacheFolder, 'lb')));
+        tryCatchIgnore(() => fs.rmdirSync(lbCache, { recursive: true }));
+        tryCatchIgnore(() => fs.mkdirSync(lbCache));
 
         const responses = await Promise.all(toFetch.map((file) => fetch(repository + file)));
 
