@@ -5,14 +5,10 @@ on:
     paths:
     - 'scripts/**/*.js'
     - '*.yaml'
-  pull_request:
-    paths:
-    - 'scripts/**/*.js'
-    - '*.yaml'
 
 jobs:
-  gh-pages:
-    name: GitHub Pages
+  test:
+    name: Test
     runs-on: ubuntu-16.04
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
     steps:
