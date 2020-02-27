@@ -56,3 +56,4 @@ class Portal2 {
 }
 
 module.exports = { Score, Player, Portal2 };
+
