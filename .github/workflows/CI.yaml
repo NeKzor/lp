@@ -4,6 +4,12 @@ on:
   push:
     paths:
     - 'scripts/**/*.js'
+    - 'scripts/*.js'
+    - '*.yaml'
+  pull_request:
+    paths:
+    - 'scripts/**/*.js'
+    - 'scripts/*.js'
     - '*.yaml'
 
 jobs:
