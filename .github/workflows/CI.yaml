@@ -16,6 +16,9 @@ jobs:
         cd scripts
         npm install
     - name: Test
-      run: npm test
+      run: |
+        pwd
+        cd scripts
+        npm test
       env:
         STEAM_API_KEY: ${{ secrets.STEAM_API_KEY }}
