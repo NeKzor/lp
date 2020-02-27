@@ -3,8 +3,8 @@ name: CI
 on:
   push:
     paths:
-    - 'public/**'
-    - 'src/**/*.js'
+    - 'scripts/**/*.js'
+    - '*.yaml'
 
 jobs:
   test:
