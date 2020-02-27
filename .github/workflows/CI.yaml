@@ -1,10 +1,7 @@
 name: CI
 
 on:
-  push:
-    paths:
-    - 'scripts/**/*.js'
-    - '*.yaml'
+  push
 
 jobs:
   test:
