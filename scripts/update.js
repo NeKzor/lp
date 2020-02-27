@@ -198,14 +198,19 @@ const filterAll = async () => {
 };
 
 const createBoard = async (board) => {
-    const players = (await db.find({ selector: { [board]: { $gt: 0 } } })).docs.sort((a, b) => {
-        if (a[board] === b[board]) {
-            return a._id.localeCompare(b._id);
-        }
-        return a[board] - b[board];
-    });
+    const profilesToResolve = (await db.find({ selector: { [board]: { $gt: 0 } } })).docs
+        .sort((a, b) => {
+            if (a[board] === b[board]) {
+                return a._id.localeCompare(b._id);
+            }
+            return a[board] - b[board];
+        })
+        .filter((p) => p.name === undefined)
+        .map((p) => p._id);
 
-    const profiles = await steam.fetchProfiles(players.filter((p) => p.name === undefined).map((p) => p._id));
+    const profiles = profilesToResolve.length !== 0
+        ? await steam.fetchProfiles(profilesToResolve)
+        : [];
 
     let rank = 0;
     let current = 0;
@@ -225,7 +230,8 @@ const createBoard = async (board) => {
         if (player.name === undefined) {
             const profile = profiles.find((p) => p.steamid.toString() === player._id);
             if (!profile) {
-                throw Error('unable to fetch profile of ' + player._id);
+                log.warn('unable to resolve profile of ' + player._id);
+                continue;
             }
 
             player.name = profile.personaname;
