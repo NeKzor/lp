@@ -198,13 +198,14 @@ const filterAll = async () => {
 };
 
 const createBoard = async (board) => {
-    const profilesToResolve = (await db.find({ selector: { [board]: { $gt: 0 } } })).docs
-        .sort((a, b) => {
-            if (a[board] === b[board]) {
-                return a._id.localeCompare(b._id);
-            }
-            return a[board] - b[board];
-        })
+    const players = (await db.find({ selector: { [board]: { $gt: 0 } } })).docs.sort((a, b) => {
+        if (a[board] === b[board]) {
+            return a._id.localeCompare(b._id);
+        }
+        return a[board] - b[board];
+    });
+
+    const profilesToResolve = players
         .filter((p) => p.name === undefined)
         .map((p) => p._id);
 
