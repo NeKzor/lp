@@ -365,3 +365,4 @@ if (process.argv[2] === 'now') {
 } else {
     schedule();
 }
+
