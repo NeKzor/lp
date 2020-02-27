@@ -82,3 +82,4 @@ describe('Test valid yaml files', () => {
         assert.equal(maps.filter((map) => map.mode === 2).length, 48, 'mp map count is not 48');
     });
 });
+
