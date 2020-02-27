@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     paths:
-    - 'scripts/*.js'
+    - 'scripts/**/*.js'
     - '*.yaml'
 
 jobs:
