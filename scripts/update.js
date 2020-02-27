@@ -344,7 +344,7 @@ const main = async () => {
         await filterAll();
         await exportAll();
 
-        Api.publish();
+        api.publish();
     } catch (err) {
         log.error(err);
     }
