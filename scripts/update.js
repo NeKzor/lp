@@ -290,8 +290,8 @@ const createBoard = async (board) => {
 };
 
 const exportAll = async () => {
-    await createBoard('sp');
-    await createBoard('mp');
+    /* await createBoard('sp');
+    await createBoard('mp'); */
     await createBoard('overall');
 
     const showcases = game.community.read();
@@ -345,12 +345,12 @@ const main = async () => {
 
         game.update();
 
-        await resetAll();
+        /* await resetAll();
         await runUpdates();
-        await filterAll();
+        await filterAll(); */
         await exportAll();
 
-        api.publish();
+        /* api.publish(); */
     } catch (err) {
         log.error(err);
     }
