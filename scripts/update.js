@@ -166,7 +166,7 @@ const runUpdates = async () => {
 };
 
 const filterAll = async () => {
-    const cheaters = game.cheaters.readOrCreate([]);
+    const cheaters = [];
 
     const { rows } = await db.allDocs();
     for (const row of rows) {
