@@ -87,7 +87,7 @@ const runUpdates = async () => {
 
             do {
                 steamLb = await steam.fetchLeaderboard('Portal2', map.id, 1, maxFetchRank);
-                if (!steamLb) {
+                if (!steamLb || steamLb.entries.entry === undefined) {
                     log.warn('fetch failed, retry in 30 seconds');
                     await goTheFuckToSleep(30000);
                 }
