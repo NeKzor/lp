@@ -21,10 +21,8 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Install Dependencies
-      run: |
-        cd scripts
-        npm install
+      run: npm install --prefix scripts
     - name: Test
-      run: npm test
+      run: npm test --prefix scripts
       env:
         STEAM_API_KEY: ${{ secrets.STEAM_API_KEY }}
