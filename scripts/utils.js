@@ -7,10 +7,10 @@ const tryCatchIgnore = (callback) => { try { callback(); } catch (err) {} }; // 
 
 const datePrefix = () => `[${moment().format('YYYY-MM-DD')}] [${moment().format('HH:mm:ss')}]`;
 const log = {
-    info:    (msg) => console.log(chalk`{bold.white ${datePrefix()}} ${msg}`), // prettier-ignore
-    success: (msg) => console.log(chalk`{bold.white ${datePrefix()}} {greenBright ${msg}}`), // prettier-ignore
-    warn:    (msg) => console.log(chalk`{bold.white ${datePrefix()}} {yellowBright ${msg}}`), // prettier-ignore
-    error:   (msg) => {
+    info: (msg) => console.log(chalk`{bold.white ${datePrefix()}} ${msg}`),
+    success: (msg) => console.log(chalk`{bold.white ${datePrefix()}} {greenBright ${msg}}`),
+    warn: (msg) => console.log(chalk`{bold.white ${datePrefix()}} {yellowBright ${msg}}`),
+    error: (msg) => {
         console.log(chalk`{bold.white ${datePrefix()}} {redBright ${msg}}`);
         console.error(msg);
     },

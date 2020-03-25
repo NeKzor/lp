@@ -29,7 +29,7 @@ const chartOptions = {
     },
     tooltip: {
         y: {
-            formatter: function(val) {
+            formatter: function (val) {
                 return val + ' portal' + (val === 1 ? '' : 's');
             },
         },

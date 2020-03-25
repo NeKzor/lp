@@ -37,8 +37,16 @@ const RecordsTableHead = ({ order, orderBy, onRequestSort }) => {
                             sortDirection={orderBy === row.id ? order : false}
                         >
                             {row.sortable === true && (
-                                <Tooltip title="Sort" placement={row.numeric ? 'bottom-end' : 'bottom-start'} enterDelay={300}>
-                                    <TableSortLabel active={orderBy === row.id} direction={order} onClick={createSortHandler(row.id)}>
+                                <Tooltip
+                                    title="Sort"
+                                    placement={row.numeric ? 'bottom-end' : 'bottom-start'}
+                                    enterDelay={300}
+                                >
+                                    <TableSortLabel
+                                        active={orderBy === row.id}
+                                        direction={order}
+                                        onClick={createSortHandler(row.id)}
+                                    >
                                         {row.label}
                                     </TableSortLabel>
                                 </Tooltip>
@@ -90,7 +98,12 @@ const RecordsTable = ({ data }) => {
     const classes = useStyles();
 
     const ExcludedMapsInfo = () => (
-        <Tooltip placement="right" title="Disabled tracking records for this map." disableFocusListener disableTouchListener>
+        <Tooltip
+            placement="right"
+            title="Disabled tracking records for this map."
+            disableFocusListener
+            disableTouchListener
+        >
             <Link className={classes.helpLink}>n/a</Link>
         </Tooltip>
     );
@@ -104,12 +117,22 @@ const RecordsTable = ({ data }) => {
     return (
         <div className={classes.root}>
             <Table>
-                <RecordsTableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort} rowCount={data.length} />
+                <RecordsTableHead
+                    order={order}
+                    orderBy={orderBy}
+                    onRequestSort={handleRequestSort}
+                    rowCount={data.length}
+                />
                 <TableBody>
                     {stableSort(data, order, orderBy).map((record) => {
                         return (
                             <React.Fragment key={record.id}>
-                                <TableRow hover tabIndex={-1} onClick={handleRowClick(record.id)} style={{ cursor: 'pointer' }}>
+                                <TableRow
+                                    hover
+                                    tabIndex={-1}
+                                    onClick={handleRowClick(record.id)}
+                                    style={{ cursor: 'pointer' }}
+                                >
                                     <TableCell size="small">
                                         <Link
                                             target="_blank"

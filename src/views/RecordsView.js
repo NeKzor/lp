@@ -24,7 +24,11 @@ const RecordsView = () => {
 
     const filterRecords = (records) => {
         return records.filter((x) => {
-            return searchTerm.length === 0 || x.name.toUpperCase().startsWith(searchTerm.toUpperCase()) || x.wr === parseInt(searchTerm);
+            return (
+                searchTerm.length === 0 ||
+                x.name.toUpperCase().startsWith(searchTerm.toUpperCase()) ||
+                x.wr === parseInt(searchTerm)
+            );
         });
     };
 

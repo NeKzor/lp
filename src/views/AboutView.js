@@ -111,8 +111,12 @@ const AboutView = () => {
                             Ranking Requirements
                         </Typography>
                         <br />
-                        <Typography variant="body1">- Be in top 5000 on every single player or cooperative leaderboard.</Typography>
-                        <Typography variant="body1">- Tie as many records as possible or get at least very close to it.</Typography>
+                        <Typography variant="body1">
+                            - Be in top 5000 on every single player or cooperative leaderboard.
+                        </Typography>
+                        <Typography variant="body1">
+                            - Tie as many records as possible or get at least very close to it.
+                        </Typography>
                         <Typography variant="body1">- Don't be one of the {detectedCheaters} cheaters.</Typography>
 
                         <Padding />
@@ -163,7 +167,11 @@ const AboutView = () => {
                                                     </MinTableCell>
                                                     <MinTableCell align="left">
                                                         {commit.author.html_url ? (
-                                                            <Link color="inherit" rel="noopener" href={commit.author.html_url}>
+                                                            <Link
+                                                                color="inherit"
+                                                                rel="noopener"
+                                                                href={commit.author.html_url}
+                                                            >
                                                                 {commit.author.login}
                                                             </Link>
                                                         ) : (
@@ -195,7 +203,9 @@ const AboutView = () => {
                         <br />
                         <FormGroup row>
                             <FormControlLabel
-                                control={<Switch checked={darkMode.enabled} onChange={toggleDarkMode} color="primary" />}
+                                control={
+                                    <Switch checked={darkMode.enabled} onChange={toggleDarkMode} color="primary" />
+                                }
                                 label="Dark Mode"
                             />
                         </FormGroup>

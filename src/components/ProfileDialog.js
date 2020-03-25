@@ -92,7 +92,12 @@ const ProfileDialog = ({ active, profile, handleClickClose }) => {
             <Dialog fullScreen open={active} onClose={handleClickClose} TransitionComponent={Transition}>
                 <AppBar position="sticky">
                     <Toolbar>
-                        <Tooltip placement="bottom" title="Open Steam profile" disableFocusListener disableTouchListener>
+                        <Tooltip
+                            placement="bottom"
+                            title="Open Steam profile"
+                            disableFocusListener
+                            disableTouchListener
+                        >
                             {profile ? (
                                 <>
                                     <Button color="inherit" onClick={() => gotoSteamProfile(profile._id)}>
@@ -161,10 +166,20 @@ const ProfileDialog = ({ active, profile, handleClickClose }) => {
                                     <ProfileTable data={profile.entries} />
                                 </Paper>
                                 <Paper style={{ paddingTop: '10px', marginBottom: '50px' }}>
-                                    <RecordDeltaChart data={profile.entries} mode={1} title="Single Player" color="#2E93fA" />
+                                    <RecordDeltaChart
+                                        data={profile.entries}
+                                        mode={1}
+                                        title="Single Player"
+                                        color="#2E93fA"
+                                    />
                                 </Paper>
                                 <Paper style={{ paddingTop: '10px', marginBottom: '50px' }}>
-                                    <RecordDeltaChart data={profile.entries} mode={2} title="Cooperative" color="#FF9800" />
+                                    <RecordDeltaChart
+                                        data={profile.entries}
+                                        mode={2}
+                                        title="Cooperative"
+                                        color="#FF9800"
+                                    />
                                 </Paper>
                             </Grid>
                         </Grid>

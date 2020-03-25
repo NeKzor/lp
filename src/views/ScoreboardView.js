@@ -19,32 +19,37 @@ const ScoreboardView = ({ boardType, profileId }) => {
         state: { records },
     } = React.useContext(AppState);
 
-    const prepareProfile = React.useCallback((profile) => {
-        if (profile) {
-            profile.entries.forEach((entry) => {
-                let map = records.find((record) => record.id === entry._id);
-                entry.name = map.name;
-                entry.index = map.index;
-                entry.delta = Math.abs(map.wr - entry.score);
-                entry.showcase = map.showcases.find((sc) => sc.player.id === profile._id || (sc.player2 && sc.player2.id === profile._id));
-            });
+    const prepareProfile = React.useCallback(
+        (profile) => {
+            if (profile) {
+                profile.entries.forEach((entry) => {
+                    let map = records.find((record) => record.id === entry._id);
+                    entry.name = map.name;
+                    entry.index = map.index;
+                    entry.delta = Math.abs(map.wr - entry.score);
+                    entry.showcase = map.showcases.find(
+                        (sc) => sc.player.id === profile._id || (sc.player2 && sc.player2.id === profile._id),
+                    );
+                });
 
-            let missing = [];
-            records.forEach((record) => {
-                let entry = profile.entries.find((entry) => entry._id === record.id);
-                if (!entry) {
-                    missing.push({
-                        _id: record.id,
-                        name: record.name,
-                        index: record.index,
-                    });
-                }
-            });
+                let missing = [];
+                records.forEach((record) => {
+                    let entry = profile.entries.find((entry) => entry._id === record.id);
+                    if (!entry) {
+                        missing.push({
+                            _id: record.id,
+                            name: record.name,
+                            index: record.index,
+                        });
+                    }
+                });
 
-            profile.entries.push(...missing);
-        }
-        return profile;
-    }, [records]);
+                profile.entries.push(...missing);
+            }
+            return profile;
+        },
+        [records],
+    );
 
     React.useEffect(() => {
         if (profile === undefined && profileId) {

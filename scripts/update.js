@@ -205,13 +205,9 @@ const createBoard = async (board) => {
         return a[board] - b[board];
     });
 
-    const profilesToResolve = players
-        .filter((p) => p.name === undefined)
-        .map((p) => p._id);
+    const profilesToResolve = players.filter((p) => p.name === undefined).map((p) => p._id);
 
-    const profiles = profilesToResolve.length !== 0
-        ? await steam.fetchProfiles(profilesToResolve)
-        : [];
+    const profiles = profilesToResolve.length !== 0 ? await steam.fetchProfiles(profilesToResolve) : [];
 
     let rank = 0;
     let current = 0;
@@ -250,7 +246,8 @@ const createBoard = async (board) => {
                 },
                 overall: {
                     delta: Math.abs(player.overall - perfectScore),
-                    percentage: player.sp !== 0 && player.mp !== 0 ? Math.round((perfectScore / player.overall) * 100) : 0,
+                    percentage:
+                        player.sp !== 0 && player.mp !== 0 ? Math.round((perfectScore / player.overall) * 100) : 0,
                 },
             };
 

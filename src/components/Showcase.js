@@ -41,7 +41,10 @@ const Showcase = ({ data }) => {
                 disableFocusListener
                 disableTouchListener
             >
-                <CardMedia className={classes.media} image={`https://i.ytimg.com/vi/${data.media.split('?')[0]}/sddefault.jpg`} />
+                <CardMedia
+                    className={classes.media}
+                    image={`https://i.ytimg.com/vi/${data.media.split('?')[0]}/sddefault.jpg`}
+                />
             </Tooltip>
         </Card>
     );

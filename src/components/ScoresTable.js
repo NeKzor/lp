@@ -32,10 +32,22 @@ const ScoresTableHead = ({ order, orderBy, onRequestSort }) => {
         <TableHead>
             <TableRow>
                 {rows.map((row) => (
-                    <TableCell key={row.id} align={row.numeric ? 'center' : 'left'} sortDirection={orderBy === row.id ? order : false}>
+                    <TableCell
+                        key={row.id}
+                        align={row.numeric ? 'center' : 'left'}
+                        sortDirection={orderBy === row.id ? order : false}
+                    >
                         {row.sortable === true && (
-                            <Tooltip title="Sort" placement={row.numeric ? 'bottom-end' : 'bottom-start'} enterDelay={300}>
-                                <TableSortLabel active={orderBy === row.id} direction={order} onClick={createSortHandler(row.id)}>
+                            <Tooltip
+                                title="Sort"
+                                placement={row.numeric ? 'bottom-end' : 'bottom-start'}
+                                enterDelay={300}
+                            >
+                                <TableSortLabel
+                                    active={orderBy === row.id}
+                                    direction={order}
+                                    onClick={createSortHandler(row.id)}
+                                >
                                     {row.label}
                                 </TableSortLabel>
                             </Tooltip>
@@ -84,7 +96,12 @@ const ScoresTable = ({ data, handleClickOpen }) => {
     return (
         <div className={classes.root}>
             <Table>
-                <ScoresTableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort} rowCount={data.length} />
+                <ScoresTableHead
+                    order={order}
+                    orderBy={orderBy}
+                    onRequestSort={handleRequestSort}
+                    rowCount={data.length}
+                />
                 <TableBody>
                     {stableSort(data, order, orderBy).map((item) => {
                         return (
@@ -104,7 +121,11 @@ const ScoresTable = ({ data, handleClickOpen }) => {
                                     <div className={classes.playerCell}>
                                         <Avatar src={item.avatar} />
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <Link className={classes.clickLink} onClick={handleClickOpen(item._id)} color="inherit">
+                                        <Link
+                                            className={classes.clickLink}
+                                            onClick={handleClickOpen(item._id)}
+                                            color="inherit"
+                                        >
                                             {item.name}
                                         </Link>
                                         {item.country && (
@@ -120,7 +141,9 @@ const ScoresTable = ({ data, handleClickOpen }) => {
                                         placement="top"
                                         title={
                                             <div>
-                                                {`${item.stats.percentage}% (${item.score - item.stats.delta}+${item.stats.delta})`}
+                                                {`${item.stats.percentage}% (${item.score - item.stats.delta}+${
+                                                    item.stats.delta
+                                                })`}
                                                 {item.scoreOld !== item.score && (
                                                     <>
                                                         <br />

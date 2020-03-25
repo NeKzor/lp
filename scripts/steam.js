@@ -38,7 +38,10 @@ class SteamWebClient {
     }
     async fetchLeaderboard(gameName, id, start = '', end = '') {
         try {
-            const res = await fetch(`${steamWebApi}/stats/${gameName}/leaderboards/${id}?xml=1&start=${start}&end=${end}`, this.config);
+            const res = await fetch(
+                `${steamWebApi}/stats/${gameName}/leaderboards/${id}?xml=1&start=${start}&end=${end}`,
+                this.config,
+            );
             if (res.status >= 400) {
                 return null;
             }
@@ -57,7 +60,10 @@ class SteamWebClient {
 
         try {
             const ids = profileIds.join(',');
-            const res = await fetch(`${steamBaseApi}/ISteamUser/GetPlayerSummaries/v0002/?key=${this.apiKey}&steamids=${ids}`, this.config);
+            const res = await fetch(
+                `${steamBaseApi}/ISteamUser/GetPlayerSummaries/v0002/?key=${this.apiKey}&steamids=${ids}`,
+                this.config,
+            );
             if (res.status >= 400) {
                 return null;
             }

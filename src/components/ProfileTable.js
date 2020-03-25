@@ -33,8 +33,16 @@ const ProfileTableHead = ({ order, orderBy, onRequestSort }) => {
                             sortDirection={orderBy === row.id ? order : false}
                         >
                             {row.sortable === true && (
-                                <Tooltip title="Sort" placement={row.numeric ? 'bottom-end' : 'bottom-start'} enterDelay={300}>
-                                    <TableSortLabel active={orderBy === row.id} direction={order} onClick={createSortHandler(row.id)}>
+                                <Tooltip
+                                    title="Sort"
+                                    placement={row.numeric ? 'bottom-end' : 'bottom-start'}
+                                    enterDelay={300}
+                                >
+                                    <TableSortLabel
+                                        active={orderBy === row.id}
+                                        direction={order}
+                                        onClick={createSortHandler(row.id)}
+                                    >
                                         {row.label}
                                     </TableSortLabel>
                                 </Tooltip>
@@ -84,14 +92,28 @@ const ProfileTable = ({ data }) => {
     return (
         <div className={classes.root}>
             <Table>
-                <ProfileTableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort} rowCount={data.length} />
+                <ProfileTableHead
+                    order={order}
+                    orderBy={orderBy}
+                    onRequestSort={handleRequestSort}
+                    rowCount={data.length}
+                />
                 <TableBody>
                     {stableSort(data, order, orderBy).map((record) => {
                         let score =
                             record.score !== undefined ? (
                                 record.showcase ? (
-                                    <Tooltip placement="right" title="Watch on YouTube" disableFocusListener disableTouchListener>
-                                        <Link target="_blank" rel="noopener" href={`https://youtu.be/${record.showcase.media}`}>
+                                    <Tooltip
+                                        placement="right"
+                                        title="Watch on YouTube"
+                                        disableFocusListener
+                                        disableTouchListener
+                                    >
+                                        <Link
+                                            target="_blank"
+                                            rel="noopener"
+                                            href={`https://youtu.be/${record.showcase.media}`}
+                                        >
                                             <b>{record.score}</b>
                                         </Link>
                                     </Tooltip>
@@ -101,7 +123,16 @@ const ProfileTable = ({ data }) => {
                             ) : (
                                 <UnknownScoreInfo />
                             );
-                        let delta = record.score !== undefined ? record.delta === 0 ? '' : `+${record.delta}` : <UnknownScoreInfo />;
+                        let delta =
+                            record.score !== undefined ? (
+                                record.delta === 0 ? (
+                                    ''
+                                ) : (
+                                    `+${record.delta}`
+                                )
+                            ) : (
+                                <UnknownScoreInfo />
+                            );
 
                         return (
                             <TableRow hover tabIndex={-1} key={record._id}>

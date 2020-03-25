@@ -57,7 +57,7 @@ class Cache {
         let idx = 0;
         for (const res of responses) {
             if (res.status >= 400) {
-                throw new Error('failed to fetch')
+                throw new Error('failed to fetch');
             }
 
             const text = await res.text();
