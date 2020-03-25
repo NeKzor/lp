@@ -175,7 +175,7 @@ const AboutView = () => {
                                                             <Link
                                                                 color="inherit"
                                                                 rel="noopener"
-                                                                href={'https://github.com/NeKzor/lp/commit/' + commit.sha}
+                                                                href={`https://github.com/${repo}/commit/${commit.sha}`}
                                                             >
                                                                 {commit.sha}
                                                             </Link>
