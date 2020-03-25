@@ -19,7 +19,7 @@ const ScoreboardView = ({ boardType, profileId }) => {
         state: { records },
     } = React.useContext(AppState);
 
-    const prepareProfile = (profile) => {
+    const prepareProfile = React.useCallback((profile) => {
         if (profile) {
             profile.entries.forEach((entry) => {
                 let map = records.find((record) => record.id === entry._id);
@@ -44,7 +44,7 @@ const ScoreboardView = ({ boardType, profileId }) => {
             profile.entries.push(...missing);
         }
         return profile;
-    };
+    }, [records]);
 
     React.useEffect(() => {
         if (profile === undefined && profileId) {
@@ -58,7 +58,7 @@ const ScoreboardView = ({ boardType, profileId }) => {
                 .then((board) => isMounted.current && setBoard(board))
                 .catch((err) => console.error(err));
         }
-    }, []);
+    }, [board.length, boardType, isMounted, prepareProfile, profile, profileId]);
 
     const handleProfileOpen = (id) => () => {
         setDialogOpen(true);
