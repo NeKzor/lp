@@ -62,6 +62,7 @@ const ScoreboardView = ({ boardType, profileId }) => {
 
     const handleProfileOpen = (id) => () => {
         setDialogOpen(true);
+        setProfile(undefined);
 
         Api.getProfile(id)
             .then((profile) => isMounted.current && setProfile(prepareProfile(profile)))
