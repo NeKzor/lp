@@ -174,6 +174,10 @@ const filterAll = async () => {
 
         if (player.isBanned) {
             cheaters.push(player._id);
+            player.sp = 0;
+            player.mp = 0;
+            player.overall = 0;
+            await db.put(player);
             continue;
         }
 
