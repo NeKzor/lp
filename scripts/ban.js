@@ -1,8 +1,6 @@
 const fs = require('fs');
 const moment = require('moment');
-const path = require('path');
 const PouchDB = require('pouchdb');
-const config = require('./config');
 const { Player } = require('./models');
 
 PouchDB.plugin(require('pouchdb-find'));
@@ -10,31 +8,13 @@ require('dotenv').config();
 
 const log = (msg) => console.log(`[${moment().format('YYYY-MM-DD HH:mm:ss')}] ${msg}`);
 
-const { cacheFolder } = config;
-
-const statsFile = path.join(cacheFolder, 'stats.json');
-const stats = JSON.parse(fs.readFileSync(path.join(cacheFolder, 'stats.json'), 'utf-8'));
-const updateStats = () => fs.writeFileSync(statsFile, JSON.stringify(stats, null, 4), 'utf-8');
-
 const db = new PouchDB('database');
 
-const cache = () => {
-    let cheaters = JSON.parse(fs.readFileSync('./scripts/old/2019-09-11.json')).cheaters;
+const backup1 = JSON.parse(fs.readFileSync('./scripts/old/2019-09-11.json')).cheaters;
+const backup2 = JSON.parse(fs.readFileSync('./scripts/old/2020-04-22.json')).data.cheaters;
 
-    for (cheater of cheaters) {
-        if (stats.cheaters.find((x) => x === cheater)) {
-            continue;
-        }
-
-        log(cheater + ' was not in cache');
-        stats.cheaters.push(cheater);
-    }
-
-    updateStats();
-};
-
-const ban = async () => {
-    for (let _id of stats.cheaters) {
+const ban = async (cheaters) => {    
+    for (const _id of cheaters) {
         let cheater = (await db.find({ selector: { _id } })).docs[0];
 
         if (!cheater) {
@@ -52,4 +32,5 @@ const ban = async () => {
     }
 };
 
-ban().catch((err) => console.error(err));
+ban(backup1).catch((err) => console.error(err));
+ban(backup2).catch((err) => console.error(err));
