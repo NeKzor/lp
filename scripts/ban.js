@@ -8,7 +8,7 @@ require('dotenv').config();
 
 const log = (msg) => console.log(`[${moment().format('YYYY-MM-DD HH:mm:ss')}] ${msg}`);
 
-const db = new PouchDB('database');
+const db = new PouchDB('database', { auto_compaction: true });
 
 const backup1 = JSON.parse(fs.readFileSync('./scripts/old/2019-09-11.json')).cheaters;
 const backup2 = JSON.parse(fs.readFileSync('./scripts/old/2020-04-22.json')).data.cheaters;
