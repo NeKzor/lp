@@ -118,6 +118,7 @@
   name: Pull the Rug
   mode: 1
   wr: 0
+  limit: 3
   index: 25
 
 - id: 47767
