@@ -18,7 +18,7 @@ if (!process.env.STEAM_API_KEY) {
 const { maxFetchRank, maxBoardRank } = config;
 
 const steam = new SteamWebClient(process.env.STEAM_API_KEY, 'nekzor.github.io.lp.2.0');
-const db = new PouchDB('database', { auto_compaction: true });
+const db = new PouchDB('database', { auto_compaction: true, revs_limit: 1 });
 const game = new Portal2();
 
 const resetAll = async () => {
