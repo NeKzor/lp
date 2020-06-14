@@ -11,9 +11,8 @@ class DarkMode {
     }
 }
 
-const inititalState = {
+const initialState = {
     records: [],
-    cheaters: [],
     darkMode: new DarkMode(),
 };
 
@@ -22,11 +21,9 @@ export const AppReducer = [
         console.log('[DISPATCH] ' + action);
         switch (action) {
             case 'setRecords':
-                window.expose = () => data.cheaters;
                 return {
                     ...state,
                     records: data.maps || [],
-                    cheaters: data.cheaters || [],
                 };
             case 'toggleDarkMode':
                 return {
@@ -37,7 +34,7 @@ export const AppReducer = [
                 throw new Error('Unknown action type.');
         }
     },
-    inititalState,
+    initialState,
 ];
 
-export default React.createContext(inititalState);
+export default React.createContext(initialState);

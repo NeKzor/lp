@@ -62,7 +62,7 @@ const App = () => {
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <AppState.Provider value={context}>
-                <BrowserRouter basename={process.env.NODE_ENV === 'production' ? '/lp' : '/'}>
+                <BrowserRouter>
                     <Route
                         path="/"
                         render={({ location: { pathname } }) => (

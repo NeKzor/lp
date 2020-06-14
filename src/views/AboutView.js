@@ -41,7 +41,7 @@ const AboutView = () => {
     const isMounted = useIsMounted();
 
     const {
-        state: { cheaters, darkMode },
+        state: { darkMode },
         dispatch,
     } = React.useContext(AppState);
 
@@ -80,17 +80,6 @@ const AboutView = () => {
         dispatch({ action: 'toggleDarkMode' });
     };
 
-    const detectedCheaters = (
-        <Tooltip
-            placement="right"
-            title="Automatic ban system catches users who cheated at least once."
-            disableFocusListener
-            disableTouchListener
-        >
-            <Link className={classes.help}>{cheaters.length}</Link>
-        </Tooltip>
-    );
-
     return (
         <>
             <Grid container>
@@ -115,9 +104,9 @@ const AboutView = () => {
                             - Be in top 5000 on every single player or cooperative leaderboard.
                         </Typography>
                         <Typography variant="body1">
-                            - Tie as many records as possible or get at least very close to it.
+                            - A world record tie is required in case a map has more than 5000 ties.
                         </Typography>
-                        <Typography variant="body1">- Don't be one of the {detectedCheaters} cheaters.</Typography>
+                        <Typography variant="body1">- Don't cheat.</Typography>
 
                         <Padding />
 
