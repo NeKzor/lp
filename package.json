@@ -28,13 +28,18 @@
         "clone-build": "git clone --single-branch --branch gh-pages https://github.com/NeKzor/lp build",
         "dev": "hs ./api --cors",
         "prettier": "prettier --config ./prettier.config.js --write './src/**/*.js' './scripts/**/*.js'",
-        "api": "gh-pages -b api -d api -m Update -u \"NeKzBot <44978126+NeKzBot@users.noreply.github.com>\""
+        "api": "gh-pages -b api -d api -m Update -u \"NeKzBot <44978126+NeKzBot@users.noreply.github.com>\"",
+        "update": "cargo run --manifest-path ./backend/Cargo.toml",
+        "update:now": "cargo run --manifest-path ./backend/Cargo.toml -- --now",
+        "update:test": "cargo test --manifest-path ./backend/Cargo.toml",
+        "server": "cargo run --manifest-path ./server/Cargo.toml",
+        "server:test": "cargo test --manifest-path ./server/Cargo.toml",
+        "book": "mdbook build ./rules"
     },
     "browserslist": [
         ">0.2%",
         "not dead",
         "not ie <= 11",
         "not op_mini all"
-    ],
-    "homepage": "https://nekzor.github.io/lp"
+    ]
 }
