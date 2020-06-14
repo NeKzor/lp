@@ -1,0 +1,17 @@
+[package]
+name = "server"
+version = "0.1.0"
+authors = ["NeKz <nekzor@users.noreply.github.com>"]
+edition = "2018"
+
+[dependencies]
+actix-cors = "0.2.0"
+actix-files = "0.2.1"
+actix-rt = "1"
+actix-session = "0.3.0"
+actix-utils = "1.0.3"
+actix-web = "2"
+chrono = "0.4"
+env_logger = "0.7.1"
+log = "0.4"
+rocket = "0.4.5"
