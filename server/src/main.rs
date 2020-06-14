@@ -9,6 +9,7 @@ use log::LevelFilter;
 extern crate actix_web;
 use actix_cors::Cors;
 use actix_files::Files;
+use actix_web::body::Body;
 use actix_web::http::header;
 use actix_web::{guard, middleware, web, App, HttpResponse, HttpServer};
 
@@ -35,8 +36,10 @@ fn init_logger() {
         .init();
 }
 
-async fn page_not_found() -> HttpResponse {
-    HttpResponse::NotFound().body("page not found :(")
+async fn csr_app() -> HttpResponse {
+    HttpResponse::Ok()
+        .header(header::CONTENT_TYPE, "text/html; charset=UTF-8")
+        .body(Body::from(include_str!("../../build/index.html")))
 }
 
 #[actix_rt::main]
@@ -57,11 +60,16 @@ async fn main() -> std::io::Result<()> {
                     .finish(),
             )
             .configure(v1::api::init)
-            .service(Files::new("/rules", "./rules/book/").index_file("index.html"))
-            .service(Files::new("/", "./build/"))
+            .service(
+                Files::new("/rules", "./rules/book/")
+                    .index_file("index.html")
+                    .disable_content_disposition()
+                    .redirect_to_slash_directory(),
+            )
+            .service(Files::new("/", "./build/").index_file("index.html"))
             .default_service(
                 web::resource("")
-                    .route(web::get().to(page_not_found))
+                    .route(web::get().to(csr_app))
                     .route(
                         web::route()
                             .guard(guard::Not(guard::Get()))
