@@ -6,7 +6,11 @@ use actix_cors::Cors;
 use actix_files::Files;
 use actix_web::body::Body;
 use actix_web::http::header;
-use actix_web::{guard, middleware::Logger, web, App, HttpResponse, HttpServer};
+use actix_web::{
+    guard,
+    middleware::{Compress, Logger},
+    web, App, HttpResponse, HttpServer,
+};
 
 mod logger;
 mod middleware;
@@ -39,7 +43,14 @@ async fn main() -> std::io::Result<()> {
                     .max_age(3600)
                     .finish(),
             )
+            .wrap(Compress::default())
             .configure(v1::api::init)
+            .service(
+                Files::new("/rules", "./rules/book/")
+                    .index_file("index.html")
+                    .disable_content_disposition()
+                    .redirect_to_slash_directory(),
+            )
             .service(
                 web::scope("").wrap_fn(cache_control).service(
                     Files::new("/static", "./build/static/").disable_content_disposition(),
@@ -49,12 +60,6 @@ async fn main() -> std::io::Result<()> {
                 Files::new("/", "./build/")
                     .index_file("index.html")
                     .disable_content_disposition(),
-            )
-            .service(
-                Files::new("/rules", "./rules/book/")
-                    .index_file("index.html")
-                    .disable_content_disposition()
-                    .redirect_to_slash_directory(),
             )
             .default_service(
                 web::resource("").route(web::get().to(csr_app)).route(
