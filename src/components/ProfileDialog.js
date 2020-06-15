@@ -8,6 +8,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Dialog from '@material-ui/core/Dialog';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
+import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import Skeleton from '@material-ui/lab/Skeleton';
 import ProfileTable from './ProfileTable';
@@ -173,7 +174,7 @@ const ProfileDialog = ({ active, profile, handleClickClose }) => {
                                         color="#2E93fA"
                                     />
                                 </Paper>
-                                <Paper style={{ paddingTop: '10px', marginBottom: '50px' }}>
+                                <Paper style={{ paddingTop: '10px', marginBottom: '25px' }}>
                                     <RecordDeltaChart
                                         data={profile.entries}
                                         mode={2}
@@ -181,6 +182,13 @@ const ProfileDialog = ({ active, profile, handleClickClose }) => {
                                         color="#FF9800"
                                     />
                                 </Paper>
+
+                                <div style={{ paddingTop: '10px', marginBottom: '20px' }}>
+                                    Share:{' '}
+                                    <Link href={`http://lp.nekz.me/@/${profile._id}`}>
+                                        lp.nekz.me/@/{profile._id}
+                                    </Link>
+                                </div>
                             </Grid>
                         </Grid>
                     </>
