@@ -11,6 +11,7 @@ use actix_web::{
     middleware::{Compress, Logger},
     web, App, HttpResponse, HttpServer,
 };
+use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
 
 mod logger;
 mod middleware;
@@ -29,12 +30,16 @@ async fn csr_app() -> HttpResponse {
 async fn main() -> std::io::Result<()> {
     logger::init();
 
+    let mut ssl_builder = SslAcceptor::mozilla_intermediate(SslMethod::tls())?;
+    ssl_builder.set_private_key_file("127.0.0.1-key.pem", SslFiletype::PEM)?;
+    ssl_builder.set_certificate_chain_file("127.0.0.1.pem")?;
+
     HttpServer::new(|| {
         App::new()
             .wrap(Logger::default())
             .wrap(
                 Cors::new()
-                    .allowed_origin("http://127.0.0.1:8080")
+                    .allowed_origin("https://127.0.0.1:8080")
                     .allowed_origin("http://localhost:3000")
                     .allowed_origin("http://lp.nekz.me")
                     .allowed_methods(vec!["GET"])
@@ -69,7 +74,7 @@ async fn main() -> std::io::Result<()> {
                 ),
             )
     })
-    .bind("127.0.0.1:8080")?
+    .bind_openssl("127.0.0.1:8080", ssl_builder)?
     .run()
     .await
 }
