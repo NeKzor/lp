@@ -132,7 +132,7 @@ pub fn export_all(
 
         if player.sp != 0 {
             let delta = (player.sp - perfect_sp_score).abs();
-            let percentage = (perfect_sp_score / player.sp) * 100;
+            let percentage = (*perfect_sp_score as f32 / player.sp as f32 * 100f32) as i32;
 
             stats.sp.delta = delta;
             stats.sp.percentage = percentage;
@@ -151,7 +151,7 @@ pub fn export_all(
 
         if player.mp != 0 {
             let delta = (player.mp - perfect_mp_score).abs();
-            let percentage = (perfect_mp_score / player.mp) * 100;
+            let percentage = (*perfect_mp_score as f32 / player.mp as f32 * 100f32) as i32;
 
             stats.mp.delta = delta;
             stats.mp.percentage = percentage;
@@ -170,7 +170,7 @@ pub fn export_all(
 
         if player.overall != 0 {
             let delta = (player.overall - perfect_ov_score).abs();
-            let percentage = (perfect_ov_score / player.overall) * 100;
+            let percentage = (*perfect_mp_score as f32 / player.overall as f32 * 100f32) as i32;
 
             stats.overall.delta = delta;
             stats.overall.percentage = percentage;
