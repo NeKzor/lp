@@ -170,7 +170,7 @@ pub fn export_all(
 
         if player.overall != 0 {
             let delta = (player.overall - perfect_ov_score).abs();
-            let percentage = (*perfect_mp_score as f32 / player.overall as f32 * 100f32) as i32;
+            let percentage = (*perfect_ov_score as f32 / player.overall as f32 * 100f32) as i32;
 
             stats.overall.delta = delta;
             stats.overall.percentage = percentage;
