@@ -1,4 +1,4 @@
-use crate::models::repository::Record;
+use core::cmp::Ordering;
 use std::collections::HashSet;
 use std::fs;
 use std::io::Write;
@@ -8,6 +8,7 @@ use log::{info, warn};
 
 use crate::models::api::*;
 use crate::models::database;
+use crate::models::repository::Record;
 use crate::models::steam::*;
 
 const STEAM_API: &str = "https://api.steampowered.com";
@@ -68,11 +69,10 @@ pub fn export_all(
     let mut ids_to_resolve = HashSet::<String>::new();
 
     records.iter().for_each(|record| {
-        record.showcases.iter().for_each(|showcase|{
+        record.showcases.iter().for_each(|showcase| {
             if let Some(player) = &showcase.steam {
                 ids_to_resolve.insert(player.clone());
             }
-    
             if let Some(player) = &showcase.steam2 {
                 ids_to_resolve.insert(player.clone());
             }
@@ -217,9 +217,25 @@ pub fn export_all(
         .unwrap();
     }
 
-    sp_ranks.sort_by_key(|rank| rank.score);
-    mp_ranks.sort_by_key(|rank| rank.score);
-    ov_ranks.sort_by_key(|rank| rank.score);
+    fn rank_then_by_id(a: &Ranking, b: &Ranking) -> Ordering {
+        if a.score == b.score {
+            if a.id.parse::<i64>().unwrap() < b.id.parse::<i64>().unwrap() {
+                Ordering::Less
+            } else {
+                Ordering::Greater
+            }
+        } else {
+            if a.score < b.score {
+                Ordering::Less
+            } else {
+                Ordering::Greater
+            }
+        }
+    }
+
+    sp_ranks.sort_by(rank_then_by_id);
+    mp_ranks.sort_by(rank_then_by_id);
+    ov_ranks.sort_by(rank_then_by_id);
 
     fn calc_ranks(rankings: &mut Vec<Ranking>) {
         let mut current_rank = 0;
