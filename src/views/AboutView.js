@@ -10,7 +10,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import AppState from '../AppState';
-import { useIsMounted } from '../Hooks';
 
 const useStyles = makeStyles((theme) => ({
     help: {
@@ -23,40 +22,42 @@ const useStyles = makeStyles((theme) => ({
 
 const Padding = () => <div style={{ paddingTop: '50px' }} />;
 
+const getUpdate = () => {
+    // Not sure if this is right lol
+    const now = moment.utc();
+    let updateIn = moment().utc().endOf('day').add(30, 'minutes');
+
+    if (updateIn.isBefore(now)) {
+        updateIn = moment().utc().endOf('day').add(1, 'day').add(30, 'minutes');
+    }
+
+    const duration = moment.duration({ from: now, to: updateIn });
+    const hours = duration.get('hours');
+    const minutes = duration.get('minutes');
+    const seconds = duration.get('seconds');
+
+    const g = (value) => (value === 1 ? '' : 's');
+    return `${hours} hour${g(hours)}, ${minutes} minute${g(minutes)}, ${seconds} second${g(seconds)}`;
+};
+
 let clockTimer = null;
 
 const AboutView = () => {
-    const isMounted = useIsMounted();
-
     const {
         state: { darkMode },
         dispatch,
     } = React.useContext(AppState);
 
-    const [nextUpdate, setNextUpdate] = React.useState('...');
+    const [nextUpdate, setNextUpdate] = React.useState(getUpdate());
     const classes = useStyles();
 
     React.useEffect(() => {
         clockTimer = setInterval(() => {
-            // Not sure if this is right lol
-            const now = moment.utc();
-            let updateIn = moment().utc().endOf('day').add(30, 'minutes');
-
-            if (updateIn.isBefore(now)) {
-                updateIn = moment().utc().endOf('day').add(1, 'day').add(30, 'minutes');
-            }
-
-            const duration = moment.duration({ from: now, to: updateIn });
-            const hours = duration.get('hours');
-            const minutes = duration.get('minutes');
-            const seconds = duration.get('seconds');
-
-            const g = (value) => (value === 1 ? '' : 's');
-            setNextUpdate(`${hours} hour${g(hours)}, ${minutes} minute${g(minutes)}, ${seconds} second${g(seconds)}`);
+            setNextUpdate(getUpdate());
         }, 1000);
 
         return () => clearInterval(clockTimer);
-    }, [isMounted]);
+    }, []);
 
     const toggleDarkMode = () => {
         dispatch({ action: 'toggleDarkMode' });
