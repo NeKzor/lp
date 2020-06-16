@@ -1,9 +1,12 @@
 class Api {
     constructor() {
-        this.baseApi =
+        window.BASE_API =
             process.env.NODE_ENV === 'development'
-                ? 'https://127.0.0.1:8080/api/v1'
+                ? 'http://127.0.0.1:8080/api/v1'
                 : 'http://lp.nekz.me/api/v1';
+    }
+    get baseApi() {
+        return window.BASE_API;
     }
     async request(route) {
         let res = await fetch(route);
