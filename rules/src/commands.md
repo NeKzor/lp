@@ -1,3 +1,3 @@
 # Commands
 
-Usage of console commands during a run is limited.
+The usage of console commands should not be used to bypass any rule.

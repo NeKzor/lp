@@ -1,21 +1,20 @@
 # Changes
 
-## 2019-11-03
+## 2020-05-16
 
-All top 10 scores require complete proof in the form of a demo or video. All top 5 scores require complete demos as proof, videos will not be accepted. All previous scores will be grandfathered.
+World record on `Ceiling Catapult` is now 2.<br>Achieved first by [`Krzyhau`].
 
-## 2019-09-14
+## 2019-07-08
 
-Console variable fps_max may only be set to values between 30 and 999. Uncapped value of 0 will not get your run banned if it is determined to not have given an advantage.
+World record on `Bridge The Gap` is now 0.<br>Achieved first by [`PerOculos`].
 
-## 2019-05-23
+## 2019-05-09
 
-Changing the console variable m_yaw to effectively stop mouse movement in either the horizontal or vertical direction is banned.
+World record on `Smooth Jazz` is now 0.<br>Achieved first by [`Krzyhau`].
 
-## 2019-05-11
+## 2019-04-23
 
-Scripting and binding multiple command buttons to a key is banned, value of cl_fov is only valid between 45 to 140 and taunt manipulation is now allowed.
+World record on `Laser Platform` is now 0.<br>Achieved first by [`Krzyhau`].
 
-## 2017-05-11
-
-All top 5 scores require proof in the form of a demo or a video. If no sufficient proof can be provided, the score will be removed.
+[`Krzyhau`]: http://lp.nekz.me/@/76561198096446735
+[`PerOculos`]: http://lp.nekz.me/@/76561198003223063

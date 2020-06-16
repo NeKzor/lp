@@ -1,12 +1,22 @@
 # General
 
+## Modifications
+
 - Changing tick rate is banned
-- Cheat protected commands are banned
-- Glitches/Tricks requiring setup before map load are banned
-- Top 5 scores require demo or video, times before November 3rd, 2019 will be grandfathered in
-- Texture changes are allowed as long as they do not provide an advantage
-  - Portal-able surfaces are never to be edited
-  - Debatable edits should be brought up to an admin prior to doing runs with them
-- As of January 6th 2019 scripting is banned
-  - Binding multiple actions to one key is banned
+- Cheat protected commands are banned, see [`Commands`]
+- Other modifications eg. portal gun skin changes are debatable but is allowed as long they do not provide any significant advantage
+
+## Scripts
+
+- Use of scripts is not allowed
+- Binding multiple actions to one key is banned
   - An action is defined as any command, aliased or otherwise, that causes any base-level game command with a “+” or “-” to occur
+
+## Records, Discoveries and Glitches
+
+- New discoveries that lead to a new world record have to be discussed with the community before they can be allowed
+  - This usually improves the automatic ban system but also serves to avoid unnecessary unbans
+- Glitches and tricks requiring a setup before map loads are banned, see [`Banned Exploits`]
+
+[`Commands`]: commands.md
+[`Banned Exploits`]: exploits.md
