@@ -11,6 +11,7 @@ use actix_web::{
     middleware::{Compress, Logger},
     web, App, HttpResponse, HttpServer,
 };
+use clap::Clap;
 use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
 
 mod logger;
@@ -19,6 +20,23 @@ mod routes;
 
 use middleware::*;
 use routes::*;
+
+#[derive(Clap)]
+#[clap(version = "1.0.0", author = "NeKz")]
+struct Opts {
+    #[clap(short, long, default_value = "127.0.0.1")]
+    address: String,
+    #[clap(short, long, default_value = "8080")]
+    port: String,
+    #[clap(short, long)]
+    enable_ssl: bool,
+    #[clap(long, default_value = "127.0.0.1-key.pem")]
+    ssl_key: String,
+    #[clap(long, default_value = "127.0.0.1.pem")]
+    ssl_cert: String,
+    #[clap(short, long)]
+    development: bool,
+}
 
 async fn csr_app() -> HttpResponse {
     HttpResponse::Ok()
@@ -30,51 +48,72 @@ async fn csr_app() -> HttpResponse {
 async fn main() -> std::io::Result<()> {
     logger::init();
 
-    let mut ssl_builder = SslAcceptor::mozilla_intermediate(SslMethod::tls())?;
-    ssl_builder.set_private_key_file("127.0.0.1-key.pem", SslFiletype::PEM)?;
-    ssl_builder.set_certificate_chain_file("127.0.0.1.pem")?;
+    let opts = Opts::parse();
 
-    HttpServer::new(|| {
-        App::new()
-            .wrap(Logger::default())
-            .wrap(
-                Cors::new()
-                    .allowed_origin("https://127.0.0.1:8080")
-                    .allowed_origin("http://localhost:3000")
-                    .allowed_origin("http://lp.nekz.me")
-                    .allowed_methods(vec!["GET"])
-                    .allowed_headers(vec![header::AUTHORIZATION, header::ACCEPT])
-                    .allowed_header(header::CONTENT_TYPE)
-                    .max_age(3600)
-                    .finish(),
-            )
-            .wrap(Compress::default())
-            .configure(v1::api::init)
-            .service(
-                Files::new("/rules", "./rules/book/")
-                    .index_file("index.html")
-                    .disable_content_disposition()
-                    .redirect_to_slash_directory(),
-            )
-            .service(
-                web::scope("").wrap_fn(cache_control).service(
-                    Files::new("/static", "./build/static/").disable_content_disposition(),
-                ),
-            )
-            .service(
-                Files::new("/", "./build/")
-                    .index_file("index.html")
-                    .disable_content_disposition(),
-            )
-            .default_service(
-                web::resource("").route(web::get().to(csr_app)).route(
-                    web::route()
-                        .guard(guard::Not(guard::Get()))
-                        .to(HttpResponse::MethodNotAllowed),
-                ),
-            )
-    })
-    .bind_openssl("127.0.0.1:8080", ssl_builder)?
-    .run()
-    .await
+    let address = format!("{}:{}", opts.address, opts.port);
+
+    let development = opts.development;
+    let enable_ssl = opts.enable_ssl;
+
+    let server =
+        HttpServer::new(move || {
+            let mut cors = Cors::new()
+                .allowed_methods(vec!["GET"])
+                .allowed_headers(vec![header::AUTHORIZATION, header::ACCEPT])
+                .allowed_header(header::CONTENT_TYPE)
+                .max_age(3600);
+
+            if development {
+                let protocol = if enable_ssl {
+                    "https://"
+                } else {
+                    "http://"
+                };
+
+                cors = cors
+                    .allowed_origin(format!("{}{}", protocol, address).as_ref())
+                    .allowed_origin("http://localhost:3000");
+            } else {
+                cors = cors.allowed_origin("http://lp.nekz.me");
+            }
+
+            App::new()
+                .wrap(Logger::default())
+                .wrap(cors.finish())
+                .wrap(Compress::default())
+                .configure(v1::api::init)
+                .service(
+                    Files::new("/rules", "./rules/book/")
+                        .index_file("index.html")
+                        .disable_content_disposition()
+                        .redirect_to_slash_directory(),
+                )
+                .service(web::scope("/static").wrap_fn(cache_control).service(
+                    Files::new("/", "./build/static/").disable_content_disposition(),
+                ))
+                .service(
+                    Files::new("/", "./build/")
+                        .index_file("index.html")
+                        .disable_content_disposition(),
+                )
+                .default_service(
+                    web::resource("").route(web::get().to(csr_app)).route(
+                        web::route()
+                            .guard(guard::Not(guard::Get()))
+                            .to(HttpResponse::MethodNotAllowed),
+                    ),
+                )
+        });
+
+    let address = format!("{}:{}", opts.address, opts.port);
+
+    if opts.enable_ssl {
+        let mut ssl_builder = SslAcceptor::mozilla_intermediate(SslMethod::tls())?;
+        ssl_builder.set_private_key_file(opts.ssl_key, SslFiletype::PEM)?;
+        ssl_builder.set_certificate_chain_file(opts.ssl_cert)?;
+
+        server.bind_openssl(address, ssl_builder)?.run().await
+    } else {
+        server.bind(address)?.run().await
+    }
 }
