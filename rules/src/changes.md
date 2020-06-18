@@ -14,7 +14,7 @@ World record on `Smooth Jazz` is now 0.<br>Achieved first by [`Krzyhau`].
 
 ## 2019-04-23
 
-World record on `Laser Platform` is now 0.<br>Achieved first by [`Krzyhau`].
+World record on `Laser Platform` is now 3.<br>Achieved first by [`Krzyhau`].
 
 [`Krzyhau`]: http://lp.nekz.me/@/76561198096446735
 [`PerOculos`]: http://lp.nekz.me/@/76561198003223063
