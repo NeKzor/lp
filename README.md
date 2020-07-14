@@ -1,6 +1,3 @@
-![CI](https://github.com/NeKzor/lp/workflows/CI/badge.svg)
-![CD](https://github.com/NeKzor/lp/workflows/CD/badge.svg)
-
 # lp
 
 ![showcase.gif](showcase.gif)
@@ -24,3 +21,11 @@ Simply edit [community.yaml](https://github.com/NeKzor/lp/blob/master/community.
 - A world record tie might be required in case a map has more than 5000 ties
 - Overall rankings obviously require both campaigns
 - Don't be a jerk and cheat
+
+## TODO & Ideas
+
+- Remove unused stuff
+- Replace CI with unit tests
+- Allow video submissions
+  - Auth with Steam
+- Figure out how SSL/TLS works
