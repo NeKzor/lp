@@ -1,5 +1,9 @@
 # Changes
 
+## 2020-07-13
+
+World record on `Column Blocker` is now 0.<br>Achieved first by [`PerOculos`].
+
 ## 2020-05-16
 
 World record on `Ceiling Catapult` is now 2.<br>Achieved first by [`Krzyhau`].
