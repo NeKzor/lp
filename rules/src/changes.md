@@ -1,5 +1,9 @@
 # Changes
 
+## 2020-10-10
+
+World record on `Future Starter` is now 2.<br>Achieved first by [`Krzyhau`].
+
 ## 2020-07-13
 
 World record on `Column Blocker` is now 0.<br>Achieved first by [`PerOculos`].
