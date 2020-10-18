@@ -100,7 +100,7 @@ const ProfileTable = ({ data }) => {
                 />
                 <TableBody>
                     {stableSort(data, order, orderBy).map((record) => {
-                        let score =
+                        const score =
                             record.score !== undefined ? (
                                 record.showcase ? (
                                     <Tooltip
@@ -123,7 +123,7 @@ const ProfileTable = ({ data }) => {
                             ) : (
                                 <UnknownScoreInfo />
                             );
-                        let delta =
+                        const delta =
                             record.score !== undefined ? (
                                 record.delta === 0 ? (
                                     ''

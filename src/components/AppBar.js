@@ -1,5 +1,6 @@
 import React from 'react';
 import MaterialAppBar from '@material-ui/core/AppBar';
+import Link from '@material-ui/core/Link';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -19,7 +20,9 @@ const AppBar = ({ currentTab }) => {
             <MaterialAppBar position="fixed">
                 <Toolbar>
                     <Typography variant="h6" color="inherit">
-                        Least Portals
+                        <Link href="/" color="inherit" style={{ textDecoration: 'none' }}>
+                            Least Portals
+                        </Link>
                     </Typography>
                 </Toolbar>
                 <SiteTabs currentTab={currentTab} />

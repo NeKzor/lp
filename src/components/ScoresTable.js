@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMedal } from '@fortawesome/free-solid-svg-icons';
 import Avatar from '@material-ui/core/Avatar';
 import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -60,16 +61,22 @@ const ScoresTableHead = ({ order, orderBy, onRequestSort }) => {
     );
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         overflowX: 'auto',
     },
-    playerCell: {
-        display: 'flex',
+    profile: {
         alignItems: 'center',
     },
-    clickLink: {
+    avatar: {
         cursor: 'pointer',
+        width: theme.spacing(5),
+        height: theme.spacing(5),
+        marginRight: 10,
+    },
+    playerLink: {
+        cursor: 'pointer',
+        marginRight: 10,
     },
 }));
 
@@ -118,23 +125,35 @@ const ScoresTable = ({ data, handleClickOpen }) => {
                                     )}
                                 </TableCell>
                                 <TableCell size="small">
-                                    <div className={classes.playerCell}>
-                                        <Avatar src={item.avatar} />
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <Link
-                                            className={classes.clickLink}
-                                            onClick={handleClickOpen(item._id)}
-                                            color="inherit"
-                                        >
-                                            {item.name}
-                                        </Link>
+                                    <Grid container direction="row" className={classes.profile}>
+                                        <Grid item>
+                                            <Avatar
+                                                onClick={handleClickOpen(item._id)}
+                                                className={classes.avatar}
+                                                src={item.avatar.slice(0, -4) + '_medium.jpg'}
+                                            />
+                                        </Grid>
+                                        <Grid item>
+                                            <Link
+                                                className={classes.playerLink}
+                                                onClick={handleClickOpen(item._id)}
+                                                color="inherit"
+                                                noWrap
+                                            >
+                                                {item.name}
+                                            </Link>
+                                        </Grid>
                                         {item.country && (
-                                            <>
-                                                &nbsp;&nbsp;&nbsp;
-                                                <Flag code={item.country} height="12" alt={item.country} />
-                                            </>
+                                            <Grid item>
+                                                <Flag
+                                                    code={item.country}
+                                                    height="12"
+                                                    alt={item.country}
+                                                    title={item.country}
+                                                />
+                                            </Grid>
                                         )}
-                                    </div>
+                                    </Grid>
                                 </TableCell>
                                 <TableCell size="small" align="center">
                                     <Tooltip

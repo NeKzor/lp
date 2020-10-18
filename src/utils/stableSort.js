@@ -1,14 +1,14 @@
 const stableSort = (array, order, orderBy) => {
-    let desc = (a, b) => {
+    const desc = (a, b) => {
         if (b[orderBy] < a[orderBy]) return -1;
         if (b[orderBy] > a[orderBy]) return 1;
         return 0;
     };
 
-    let cmp = order === 'desc' ? (a, b) => desc(a, b) : (a, b) => -desc(a, b);
+    const cmp = order === 'desc' ? (a, b) => desc(a, b) : (a, b) => -desc(a, b);
 
-    let sort = (a, b) => {
-        let order = cmp(a[0], b[0]);
+    const sort = (a, b) => {
+        const order = cmp(a[0], b[0]);
         if (order !== 0) return order;
         return a[1] - b[1];
     };

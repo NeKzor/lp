@@ -2,7 +2,6 @@ import React from 'react';
 import Flag from 'react-world-flags';
 import AppBar from '@material-ui/core/AppBar';
 import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import CloseIcon from '@material-ui/icons/Close';
 import Dialog from '@material-ui/core/Dialog';
@@ -36,6 +35,22 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(5),
         textAlign: 'center',
     },
+    profile: {
+        alignItems: 'center',
+    },
+    avatar: {
+        cursor: 'pointer',
+        width: theme.spacing(5),
+        height: theme.spacing(5),
+        marginRight: 10,
+    },
+    playerLink: {
+        cursor: 'pointer',
+        marginRight: 10,
+    },
+    country: {
+        marginTop: 8,
+    },
 }));
 
 const Transition = React.forwardRef((props, ref) => {
@@ -43,7 +58,7 @@ const Transition = React.forwardRef((props, ref) => {
 });
 
 const gotoSteamProfile = (id) => {
-    let tab = window.open(`https://steamcommunity.com/profiles/${id}`, '_blank');
+    const tab = window.open(`https://steamcommunity.com/profiles/${id}`, '_blank');
     tab.opener = null;
 };
 
@@ -52,6 +67,7 @@ const ProfileStat = ({ title, type, data }) => {
     const oldScore = data[type + 'Old'];
     const delta = data.stats[type].delta;
     const percentage = data.stats[type].percentage;
+
     return (
         <>
             <Tooltip
@@ -93,40 +109,52 @@ const ProfileDialog = ({ active, profile, handleClickClose }) => {
             <Dialog fullScreen open={active} onClose={handleClickClose} TransitionComponent={Transition}>
                 <AppBar position="sticky">
                     <Toolbar>
-                        <Tooltip
-                            placement="bottom"
-                            title="Open Steam profile"
-                            disableFocusListener
-                            disableTouchListener
-                        >
-                            {profile ? (
-                                <>
-                                    <Button color="inherit" onClick={() => gotoSteamProfile(profile._id)}>
-                                        <Avatar src={profile.avatar} />
-                                    </Button>
-                                    <Typography variant="h6" color="inherit" className={classes.flex}>
-                                        &nbsp;&nbsp;&nbsp;{profile.name}
-                                        {profile.country && (
-                                            <>
-                                                &nbsp;&nbsp;&nbsp;
-                                                <Flag
-                                                    code={profile.country}
-                                                    style={{ position: 'relative', top: '2px' }}
-                                                    height="15"
-                                                    alt={profile.country}
-                                                />
-                                            </>
-                                        )}
-                                    </Typography>
-                                </>
-                            ) : (
-                                <>
-                                    <Skeleton variant="circle" width={40} height={40} />
-                                    <Skeleton style={{ marginLeft: '10px' }} variant="text" width={200} />
-                                    <Typography className={classes.flex} />
-                                </>
-                            )}
-                        </Tooltip>
+                        {profile ? (
+                            <Grid container direction="row" className={classes.profile}>
+                                <Grid item>
+                                    <Avatar
+                                        onClick={() => gotoSteamProfile(profile._id)}
+                                        className={classes.avatar}
+                                        src={profile.avatar.slice(0, -4) + '_medium.jpg'}
+                                    />
+                                </Grid>
+                                <Grid item>
+                                    <Tooltip
+                                        placement="bottom"
+                                        title="Open Steam profile"
+                                        disableFocusListener
+                                        disableTouchListener
+                                    >
+                                        <Typography variant="h6">
+                                            <Link
+                                                className={classes.playerLink}
+                                                onClick={() => gotoSteamProfile(profile._id)}
+                                                color="inherit"
+                                            >
+                                                {profile.name}
+                                            </Link>
+                                        </Typography>
+                                    </Tooltip>
+                                </Grid>
+                                {profile.country && (
+                                    <Grid item>
+                                        <Flag
+                                            className={classes.country}
+                                            code={profile.country}
+                                            height="15"
+                                            alt={profile.country}
+                                            title={profile.country}
+                                        />
+                                    </Grid>
+                                )}
+                            </Grid>
+                        ) : (
+                            <>
+                                <Skeleton variant="circle" width={40} height={40} />
+                                <Skeleton style={{ marginLeft: '10px' }} variant="text" width={200} />
+                                <Typography className={classes.flex} />
+                            </>
+                        )}
                         <Tooltip placement="bottom" title="Close profile" disableFocusListener disableTouchListener>
                             <IconButton color="inherit" onClick={handleClickClose}>
                                 <CloseIcon />
@@ -185,9 +213,7 @@ const ProfileDialog = ({ active, profile, handleClickClose }) => {
 
                                 <div style={{ paddingTop: '10px', marginBottom: '20px' }}>
                                     Share:{' '}
-                                    <Link href={`http://lp.nekz.me/@/${profile._id}`}>
-                                        lp.nekz.me/@/{profile._id}
-                                    </Link>
+                                    <Link href={`http://lp.nekz.me/@/${profile._id}`}>lp.nekz.me/@/{profile._id}</Link>
                                 </div>
                             </Grid>
                         </Grid>

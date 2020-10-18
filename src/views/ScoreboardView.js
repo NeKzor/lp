@@ -23,7 +23,7 @@ const ScoreboardView = ({ boardType, profileId }) => {
         (profile) => {
             if (profile) {
                 profile.entries.forEach((entry) => {
-                    let map = records.find((record) => record.id === entry._id);
+                    const map = records.find((record) => record.id === entry._id);
                     entry.name = map.name;
                     entry.index = map.index;
                     entry.delta = Math.abs(map.wr - entry.score);
@@ -32,9 +32,9 @@ const ScoreboardView = ({ boardType, profileId }) => {
                     );
                 });
 
-                let missing = [];
+                const missing = [];
                 records.forEach((record) => {
-                    let entry = profile.entries.find((entry) => entry._id === record.id);
+                    const entry = profile.entries.find((entry) => entry._id === record.id);
                     if (!entry) {
                         missing.push({
                             _id: record.id,

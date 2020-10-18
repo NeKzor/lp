@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const watch = (id) => () => {
-    let tab = window.open(`https://youtu.be/${id}`, '_blank');
+    const tab = window.open(`https://youtu.be/${id}`, '_blank');
     tab.opener = null;
 };
 

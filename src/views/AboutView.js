@@ -90,7 +90,7 @@ const AboutView = () => {
                             - A world record tie is required in case a map has more than 5000 ties.
                         </Typography>
                         <Typography variant="body1">
-                            - Do not cheat and always follow the{' '}
+                            - Do not cheat and follow the{' '}
                             <Link rel="noopener" href="http://lp.nekz.me/rules">
                                 rules
                             </Link>
