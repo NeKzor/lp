@@ -167,7 +167,8 @@
 - id: 47781
   name: Neurotoxin Sabotage
   mode: 1
-  wr: 3
+  wr: 2
+  limit: 3
   index: 33
 
 - id: 47782
