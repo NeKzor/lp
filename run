@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# dbpath for mongod wich you might want to give yourself access to (default path for Ubuntu)
+dbpath="/var/lib/mongodb"
+
+# Cargo manifrest path to the server
+servermanifest="./server/Cargo.toml"
+
+# Test function name which populates records collection  
+populaterecords="db_populate_records"
+
+if [ "$1" = "server" ]; then
+    cargo run --manifest-path "$servermanifest" -- "${@:2}"
+elif [ "$1" = "populate-records" ]; then
+    cargo test --manifest-path "$servermanifest" "$populaterecords" -- --nocapture "${@:2}"
+elif [ "$1" = "db" ]; then
+    mongod --dbpath="$dbpath" --auth "${@:2}"
+elif [ "$1" = "db-no-auth" ]; then
+    mongod --dbpath="$dbpath" "${@:2}"
+elif [ "$1" = "app" ]; then
+    npm run start "${@:2}"
+elif [ "$1" = "server-build" ]; then
+    cargo build --manifest-path "$servermanifest" -- "${@:2}"
+elif [ "$1" = "--help" ]; then
+    echo "
+    run <command>
+
+        server           : starts server application
+        populate-records : populates records collection
+        db               : starts database instance
+        db-no-auth       : starts database instance without authentication
+        app              : starts client app
+    "
+fi

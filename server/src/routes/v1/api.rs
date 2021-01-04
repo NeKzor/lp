@@ -39,7 +39,7 @@ async fn profiles(steam_id64: web::Path<u64>) -> Result<HttpResponse, Error> {
 async fn index() -> Result<HttpResponse, Error> {
     Ok(HttpResponse::Ok()
         .header(header::CONTENT_TYPE, "text/html; charset=UTF-8")
-        .body(Body::from(include_str!("index.html"))))
+        .body(Body::from(std::fs::read_to_string("./api/v1.html")?)))
 }
 
 pub fn init(cfg: &mut web::ServiceConfig) {

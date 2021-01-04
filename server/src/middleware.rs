@@ -1,13 +1,14 @@
+use actix_http::Error;
+use actix_web::body::Body;
+use actix_web::dev::{Service, ServiceRequest, ServiceResponse};
+use actix_web::http::{header, HeaderValue};
 use core::future::Future;
 
-use actix_http::Error;
-use actix_web::dev::{Service, ServiceRequest, ServiceResponse};
-use actix_web::body::Body;
-use actix_web::http::{header, HeaderValue};
-
-// Need this for all assets in build/static/
-// see https://create-react-app.dev/docs/production-build/#static-file-caching
-
+/// Sets cache-control header to max-age=31536000.
+/// Required for all assets in build/static/ folder.
+///
+/// Recomended by React devs see:
+///     https://create-react-app.dev/docs/production-build/#static-file-caching
 pub fn cache_control<S>(
     req: ServiceRequest,
     service: &mut S,

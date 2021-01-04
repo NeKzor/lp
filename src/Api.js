@@ -1,10 +1,13 @@
 class Api {
     constructor() {
         window.BASE_API =
-            process.env.NODE_ENV === 'development' ? 'http://127.0.0.1:8080/api/v1' : 'http://lp.nekz.me/api/v1';
+            process.env.NODE_ENV === 'development' ? 'http://127.0.0.1:8080/api/v1' : 'https://lp.nekz.me/api/v1';
     }
     get baseApi() {
         return window.BASE_API;
+    }
+    get baseApi2() {
+        return process.env.NODE_ENV === 'development' ? 'http://127.0.0.1:8080' : 'https://next.lp.nekz.me';
     }
     async request(route) {
         const res = await fetch(route);
@@ -12,7 +15,7 @@ class Api {
         return res;
     }
     async getRecords() {
-        const res = await this.request(`${this.baseApi}/records`);
+        const res = await this.request(`${this.baseApi2}/records/all`);
         return res.ok ? (await res.json()).data : {};
     }
     async getBoard(board) {
