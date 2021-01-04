@@ -1,7 +1,6 @@
 use actix_http::{Error, Payload};
-use actix_identity::{Identity};
+use actix_identity::Identity;
 use actix_web::{web, FromRequest, HttpRequest};
-use bson::Document;
 use chrono::prelude::*;
 use futures::{Future, StreamExt};
 use log::error;
@@ -215,12 +214,20 @@ impl User {
     }
 
     pub async fn save(&self, db: &mongodb::Database) {
-        let doc: Document = self.into();
+        let doc: bson::Document = self.into();
+        let users = db.collection(User::COLLECTION);
 
-        db.collection(User::COLLECTION)
-            .update_one(doc! {"_id": doc.get("_id").unwrap()}, doc, None)
-            .await
-            .unwrap();
+        if let Some(id) = doc.get("_id") {
+            users
+                .update_one(doc! {"_id": id }, doc, None)
+                .await
+                .expect("update_one error in User::save");
+        } else {
+            users
+                .insert_one(doc, None)
+                .await
+                .expect("insert_one error in User::save");
+        }
     }
 
     pub fn to_document<'a>(&self) -> mongodb::bson::document::Document {

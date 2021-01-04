@@ -78,11 +78,17 @@ impl Log {
 
     pub async fn save(&self, db: &mongodb::Database) {
         let doc: bson::Document = self.into();
+        let logs = db.collection(Log::COLLECTION);
 
-        db.collection(Log::COLLECTION)
-            .update_one(doc! {"_id": doc.get("_id").unwrap()}, doc, None)
-            .await
-            .unwrap();
+        if let Some(id) = doc.get("_id") {
+            logs.update_one(doc! {"_id": id }, doc, None)
+                .await
+                .expect("update_one error in Log::save");
+        } else {
+            logs.insert_one(doc, None)
+                .await
+                .expect("insert_one error in Log::save");
+        }
     }
 }
 

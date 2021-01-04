@@ -3,6 +3,7 @@
 ## TODO
 
 - ~~Implement extractor permission checks~~
+- Implement [rate limiter](https://github.com/TerminalWitchcraft/actix-ratelimit)
 - Collection for logs
 - Better error responses
 - Custom validations

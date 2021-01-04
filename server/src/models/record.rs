@@ -106,11 +106,19 @@ impl Record {
 
     pub async fn save(&self, db: &mongodb::Database) {
         let doc: bson::Document = self.into();
+        let records = db.collection(Record::COLLECTION);
 
-        db.collection(Record::COLLECTION)
-            .update_one(doc! {"_id": doc.get("_id").unwrap()}, doc, None)
-            .await
-            .unwrap();
+        if let Some(id) = doc.get("_id") {
+            records
+                .update_one(doc! {"_id": id }, doc, None)
+                .await
+                .expect("update_one error in Record::save");
+        } else {
+            records
+                .insert_one(doc, None)
+                .await
+                .expect("insert_one error in Record::save");
+        }
     }
 }
 
