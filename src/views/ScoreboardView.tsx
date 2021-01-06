@@ -8,7 +8,14 @@ import Api from '../Api';
 import AppState from '../AppState';
 import { useIsMounted } from '../Hooks';
 
-const ScoreboardView = ({ boardType, profileId }) => {
+type BoardType = 'sp' | 'mp' | 'overall';
+
+type ScoreboardViewProps = {
+    boardType: BoardType;
+    profileId?: string;
+};
+
+const ScoreboardView = ({ boardType, profileId }: ScoreboardViewProps) => {
     const isMounted = useIsMounted();
 
     const [board, setBoard] = React.useState([]);
@@ -22,19 +29,19 @@ const ScoreboardView = ({ boardType, profileId }) => {
     const prepareProfile = React.useCallback(
         (profile) => {
             if (profile) {
-                profile.entries.forEach((entry) => {
-                    const map = records.find((record) => record.id === entry._id);
+                profile.entries.forEach((entry: any) => {
+                    const map = records.find((record: any) => record.id === entry._id);
                     entry.name = map.name;
                     entry.index = map.index;
                     entry.delta = Math.abs(map.wr - entry.score);
                     entry.showcase = map.showcases.find(
-                        (sc) => sc.player.id === profile._id || (sc.player2 && sc.player2.id === profile._id),
+                        (sc: any) => sc.player.id === profile._id || (sc.player2 && sc.player2.id === profile._id),
                     );
                 });
 
-                const missing = [];
-                records.forEach((record) => {
-                    const entry = profile.entries.find((entry) => entry._id === record.id);
+                const missing: any[] = [];
+                records.forEach((record: any) => {
+                    const entry = profile.entries.find((entry: any) => entry._id === record.id);
                     if (!entry) {
                         missing.push({
                             _id: record.id,
@@ -65,7 +72,7 @@ const ScoreboardView = ({ boardType, profileId }) => {
         }
     }, [board.length, boardType, isMounted, prepareProfile, profile, profileId]);
 
-    const handleProfileOpen = (id) => () => {
+    const handleProfileOpen = (id: string) => () => {
         setDialogOpen(true);
         setProfile(undefined);
 

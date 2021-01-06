@@ -12,7 +12,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const AppBar = ({ currentTab }) => {
+type AppBarProps = {
+    currentTab: number;
+};
+
+const AppBar = ({ currentTab }: AppBarProps) => {
     const classes = useStyles();
 
     return (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect, RouteComponentProps } from 'react-router-dom';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -11,7 +11,7 @@ import AboutView from './views/AboutView';
 import RecordsView from './views/RecordsView';
 import ScoreboardView from './views/ScoreboardView';
 import Api from './Api';
-import AppState, { AppReducer } from './AppState';
+import AppState, { appReducer, initialAppState } from './AppState';
 import NotFoundView from './views/NotFoundView';
 
 const useStyles = makeStyles((theme) => ({
@@ -20,8 +20,10 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+type ProfileRouteComponentProps = RouteComponentProps<{ id: string }>;
+
 const App = () => {
-    const [state, dispatch] = React.useReducer(...AppReducer);
+    const [state, dispatch] = React.useReducer(appReducer, initialAppState);
 
     React.useEffect(() => {
         Api.getRecords()
@@ -46,9 +48,6 @@ const App = () => {
                     main: red.A400,
                 },
                 type: state.darkMode.enabled ? 'dark' : 'light',
-            },
-            typography: {
-                useNextVariants: true,
             },
         });
     }, [state.darkMode.enabled]);
@@ -97,7 +96,7 @@ const App = () => {
                                             <Route
                                                 exact
                                                 from="/@/:id"
-                                                component={({ match: { params } }) => (
+                                                component={({ match: { params } }: ProfileRouteComponentProps) => (
                                                     <ScoreboardView boardType="sp" profileId={params.id} />
                                                 )}
                                             />

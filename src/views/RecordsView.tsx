@@ -22,8 +22,8 @@ const RecordsView = () => {
 
     const [searchTerm, setSearchTerm] = React.useState('');
 
-    const filterRecords = (records) => {
-        return records.filter((x) => {
+    const filterRecords = (records: any) => {
+        return records.filter((x: any) => {
             return (
                 searchTerm.length === 0 ||
                 x.name.toUpperCase().startsWith(searchTerm.toUpperCase()) ||
@@ -32,7 +32,7 @@ const RecordsView = () => {
         });
     };
 
-    const handleInputChange = (ev) => {
+    const handleInputChange = (ev: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         setSearchTerm(ev.target.value);
     };
 

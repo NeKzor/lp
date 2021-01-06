@@ -20,8 +20,14 @@ const rows = [
     { id: 'ties', numeric: true, sortable: true, label: 'Ties' },
 ];
 
-const RecordsTableHead = ({ order, orderBy, onRequestSort }) => {
-    const createSortHandler = (property) => (event) => {
+type RecordsTableHeadProps = {
+    order: 'asc' | 'desc';
+    orderBy: string;
+    onRequestSort: any;
+};
+
+const RecordsTableHead = ({ order, orderBy, onRequestSort }: RecordsTableHeadProps) => {
+    const createSortHandler = (property: any) => (event: any) => {
         onRequestSort(event, property);
     };
 
@@ -33,7 +39,6 @@ const RecordsTableHead = ({ order, orderBy, onRequestSort }) => {
                         <TableCell
                             key={row.id}
                             align={row.numeric ? 'center' : 'left'}
-                            padding={row.disablePadding ? 'none' : 'default'}
                             sortDirection={orderBy === row.id ? order : false}
                         >
                             {row.sortable === true && (
@@ -75,8 +80,19 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const RecordsTable = ({ data }) => {
-    const [state, setState] = React.useState({
+type RecordsTableProps = {
+    data: any;
+};
+
+type RecordsTableState = {
+    order: 'asc' | 'desc';
+    orderBy: string;
+    page: number;
+    rowsPerPage: 100;
+};
+
+const RecordsTable = ({ data }: RecordsTableProps) => {
+    const [state, setState] = React.useState<RecordsTableState>({
         order: 'asc',
         orderBy: 'index',
         page: 0,
@@ -84,15 +100,15 @@ const RecordsTable = ({ data }) => {
     });
     const [curRecord, setCurRecord] = React.useState(0);
 
-    const handleRequestSort = (_, property) => {
+    const handleRequestSort = (_: any, property: any) => {
         const orderBy = property;
-        let order = 'desc';
+        let order: 'asc' | 'desc' = 'desc';
 
         if (state.orderBy === property && state.order === 'desc') {
             order = 'asc';
         }
 
-        setState({ order, orderBy });
+        setState((state) => ({ ...state, order, orderBy }));
     };
 
     const classes = useStyles();
@@ -108,7 +124,7 @@ const RecordsTable = ({ data }) => {
         </Tooltip>
     );
 
-    const handleRowClick = (id) => () => {
+    const handleRowClick = (id: any) => () => {
         setCurRecord(curRecord !== id ? id : 0);
     };
 
@@ -121,7 +137,6 @@ const RecordsTable = ({ data }) => {
                     order={order}
                     orderBy={orderBy}
                     onRequestSort={handleRequestSort}
-                    rowCount={data.length}
                 />
                 <TableBody>
                     {stableSort(data, order, orderBy).map((record) => {
@@ -170,7 +185,7 @@ const RecordsTable = ({ data }) => {
                                                     </>
                                                 )}
                                                 {record.showcases.length > 1 &&
-                                                    record.showcases.map((showcase, idx) => (
+                                                    record.showcases.map((showcase: any, idx: number) => (
                                                         <Grid key={idx} item xs={12} md={6} lg={6}>
                                                             <Showcase data={showcase} />
                                                         </Grid>

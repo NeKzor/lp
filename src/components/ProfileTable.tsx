@@ -2,7 +2,7 @@ import React from 'react';
 import Link from '@material-ui/core/Link';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
+import TableCell, { SortDirection } from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
@@ -16,8 +16,14 @@ const rows = [
     { id: 'delta', numeric: true, sortable: true, label: 'ΔWR' },
 ];
 
-const ProfileTableHead = ({ order, orderBy, onRequestSort }) => {
-    const createSortHandler = (property) => (event) => {
+type ProfileTableHeadProps = {
+    order: SortDirection;
+    orderBy: string;
+    onRequestSort: any;
+};
+
+const ProfileTableHead = ({ order, orderBy, onRequestSort }: ProfileTableHeadProps) => {
+    const createSortHandler = (property: any) => (event: any) => {
         onRequestSort(event, property);
     };
 
@@ -29,7 +35,6 @@ const ProfileTableHead = ({ order, orderBy, onRequestSort }) => {
                         <TableCell
                             key={row.id}
                             align={row.numeric ? 'center' : 'center'}
-                            padding={row.disablePadding ? 'none' : 'default'}
                             sortDirection={orderBy === row.id ? order : false}
                         >
                             {row.sortable === true && (
@@ -40,7 +45,7 @@ const ProfileTableHead = ({ order, orderBy, onRequestSort }) => {
                                 >
                                     <TableSortLabel
                                         active={orderBy === row.id}
-                                        direction={order}
+                                        direction={order !== false ? order : 'asc'}
                                         onClick={createSortHandler(row.id)}
                                     >
                                         {row.label}
@@ -63,15 +68,24 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const ProfileTable = ({ data }) => {
-    const [state, setState] = React.useState({
+type ProfileTableProps = {
+    data: any[];
+};
+
+type ProfileTableState = {
+    order: 'asc' | 'desc';
+    orderBy: string;
+};
+
+const ProfileTable = ({ data }: ProfileTableProps) => {
+    const [state, setState] = React.useState<ProfileTableState>({
         order: 'asc',
         orderBy: 'index',
     });
 
-    const handleRequestSort = (_, property) => {
+    const handleRequestSort = (_: any, property: any) => {
         const orderBy = property;
-        let order = 'desc';
+        let order: 'asc' | 'desc' = 'desc';
 
         if (state.orderBy === property && state.order === 'desc') {
             order = 'asc';
@@ -96,7 +110,6 @@ const ProfileTable = ({ data }) => {
                     order={order}
                     orderBy={orderBy}
                     onRequestSort={handleRequestSort}
-                    rowCount={data.length}
                 />
                 <TableBody>
                     {stableSort(data, order, orderBy).map((record) => {

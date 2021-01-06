@@ -15,12 +15,18 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const watch = (id) => () => {
+const watch = (id: string) => () => {
     const tab = window.open(`https://youtu.be/${id}`, '_blank');
-    tab.opener = null;
+    if (tab) {
+        tab.opener = null;
+    }
 };
 
-const Showcase = ({ data }) => {
+type ShowcaseProps = {
+    data: any;
+};
+
+const Showcase = ({ data }: ShowcaseProps) => {
     const classes = useStyles();
 
     const avatar = (

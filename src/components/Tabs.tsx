@@ -3,7 +3,11 @@ import { Link } from 'react-router-dom';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 
-const SiteTabs = ({ currentTab }) => {
+type SiteTabsProps = {
+    currentTab: number;
+};
+
+const SiteTabs = ({ currentTab }: SiteTabsProps) => {
     return (
         <>
             <Tabs

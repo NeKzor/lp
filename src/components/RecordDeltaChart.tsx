@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactApexCharts from 'react-apexcharts';
 import { useTheme } from '@material-ui/styles';
+import { Theme } from '@material-ui/core';
 
 const chartOptions = {
     plotOptions: {
@@ -28,30 +29,37 @@ const chartOptions = {
     },
     tooltip: {
         y: {
-            formatter: function (val) {
+            formatter: function (val: number) {
                 return val + ' portal' + (val === 1 ? '' : 's');
             },
         },
     },
 };
 
-const RecordDeltaChart = ({ data, mode, title, color }) => {
-    const sorted = data.filter((m) => m.mode === mode).sort((a, b) => a.index - b.index);
-    const max = Math.max(1, ...sorted.map((m) => m.score));
+type RecordDeltaChartProps = {
+    data: any;
+    mode: any;
+    title: string;
+    color: string;
+}
+
+const RecordDeltaChart = ({ data, mode, title, color }: RecordDeltaChartProps) => {
+    const sorted = data.filter((m: any) => m.mode === mode).sort((a: any, b: any) => a.index - b.index);
+    const max = Math.max(1, ...sorted.map((m: any) => m.score));
 
     const series = [
         {
             name: 'WR Delta',
-            data: sorted.map((m) => m.delta),
+            data: sorted.map((m: any) => m.delta),
         },
     ];
 
-    const theme = useTheme();
+    const theme = useTheme<Theme>();
 
     const options = {
         ...chartOptions,
         xaxis: {
-            categories: sorted.map((m) => m.name),
+            categories: sorted.map((m: any) => m.name),
             labels: {
                 show: false,
             },

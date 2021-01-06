@@ -24,8 +24,14 @@ const rows = [
     { id: 'score', numeric: true, sortable: true, label: 'Portals' },
 ];
 
-const ScoresTableHead = ({ order, orderBy, onRequestSort }) => {
-    const createSortHandler = (property) => (event) => {
+type ScoresTableHeadProps = {
+    order: 'asc' | 'desc';
+    orderBy: string;
+    onRequestSort: any;
+};
+
+const ScoresTableHead = ({ order, orderBy, onRequestSort }: ScoresTableHeadProps) => {
+    const createSortHandler = (property: any) => (event: any) => {
         onRequestSort(event, property);
     };
 
@@ -80,21 +86,31 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const ScoresTable = ({ data, handleClickOpen }) => {
-    const [state, setState] = React.useState({
+type ScoresTableProps = {
+    data: any;
+    handleClickOpen: any;
+};
+
+type ScoresTableState = {
+    order: 'asc' | 'desc';
+    orderBy: string;
+};
+
+const ScoresTable = ({ data, handleClickOpen }: ScoresTableProps) => {
+    const [state, setState] = React.useState<ScoresTableState>({
         order: 'asc',
         orderBy: 'score',
     });
 
-    const handleRequestSort = (_, property) => {
+    const handleRequestSort = (_: any, property: any) => {
         const orderBy = property;
-        let order = 'desc';
+        let order: 'asc' | 'desc' = 'desc';
 
         if (state.orderBy === property && state.order === 'desc') {
             order = 'asc';
         }
 
-        setState({ order, orderBy });
+        setState((state) => ({ ...state, order, orderBy }));
     };
 
     const classes = useStyles();
@@ -107,7 +123,6 @@ const ScoresTable = ({ data, handleClickOpen }) => {
                     order={order}
                     orderBy={orderBy}
                     onRequestSort={handleRequestSort}
-                    rowCount={data.length}
                 />
                 <TableBody>
                     {stableSort(data, order, orderBy).map((item) => {

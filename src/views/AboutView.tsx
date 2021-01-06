@@ -36,11 +36,11 @@ const getUpdate = () => {
     const minutes = duration.get('minutes');
     const seconds = duration.get('seconds');
 
-    const g = (value) => (value === 1 ? '' : 's');
+    const g = (value: number) => (value === 1 ? '' : 's');
     return `${hours} hour${g(hours)}, ${minutes} minute${g(minutes)}, ${seconds} second${g(seconds)}`;
 };
 
-let clockTimer = null;
+let clockTimer: number | undefined = undefined;
 
 const AboutView = () => {
     const {
@@ -52,11 +52,11 @@ const AboutView = () => {
     const classes = useStyles();
 
     React.useEffect(() => {
-        clockTimer = setInterval(() => {
+        clockTimer = window.setInterval(() => {
             setNextUpdate(getUpdate());
         }, 1000);
 
-        return () => clearInterval(clockTimer);
+        return () => window.clearInterval(clockTimer);
     }, []);
 
     const toggleDarkMode = () => {

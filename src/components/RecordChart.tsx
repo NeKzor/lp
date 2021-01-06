@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactApexCharts from 'react-apexcharts';
 import { useTheme } from '@material-ui/styles';
+import { Theme } from '@material-ui/core';
 
 const chartOptions = {
     plotOptions: {
@@ -29,29 +30,36 @@ const chartOptions = {
     },
     tooltip: {
         y: {
-            formatter: function (val) {
+            formatter: function (val: number) {
                 return val + ' portal' + (val === 1 ? '' : 's');
             },
         },
     },
 };
 
-const RecordChart = ({ data, mode, title, color }) => {
-    const sorted = data.filter((m) => m.mode === mode).sort((a, b) => a.index - b.index);
+type RecordChartProps = {
+    data: any;
+    mode: any;
+    title: string;
+    color: string;
+};
+
+const RecordChart = ({ data, mode, title, color }: RecordChartProps) => {
+    const sorted = data.filter((m: any) => m.mode === mode).sort((a: any, b: any) => a.index - b.index);
 
     const series = [
         {
             name: 'World Record',
-            data: sorted.map((m) => m.wr),
+            data: sorted.map((m: any) => m.wr),
         },
     ];
 
-    const theme = useTheme();
+    const theme = useTheme<Theme>();
 
     const options = {
         ...chartOptions,
         xaxis: {
-            categories: sorted.map((m) => m.name),
+            categories: sorted.map((m: any) => m.name),
             labels: {
                 show: false,
             },

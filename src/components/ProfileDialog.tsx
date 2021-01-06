@@ -17,6 +17,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import RecordDeltaChart from './RecordDeltaChart';
+import { SlideProps } from '@material-ui/core/Slide';
 
 const useStyles = makeStyles((theme) => ({
     stats: {
@@ -53,16 +54,24 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Transition = React.forwardRef((props, ref) => {
-    return <Slide direction="up" {...props} ref={ref} />;
+const Transition = React.forwardRef<unknown, SlideProps>((props, ref) => {
+    return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const gotoSteamProfile = (id) => {
+const gotoSteamProfile = (id: string) => {
     const tab = window.open(`https://steamcommunity.com/profiles/${id}`, '_blank');
-    tab.opener = null;
+    if (tab) {
+        tab.opener = null;
+    }
 };
 
-const ProfileStat = ({ title, type, data }) => {
+type ProfileStatProps = {
+    title: string;
+    type: string;
+    data: any;
+};
+
+const ProfileStat = ({ title, type, data }: ProfileStatProps) => {
     const score = data[type];
     const oldScore = data[type + 'Old'];
     const delta = data.stats[type].delta;
@@ -101,7 +110,13 @@ const ProfileStat = ({ title, type, data }) => {
     );
 };
 
-const ProfileDialog = ({ active, profile, handleClickClose }) => {
+type ProfileDialogProps = {
+    active: boolean;
+    profile: any;
+    handleClickClose: any;
+};
+
+const ProfileDialog = ({ active, profile, handleClickClose }: ProfileDialogProps) => {
     const classes = useStyles();
 
     return (
