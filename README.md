@@ -39,6 +39,10 @@ DB_NAME=lp
 DB_USER=user
 DB_PASS=yes
 DB_PORT=27017
+
+# optional but required for production
+# random 8-bit integer values and 32 in total
+SESSION_KEY=1,5,255,232,...
 ```
 
 - Configure `run`

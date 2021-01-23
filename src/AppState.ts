@@ -1,5 +1,23 @@
 import React from 'react';
 
+class User {
+    profile: any = null;
+
+    constructor() {
+        this.profile = null;
+    }
+    hasLoaded() {
+        return this.profile;
+    }
+    isLoggedIn() {
+        return this.profile && !this.profile.error;
+    }
+    setProfile(profile: any) {
+        this.profile = profile;
+        return this;
+    }
+}
+
 class DarkMode {
     enabled = false;
 
@@ -15,19 +33,29 @@ class DarkMode {
 
 type AppState = {
     records: any[];
+    user: User;
     darkMode: DarkMode;
 };
 
 export const initialAppState: AppState = {
     records: [],
+    user: new User(),
     darkMode: new DarkMode(),
 };
 
-type ActionType = { action: 'setRecords'; data: any } | { action: 'toggleDarkMode' };
+type ActionType =
+    | { action: 'setProfile'; data: any }
+    | { action: 'setRecords'; data: any }
+    | { action: 'toggleDarkMode' };
 
 export const appReducer = (state: typeof initialAppState, dispatch: ActionType) => {
     console.log('[DISPATCH] ' + dispatch.action);
     switch (dispatch.action) {
+        case 'setProfile':
+            return {
+                ...state,
+                user: state.user.setProfile(dispatch.data),
+            };
         case 'setRecords':
             return {
                 ...state,
@@ -46,6 +74,6 @@ export const appReducer = (state: typeof initialAppState, dispatch: ActionType) 
 type ContextType = {
     state: typeof initialAppState;
     dispatch: React.Dispatch<ActionType>;
-}
+};
 
-export default React.createContext<ContextType>({ state: initialAppState, dispatch: () => {}});
+export default React.createContext<ContextType>({ state: initialAppState, dispatch: () => {} });

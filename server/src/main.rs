@@ -5,7 +5,7 @@ extern crate actix_web;
 extern crate bitflags;
 use actix_cors::Cors;
 use actix_files::Files;
-use actix_http::{body::Body, http::header};
+use actix_http::{body::Body, cookie::SameSite, http::header};
 use actix_identity::{CookieIdentityPolicy, IdentityService};
 use actix_web::{
     guard,
@@ -96,8 +96,19 @@ async fn main() -> std::io::Result<()> {
 
     let db = client.database(db_name.as_ref());
 
-    // TODO: make this persistent in production
-    let private_key = rand::thread_rng().gen::<[u8; 32]>();
+    let private_key = std::env::var("SESSION_KEY")
+        .map(|key| {
+            key.split(",")
+                .map(|str| str.parse::<u8>().expect("number does not fit in u8"))
+                .collect::<Vec<u8>>()
+        })
+        .unwrap_or_else(|_| {
+            if !development {
+                panic!("env var SESSION_KEY is not set");
+            }
+
+            rand::thread_rng().gen::<[u8; 32]>().into()
+        });
 
     let protocol = if enable_ssl { "https://" } else { "http://" };
 
@@ -113,13 +124,14 @@ async fn main() -> std::io::Result<()> {
         let cors = {
             let cors = Cors::default()
                 .allowed_origin(host_address.as_ref())
-                .allowed_methods(vec!["GET", "POST"])
+                .allowed_methods(vec!["GET", "PATCH", "POST"])
                 .allowed_headers(vec![header::AUTHORIZATION, header::ACCEPT])
                 .allowed_header(header::CONTENT_TYPE)
                 .max_age(3600);
     
             if development {
-                cors.allowed_origin(format!("http://localhost:{}", app_port).as_ref())
+                cors
+                    .allow_any_origin()
             } else {
                 cors
             }
@@ -146,7 +158,9 @@ async fn main() -> std::io::Result<()> {
                     .name("lp-auth")
                     .path("/")
                     .max_age(604800)
-                    .secure(enable_ssl),
+                    //.http_only(true)
+                    .secure(false)
+                    //.same_site(if development { SameSite::None } else { SameSite::Lax }),
             ))
             .data(db.clone())
             .data(redirector.clone())
@@ -223,5 +237,20 @@ pub mod tests {
         dotenv().ok();
 
         let _ = futures::executor::block_on(async { find_users().await });
+    }
+
+    #[test]
+    fn session_key() {
+        dotenv().ok();
+
+        let private_key = std::env::var("SESSION_KEY")
+            .map(|key| {
+                key.split(",")
+                    .map(|str| str.parse::<u8>().expect("number does not fit in u8"))
+                    .collect::<Vec<u8>>()
+            })
+            .unwrap_or_else(|_| rand::thread_rng().gen::<[u8; 32]>().into());
+
+        println!("private_key: {:?}", private_key);
     }
 }

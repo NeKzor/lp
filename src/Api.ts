@@ -31,23 +31,26 @@ export default new Api();
 
 class ApiClient {
     baseApi: string;
+    options: RequestInit;
 
     constructor(baseApi: string) {
         this.baseApi = baseApi;
+        this.options = {
+        };
     }
     async get(route: string) {
-        const res = await fetch(this.baseApi + route,  { method: 'GET' });
-        console.log(`[GET] ${route} (${res.status})`);
+        const res = await fetch(this.baseApi + route,  { method: 'GET', ...this.options });
+        console.log(`[GET] ${this.baseApi + route} (${res.status})`);
         return res;
     }
     async patch(route: string, body: any) {
-        const res = await fetch(this.baseApi + route, { method: 'PATCH', body });
-        console.log(`[PATCH] ${route} (${res.status})`);
+        const res = await fetch(this.baseApi + route, { method: 'PATCH', body, ...this.options });
+        console.log(`[PATCH] ${this.baseApi + route} (${res.status})`);
         return res;
     }
     async post(route: string, body: any) {
-        const res = await fetch(this.baseApi + route, { method: 'POST', body });
-        console.log(`[POST] ${route} (${res.status})`);
+        const res = await fetch(this.baseApi + route, { method: 'POST', body, ...this.options });
+        console.log(`[POST] ${this.baseApi + route} (${res.status})`);
         return res;
     }
 }
@@ -58,28 +61,28 @@ class ApiService {
 
     constructor() {
         this.client = new ApiClient(
-            process.env.NODE_ENV === 'development' ? 'http://127.0.0.1:8080' : 'https://next.lp.nekz.me'
+            process.env.NODE_ENV === 'development' ? '' : 'https://next.lp.nekz.me'
         );
     }
     async getMe() {
         const res = await this.client.get('/users/@me');
-        return res.ok ? await res.json() : {};
+        return await res.json();
     }
     async getUser(steamId: string) {
         const res = await this.client.get(`/users/${steamId}`);
-        return res.ok ? await res.json() : {};
+        return await res.json();
     }
     async getUsers() {
         const res = await this.client.get('/users/all');
-        return res.ok ? await res.json() : [];
+        return await res.json();
     }
     async editUser(user: any) {
         const res = await this.client.patch('/users/edit', user);
-        return res.ok ? await res.json() : {};
+        return await res.json();
     }
     async getLogs(filter: any) {
         const res = await this.client.post('/logs/all', filter);
-        return res.ok ? await res.json() : [];
+        return await res.json();
     }
 }
 
