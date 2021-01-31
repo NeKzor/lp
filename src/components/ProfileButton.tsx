@@ -37,7 +37,7 @@ const ProfileButton = ({ data }: ProfileButtonProps) => {
 
     const handleOpen = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         if (!data.isLoggedIn()) {
-            window.open('https://localhost:8080/login', '_self');
+            window.open(process.env.NODE_ENV === 'development' ? 'https://localhost:8080/login' : '/login', '_self');
         } else {
             setAnchor(event.currentTarget);
         }
@@ -48,7 +48,7 @@ const ProfileButton = ({ data }: ProfileButtonProps) => {
     };
 
     const logout = () => {
-        window.open('/logout', '_self');
+        window.open(process.env.NODE_ENV === 'development' ? 'https://localhost:8080/login' : '/logout', '_self');
     };
 
     const classes = useStyles();

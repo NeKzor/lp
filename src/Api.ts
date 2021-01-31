@@ -4,7 +4,7 @@ type BoardType = 'sp' | 'mp' | 'overall';
 
 class Api {
     get baseApi() {
-        return process.env.NODE_ENV === 'development' ? 'https://127.0.0.1:8080/api/v1' : 'https://lp.nekz.me/api/v1';
+        return process.env.NODE_ENV === 'development' ? '/api/v1' : 'https://next.lp.nekz.me/api/v1';
     }
     async request(route: string) {
         const res = await fetch(route);
