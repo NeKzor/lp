@@ -1,5 +1,9 @@
 # Changes
 
+## 2021-02-06
+
+World record on 'Propulsion Catch' is now 0.<br>Achieved first by [`PerOculos`].
+
 ## 2020-10-14
 
 World record on `Neurotoxin Sabotage` is now 2.<br>Achieved first by [`Krzyhau`].
@@ -28,5 +32,5 @@ World record on `Smooth Jazz` is now 0.<br>Achieved first by [`Krzyhau`].
 
 World record on `Laser Platform` is now 3.<br>Achieved first by [`Krzyhau`].
 
-[`Krzyhau`]: http://lp.nekz.me/@/76561198096446735
-[`PerOculos`]: http://lp.nekz.me/@/76561198003223063
+[`Krzyhau`]: https://lp.nekz.me/@/76561198096446735
+[`PerOculos`]: https://lp.nekz.me/@/76561198003223063

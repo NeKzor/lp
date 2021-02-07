@@ -20,6 +20,6 @@ Community rules for the Portal 2 least portals leaderboard [lp.nekz.me].
   - This usually improves the automatic ban system but also serves to avoid unnecessary unbans
 - Glitches and tricks requiring a setup before map loads are banned, see [`Banned Exploits`]
 
-[lp.nekz.me]: http://lp.nekz.me
+[lp.nekz.me]: https://lp.nekz.me
 [`Commands`]: commands.md
 [`Banned Exploits`]: exploits.md

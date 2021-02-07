@@ -282,7 +282,7 @@
 - id: 47818
   name: Propulsion Catch
   mode: 1
-  wr: 2
+  wr: 0
   index: 56
 
 - id: 47820
