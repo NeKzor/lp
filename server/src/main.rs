@@ -57,29 +57,31 @@ async fn main() -> std::io::Result<()> {
 
     let server =
         HttpServer::new(move || {
-            let mut cors = Cors::new()
+            let mut cors = Cors::default()
                 .allowed_methods(vec!["GET"])
                 .allowed_headers(vec![header::AUTHORIZATION, header::ACCEPT])
                 .allowed_header(header::CONTENT_TYPE)
                 .max_age(3600);
 
-            if development {
-                let protocol = if enable_ssl {
-                    "https://"
-                } else {
-                    "http://"
-                };
+            let protocol = if enable_ssl {
+                "https://"
+            } else {
+                "http://"
+            };
 
+            if development {
                 cors = cors
                     .allowed_origin(format!("{}{}", protocol, address).as_ref())
                     .allowed_origin("http://localhost:3000");
             } else {
-                cors = cors.allowed_origin("http://lp.nekz.me");
+                cors = cors
+                    .allowed_origin("http://lp.nekz.me")
+                    .allowed_origin("https://lp.nekz.me");
             }
 
             App::new()
                 .wrap(Logger::default())
-                .wrap(cors.finish())
+                .wrap(cors)
                 .wrap(Compress::default())
                 .configure(v1::api::init)
                 .service(
