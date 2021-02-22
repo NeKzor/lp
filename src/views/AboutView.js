@@ -91,7 +91,7 @@ const AboutView = () => {
                         </Typography>
                         <Typography variant="body1">
                             - Do not cheat and follow the{' '}
-                            <Link rel="noopener" href="http://lp.nekz.me/rules">
+                            <Link rel="noopener" href="https://lp.nekz.me/rules">
                                 rules
                             </Link>
                             .
