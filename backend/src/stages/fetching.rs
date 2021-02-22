@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use log::{error, info};
+use log::{error, info, warn};
 use rayon::prelude::*;
 use serde_xml_rs::from_reader;
 
@@ -69,6 +69,7 @@ pub fn update_entries(record: &Record, entries: &[Entry], player_ids: &mut HashS
                     new_score = ov.score;
                 } else {
                     player.is_banned = true;
+                    warn!("Auto-banned player {} (score: {})", player.id, new_score);
                 }
             }
 
