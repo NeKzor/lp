@@ -213,7 +213,7 @@ const ProfileDialog = ({ active, profile, handleClickClose }) => {
 
                                 <div style={{ paddingTop: '10px', marginBottom: '20px' }}>
                                     Share:{' '}
-                                    <Link href={`http://lp.nekz.me/@/${profile._id}`}>lp.nekz.me/@/{profile._id}</Link>
+                                    <Link href={`https://lp.nekz.me/@/${profile._id}`}>lp.nekz.me/@/{profile._id}</Link>
                                 </div>
                             </Grid>
                         </Grid>
