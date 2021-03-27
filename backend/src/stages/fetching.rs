@@ -61,20 +61,22 @@ pub fn update_entries(record: &Record, entries: &[Entry], player_ids: &mut HashS
                 continue;
             }
 
-            let mut new_score = entry.score.value;
-
-            if !entry.is_valid(&record) {
+            let new_score = {
                 if let Some(ov) = record
                     .overrides
                     .iter()
-                    .find(|ov| ov.id == record.id && ov.player == entry.steam_id.value)
+                    .find(|ov| ov.player == entry.steam_id.value)
                 {
-                    new_score = ov.score;
+                    ov.score
                 } else {
-                    player.is_banned = true;
-                    warn!("Auto-banned player {} (score: {})", player.id, new_score);
+                    if !entry.is_valid(&record) {
+                        player.is_banned = true;
+                        warn!("Auto-banned player {} (score: {})", player.id, entry.score.value);
+                    }
+    
+                    entry.score.value
                 }
-            }
+            };
 
             if let Some(mut score) = player
                 .scores
