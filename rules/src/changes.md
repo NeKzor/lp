@@ -1,8 +1,12 @@
 # Changes
 
+## 2021-03-25
+
+World record on `Bridge Fling` is now 4.<br>Achieved first by [`Nidboj132`] and [`Oryn`].
+
 ## 2021-02-06
 
-World record on 'Propulsion Catch' is now 0.<br>Achieved first by [`PerOculos`].
+World record on `Propulsion Catch` is now 0.<br>Achieved first by [`PerOculos`].
 
 ## 2020-10-14
 
@@ -34,3 +38,5 @@ World record on `Laser Platform` is now 3.<br>Achieved first by [`Krzyhau`].
 
 [`Krzyhau`]: https://lp.nekz.me/@/76561198096446735
 [`PerOculos`]: https://lp.nekz.me/@/76561198003223063
+[`Nidboj132`]: https://lp.nekz.me/@/76561198337970645
+[`Oryn`]: https://lp.nekz.me/@/76561198134041367
