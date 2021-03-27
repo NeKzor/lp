@@ -40,7 +40,10 @@ pub fn update_entries(record: &Record, entries: &[Entry], player_ids: &mut HashS
     let ids = Mutex::new(player_ids);
     let wr_ties = Mutex::new(0);
 
-    entries.par_iter().chunks(1000).for_each(|entries| {
+    entries.par_iter().chunks(2500).for_each(|entries| {
+        let mut temp_ids = HashSet::new();
+        let mut temp_wr_ties = 0;
+
         for entry in entries {
             let name = format!("./tmp/{}", entry.steam_id.value);
 
@@ -92,13 +95,11 @@ pub fn update_entries(record: &Record, entries: &[Entry], player_ids: &mut HashS
 
             if !player.is_banned {
                 if record.wr == new_score {
-                    let mut ties = wr_ties.lock().unwrap();
-                    *ties += 1;
+                    temp_wr_ties += 1;
                 }
 
                 if update_ids {
-                    let mut player_ids = ids.lock().unwrap();
-                    (*player_ids).insert(player.id.clone());
+                    temp_ids.insert(player.id.clone());
                 }
             }
 
@@ -106,6 +107,12 @@ pub fn update_entries(record: &Record, entries: &[Entry], player_ids: &mut HashS
                 error!("failed to save player {}", player.id);
             }
         }
+
+        let mut mtx_ties = wr_ties.lock().unwrap();
+        let mut mtx_player_ids = ids.lock().unwrap();
+
+        *mtx_ties += temp_wr_ties;
+        (*mtx_player_ids).extend(temp_ids);
     });
 
     wr_ties.into_inner().unwrap_or_default()
