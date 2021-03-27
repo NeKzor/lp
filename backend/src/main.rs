@@ -135,7 +135,7 @@ fn main() {
 
     // Note: UTC only
     scheduler.add(Job::new(
-        "0 0 0 * * * *".parse().unwrap(),
+        "0 0 * * * * *".parse().unwrap(),
         || match std::panic::catch_unwind(run) {
             Ok(_) => info!("done"),
             Err(oops) => error!("{:#?}", oops),
