@@ -20,24 +20,19 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Padding = () => <div style={{ paddingTop: '50px' }} />;
+const Padding = () => <div style={{ paddingTop: '35px' }} />;
 
 const getUpdate = () => {
     // Not sure if this is right lol
     const now = moment.utc();
-    let updateIn = moment().utc().endOf('day').add(30, 'minutes');
-
-    if (updateIn.isBefore(now)) {
-        updateIn = moment().utc().endOf('day').add(1, 'day').add(30, 'minutes');
-    }
+    let updateIn = now.clone().add(1, 'hour').startOf('hour');
 
     const duration = moment.duration({ from: now, to: updateIn });
-    const hours = duration.get('hours');
     const minutes = duration.get('minutes');
     const seconds = duration.get('seconds');
 
     const g = (value) => (value === 1 ? '' : 's');
-    return `${hours} hour${g(hours)}, ${minutes} minute${g(minutes)}, ${seconds} second${g(seconds)}`;
+    return `${minutes} minute${g(minutes)}, ${seconds} second${g(seconds)}`;
 };
 
 let clockTimer = null;
@@ -102,6 +97,9 @@ const AboutView = () => {
                         <Typography variant="h5">Next Update</Typography>
                         <br />
                         {nextUpdate}
+                        <br />
+                        <br />
+                        Updates happen hourly and take about 11 minutes to complete.
 
                         <Padding />
 
