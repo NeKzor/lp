@@ -41,7 +41,7 @@
 # Kitsune 0 on Bridge Swap w/Commands
 - id: 47850
   player: '76561198136477838'
-  score: 4
+  score: 3
 
 # Kitsune 0 on Bomb Flings w/Commands
 - id: 47467
@@ -157,3 +157,13 @@
 - id: 47799
   player: '76561198136477838'
   score: 5
+
+# Kitsune 0 on Propulsion Flings w/Commands
+- id: 47794
+  player: '76561198136477838'
+  score: 2
+
+# Kitsune 0 on Conversion Intro w/Commands
+- id: 47796
+  player: '76561198136477838'
+  score: 29
