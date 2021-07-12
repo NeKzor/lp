@@ -53,97 +53,107 @@
   player: '76561198136477838'
   score: 5
 
-  # Kitsune 0 on Ceiling Catapult w/Commands
+# Kitsune 0 on Ceiling Catapult w/Commands
 - id: 47749
   player: '76561198136477838'
   score: 8
 
-  # Kitsune 0 on Fizzler Intro w/Commands
+# Kitsune 0 on Fizzler Intro w/Commands
 - id: 47747
   player: '76561198136477838'
   score: 2
 
-  # Kitsune 0 on Future Starter w/Commands
+# Kitsune 0 on Future Starter w/Commands
 - id: 47107
   player: '76561198136477838'
   score: 3
 
-  # Kitsune 0 on Jail Break w/Commands
+# Kitsune 0 on Jail Break w/Commands
 - id: 47772
   player: '76561198136477838'
   score: 2
 
-  # Kitsune 0 on Neurotoxin Sabotage w/Commands
+# Kitsune 0 on Neurotoxin Sabotage w/Commands
 - id: 47781
   player: '76561198136477838'
   score: 3
 
-  # Kitsune 0 on Ricochet w/Commands
+# Kitsune 0 on Ricochet w/Commands
 - id: 47750
   player: '76561198136477838'
   score: 2
 
-  # Kitsune 0 on Trust Fling w/Commands
+# Kitsune 0 on Trust Fling w/Commands
 - id: 47745
   player: '76561198136477838'
   score: 2
-  
-  # Kitsune 0 on Turret Factory w/Commands
+
+# Kitsune 0 on Turret Factory w/Commands
 - id: 47777
   player: '76561198136477838'
   score: 6
 
-  # Kitsune 0 on Turret Sabotage w/Commands
+# Kitsune 0 on Turret Sabotage w/Commands
 - id: 47778
   player: '76561198136477838'
   score: 7
-  
-  # Kitsune 0 on Underground w/Commands
+
+# Kitsune 0 on Underground w/Commands
 - id: 47782
   player: '76561198136477838'
   score: 7
 
-  # Kitsune 0 on Finale 2 w/Commands
+# Kitsune 0 on Finale 2 w/Commands
 - id: 47822
   player: '76561198136477838'
   score: 4
 
-  # Kitsune 0 on Finale 3 w/Commands
+# Kitsune 0 on Finale 3 w/Commands
 - id: 47823
   player: '76561198136477838'
   score: 9
 
-  # Kitsune 0 on Finale 4 w/Commands
+# Kitsune 0 on Finale 4 w/Commands
 - id: 47457
   player: '76561198136477838'
   score: 9
 
-  # Kitsune 0 on Funnel Catch w/Commands
+# Kitsune 0 on Funnel Catch w/Commands
 - id: 47809
   player: '76561198136477838'
   score: 2
 
-  # Kitsune 0 on Laser Platform w/Commands
+# Kitsune 0 on Laser Platform w/Commands
 - id: 47816
   player: '76561198136477838'
   score: 16
 
-  # Kitsune 0 on PotatOS w/Commands
+# Kitsune 0 on PotatOS w/Commands
 - id: 47471
   player: '76561198136477838'
   score: 8
 
-  # Kitsune 0 on Propulsion Intro w/Commands
+# Kitsune 0 on Propulsion Intro w/Commands
 - id: 47792
   player: '76561198136477838'
   score: 4
 
-  # Kitsune 0 on Repulsion Polarity w/Commands
+# Kitsune 0 on Repulsion Polarity w/Commands
 - id: 47820
   player: '76561198136477838'
   score: 4
 
-  # Kitsune 0 on Wall Button w/Commands
+# Kitsune 0 on Wall Button w/Commands
 - id: 47805
   player: '76561198136477838'
   score: 2
+
+# Kitsune 0 on Cave Johnson w/Commands
+- id: 47785
+  player: '76561198136477838'
+  score: 9
+
+# Kitsune 0 on Three Gels w/Commands
+- id: 47799
+  player: '76561198136477838'
+  score: 5
