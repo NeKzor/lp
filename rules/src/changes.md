@@ -1,5 +1,9 @@
 # Changes
 
+## 2021-08-22
+
+World record on `Cave Johnson` is now 4.<br>Achieved first by [`Nidboj132`].
+
 ## 2021-03-25
 
 World record on `Bridge Fling` is now 4.<br>Achieved first by [`Nidboj132`] and [`Oryn`].
