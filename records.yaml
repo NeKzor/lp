@@ -402,7 +402,7 @@
 - id: 47850
   name: Bridge Swap
   mode: 2
-  wr: 3
+  wr: 2
   index: 79
 
 - id: 47855

@@ -1,5 +1,9 @@
 # Changes
 
+## 2021-09-04
+
+World record on `Bridge Swap` is now 2.<br>Achieved first by [`Nidboj132`] and [`Oryn`].
+
 ## 2021-08-22
 
 World record on `Cave Johnson` is now 4.<br>Achieved first by [`Nidboj132`].
