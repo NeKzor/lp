@@ -1,5 +1,9 @@
 # Changes
 
+## 2022-01-02
+
+World record on `Conversion Intro` is now 9.<br>Achieved first by [`Krzyhau`].
+
 ## 2021-09-04
 
 World record on `Bridge Swap` is now 2.<br>Achieved first by [`Nidboj132`] and [`Oryn`].
