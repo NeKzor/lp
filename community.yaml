@@ -19,6 +19,11 @@
   date: Dec. 2013
   media: 2D78_4909H0
 
+- id: 47451
+  steam: '76561198973478625'
+  date: Mar. 2021
+  media: 8IRgc4sa1_k
+
 # Future Starter
 
 - id: 47107
@@ -67,6 +72,11 @@
   steam: '76561198015995629'
   date: Aug. 2012
   media: 0htANr3C3bo
+
+- id: 47466
+  steam: '76561198029488151'
+  date: Mar. 2013
+  media: 4Rzj37lK2s4
 
 # Fizzler Intro
 
@@ -599,6 +609,12 @@
   steam2: '76561198043899549'
   date: Aug. 2016
   media: V0xSr_GXtsA
+
+- id: 52688
+  steam: '76561198003598363'
+  steam2: '76561198140834873'
+  date: Sep. 2017
+  media: fxGOCwh_WYA
 
 # Advanced Polarity
 
