@@ -15,8 +15,10 @@
         "react-apexcharts": "^1.3.6",
         "react-dom": "^16.13.1",
         "react-router-dom": "^5.1.2",
-        "react-scripts": "^3.4.1",
         "react-world-flags": "^1.3.0"
+    },
+    "devDependencies": {
+        "react-scripts": "^3.4.1"
     },
     "scripts": {
         "predeploy": "npm run build",
@@ -35,7 +37,8 @@
         "server": "cargo run --manifest-path ./server/Cargo.toml",
         "server:test": "cargo test --manifest-path ./server/Cargo.toml",
         "book": "mdbook build ./rules",
-        "book:serve": "mdbook serve -p 3030 ./rules"
+        "book:serve": "mdbook serve -p 3030 ./rules",
+        "audit": "npm audit --production"
     },
     "browserslist": [
         ">0.2%",
