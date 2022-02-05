@@ -1,5 +1,9 @@
 # Changes
 
+## 2022-02-03
+
+World record on `Lasers` is now 3.<br>Achieved first by [`Nidboj132`] and [`Oryn`].
+
 ## 2022-01-02
 
 World record on `Conversion Intro` is now 9.<br>Achieved first by [`Krzyhau`].

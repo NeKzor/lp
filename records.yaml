@@ -324,7 +324,7 @@
 - id: 47827
   name: Lasers
   mode: 2
-  wr: 4
+  wr: 3
   index: 66
 
 - id: 47830
