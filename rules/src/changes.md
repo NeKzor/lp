@@ -4,6 +4,8 @@
 
 World record on `Turret Factory` is now 5.<br>Achieved first by [`Nidboj132`].
 
+World record on `Bridge Intro` is now 2.<br>Achieved first by [`Krzyhau`].
+
 ## 2022-02-03
 
 World record on `Lasers` is now 3.<br>Achieved first by [`Nidboj132`] and [`Oryn`].
