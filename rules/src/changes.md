@@ -1,5 +1,9 @@
 # Changes
 
+## 2022-04-24
+
+World record on `Turret Factory` is now 5.<br>Achieved first by [`Nidboj132`].
+
 ## 2022-02-03
 
 World record on `Lasers` is now 3.<br>Achieved first by [`Nidboj132`] and [`Oryn`].
