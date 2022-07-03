@@ -1,5 +1,9 @@
 # Changes
 
+## 2022-07-02
+
+World record on `Ceiling Catapult` is now 0.<br>Achieved first by [`Krzyhau`].
+
 ## 2022-06-26
 
 World record on `Propulsion Flings` is now 0.<br>Achieved first by [`feliser`].
