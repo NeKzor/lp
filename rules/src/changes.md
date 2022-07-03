@@ -1,5 +1,9 @@
 # Changes
 
+## 2022-06-26
+
+World record on `Propulsion Flings` is now 0.<br>Achieved first by [`feliser`].
+
 ## 2022-04-24
 
 World record on `Turret Factory` is now 5.<br>Achieved first by [`Nidboj132`].
@@ -62,3 +66,4 @@ World record on `Laser Platform` is now 3.<br>Achieved first by [`Krzyhau`].
 [`PerOculos`]: https://lp.nekz.me/@/76561198003223063
 [`Nidboj132`]: https://lp.nekz.me/@/76561198337970645
 [`Oryn`]: https://lp.nekz.me/@/76561198134041367
+[`feliser`]: https://lp.nekz.me/@/76561198084336096
