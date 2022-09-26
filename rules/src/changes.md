@@ -1,5 +1,9 @@
 # Changes
 
+## 2022-09-26
+
+World record on `Wall Button` is now 0.<br>Achieved first by [`Nidboj132`].
+
 ## 2022-07-02
 
 World record on `Ceiling Catapult` is now 0.<br>Achieved first by [`Krzyhau`].
