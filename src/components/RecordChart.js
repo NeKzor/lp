@@ -22,7 +22,7 @@ const chartOptions = {
         title: {
             text: 'Portals',
         },
-        max: 12,
+        max: 10,
     },
     fill: {
         opacity: 1,
