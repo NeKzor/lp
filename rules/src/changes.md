@@ -1,5 +1,9 @@
 # Changes
 
+## 2022-11-02
+
+World record on `Neurotoxin Sabotage` is now 0.<br>Achieved first by [`zach`].
+
 ## 2022-09-26
 
 World record on `Wall Button` is now 0.<br>Achieved first by [`Nidboj132`].
@@ -75,3 +79,4 @@ World record on `Laser Platform` is now 3.<br>Achieved first by [`Krzyhau`].
 [`Nidboj132`]: https://lp.nekz.me/@/76561198337970645
 [`Oryn`]: https://lp.nekz.me/@/76561198134041367
 [`feliser`]: https://lp.nekz.me/@/76561198084336096
+[`zach`]: https://lp.nekz.me/@/76561198096862334
