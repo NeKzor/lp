@@ -1,5 +1,9 @@
 # Changes
 
+## 2023-02-05
+
+World record on `Fizzler Intro` is now 0.<br>Achieved first by [`Nidboj132`].
+
 ## 2022-11-02
 
 World record on `Neurotoxin Sabotage` is now 0.<br>Achieved first by [`zach`].
