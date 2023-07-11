@@ -1,5 +1,9 @@
 # Changes
 
+## 2023-07-11
+
+World record on `Lasers` is now 2.<br>Achieved first by [`Nidboj132`] and [`Oryn`].
+
 ## 2023-03-04
 
 World record on `Underground` is now 2.<br>Achieved first by [`Nidboj132`].
