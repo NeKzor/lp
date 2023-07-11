@@ -17,6 +17,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import RecordDeltaChart from './RecordDeltaChart';
+import baseUrl from "../utils/baseUrl";
 
 const useStyles = makeStyles((theme) => ({
     stats: {
@@ -213,7 +214,7 @@ const ProfileDialog = ({ active, profile, handleClickClose }) => {
 
                                 <div style={{ paddingTop: '10px', marginBottom: '20px' }}>
                                     Share:{' '}
-                                    <Link href={`https://lp.nekz.me/@/${profile._id}`}>lp.nekz.me/@/{profile._id}</Link>
+                                    <Link href={baseUrl() + `/@/${profile._id}`}>{baseUrl()}/@/{profile._id}</Link>
                                 </div>
                             </Grid>
                         </Grid>

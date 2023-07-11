@@ -1,7 +1,8 @@
+import baseUrl from "./utils/baseUrl";
+
 class Api {
     constructor() {
-        window.BASE_API =
-            process.env.NODE_ENV === 'development' ? 'http://127.0.0.1:8080/api/v1' : 'https://lp.nekz.me/api/v1';
+        window.BASE_API = baseUrl() + "/api/v1"
     }
     get baseApi() {
         return window.BASE_API;

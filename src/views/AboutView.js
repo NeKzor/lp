@@ -10,6 +10,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import AppState from '../AppState';
+import baseUrl from "../utils/baseUrl";
 
 const useStyles = makeStyles((theme) => ({
     help: {
@@ -86,7 +87,7 @@ const AboutView = () => {
                         </Typography>
                         <Typography variant="body1">
                             - Do not cheat and follow the{' '}
-                            <Link rel="noopener" href="https://lp.nekz.me/rules">
+                            <Link rel="noopener" href={baseUrl() + "/rules/"}>
                                 rules
                             </Link>
                             .
