@@ -4,6 +4,10 @@
 
 World record on `Lasers` is now 2.<br>Achieved first by [`Nidboj132`] and [`Oryn`].
 
+## 2023-06-28
+
+World record on `Fling Block` is now 0.<br>Achieved first by [`acuifex`] and [`Seal`].
+
 ## 2023-03-04
 
 World record on `Underground` is now 2.<br>Achieved first by [`Nidboj132`].
@@ -92,3 +96,5 @@ World record on `Laser Platform` is now 3.<br>Achieved first by [`Krzyhau`].
 [`Oryn`]: https://lp.nekz.me/@/76561198134041367
 [`feliser`]: https://lp.nekz.me/@/76561198084336096
 [`zach`]: https://lp.nekz.me/@/76561198096862334
+[`acuifex`]: https://lp.nekz.me/@/76561198106266513
+[`Seal`]: https://lp.nekz.me/@/76561198045953137
