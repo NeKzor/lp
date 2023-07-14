@@ -23,9 +23,9 @@
     "scripts": {
         "predeploy": "npm run build",
         "deploy": "gh-pages -d build -m Update",
-        "start": "react-scripts start",
-        "build": "react-scripts build && cp build/index.html build/404.html",
-        "eject": "react-scripts eject",
+        "start": "react-scripts --openssl-legacy-provider start",
+        "build": "react-scripts --openssl-legacy-provider build && cp build/index.html build/404.html",
+        "eject": "react-scripts --openssl-legacy-provider eject",
         "clone-api": "git clone --single-branch --branch api https://github.com/NeKzBot/lp api",
         "clone-build": "git clone --single-branch --branch gh-pages https://github.com/NeKzor/lp build",
         "dev": "hs ./api --cors",
