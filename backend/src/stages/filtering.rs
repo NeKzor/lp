@@ -3,6 +3,7 @@ use std::collections::HashSet;
 use log::{error, info, warn};
 
 use crate::models::database::*;
+use crate::models::steam::SteamId;
 
 // These values should never change
 const SP_MAPS_COUNT: i32 = 51;
@@ -42,12 +43,11 @@ fn calculate_completion(player: &Player) -> Option<(Option<i32>, Option<i32>)> {
     }
 }
 
-pub fn filter_players(player_ids: &HashSet<String>) -> HashSet<String> {
-    let mut filtered = HashSet::<String>::new();
+pub fn filter_players(player_ids: &HashSet<SteamId>, player_cache: &mut PlayerCache) -> HashSet<SteamId> {
+    let mut filtered = HashSet::<SteamId>::new();
 
     for player_id in player_ids.iter() {
-        let name = format!("./tmp/{}", player_id);
-        let result = Player::find(&name);
+        let result = player_cache.find(*player_id);
 
         if result.is_none() {
             warn!("player {} not found", player_id);
@@ -55,10 +55,6 @@ pub fn filter_players(player_ids: &HashSet<String>) -> HashSet<String> {
         }
 
         let mut player = result.unwrap();
-
-        if player.is_banned {
-            continue;
-        }
 
         let completion = calculate_completion(&player);
 
@@ -86,11 +82,7 @@ pub fn filter_players(player_ids: &HashSet<String>) -> HashSet<String> {
             player.mp = mp;
         }
 
-        if let Ok(_) = player.save(&name) {
-            filtered.insert(player_id.clone());
-        } else {
-            error!("failed to save player {}", player_id);
-        }
+        filtered.insert(player_id.clone());
     }
 
     filtered

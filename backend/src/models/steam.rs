@@ -1,4 +1,5 @@
 use serde::{Deserialize};
+use serde_aux::field_attributes::deserialize_number_from_string;
 
 use crate::models::repository::Record;
 
@@ -11,7 +12,7 @@ pub struct XmlTag<T> {
 #[derive(Debug, Deserialize)]
 pub struct Entry {
     #[serde(rename = "steamid")]
-    pub steam_id: XmlTag<String>,
+    pub steam_id: XmlTag<SteamId>,
     pub score: XmlTag<i32>,
 }
 
@@ -45,8 +46,8 @@ impl Leaderboards {
 
 #[derive(Debug, Deserialize)]
 pub struct SteamUser {
-    #[serde(rename = "steamid")]
-    pub steam_id: String,
+    #[serde(rename = "steamid", deserialize_with = "deserialize_number_from_string")]
+    pub steam_id: SteamId,
     #[serde(rename = "personaname")]
     pub name: String,
     pub avatar: String,
@@ -63,3 +64,5 @@ pub struct ISteamUser {
 pub struct JsonResponse<T> {
     pub response: T,
 }
+
+pub type SteamId = u64;

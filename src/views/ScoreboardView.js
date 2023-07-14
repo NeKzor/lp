@@ -23,10 +23,14 @@ const ScoreboardView = ({ boardType, profileId }) => {
         (profile) => {
             if (profile) {
                 profile.entries.forEach((entry) => {
-                    const map = records.find((record) => record.id === entry._id);
+
+                    const map = records.find((record) => record.id === entry._id)
+                        // small hack to fix issues with partial lists
+                    ?? {name: "unknown", index: 0, wr: 0, showcases:[]};
+
                     entry.name = map.name;
                     entry.index = map.index;
-                    entry.delta = Math.abs(map.wr - entry.score);
+                    entry.delta = entry.score - map.wr;
                     entry.showcase = map.showcases.find(
                         (sc) => sc.player.id === profile._id || (sc.player2 && sc.player2.id === profile._id),
                     );

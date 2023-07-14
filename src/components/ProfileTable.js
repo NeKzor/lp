@@ -128,14 +128,15 @@ const ProfileTable = ({ data }) => {
                                 record.delta === 0 ? (
                                     ''
                                 ) : (
-                                    `+${record.delta}`
+                                    `${(record.delta<0?"":"+") + record.delta}`
                                 )
                             ) : (
                                 <UnknownScoreInfo />
                             );
 
                         return (
-                            <TableRow hover tabIndex={-1} key={record._id}>
+                            <TableRow hover tabIndex={-1} key={record._id}
+                                      style={record.delta < 0 ? {backgroundColor: "#f005"} : {}}>
                                 <TableCell size="small" align="center">
                                     <Link
                                         target="_blank"

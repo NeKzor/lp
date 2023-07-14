@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::models::database::Campaign;
+use crate::models::steam::SteamId;
 
 pub trait RepositoryItem {
     fn link() -> &'static str;
@@ -43,7 +44,7 @@ impl Record {
 #[derive(Debug, Deserialize)]
 pub struct Override {
     pub id: i32,
-    pub player: String,
+    pub player: SteamId,
     pub score: i32,
 }
 
@@ -52,8 +53,8 @@ pub struct Showcase {
     pub id: i32,
     pub player: Option<String>,
     pub player2: Option<String>,
-    pub steam: Option<String>,
-    pub steam2: Option<String>,
+    pub steam: Option<SteamId>,
+    pub steam2: Option<SteamId>,
     pub date: String,
     pub media: String,
 }

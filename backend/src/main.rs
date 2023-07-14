@@ -16,18 +16,20 @@ use stages::exporting::*;
 use stages::fetching::*;
 use stages::filtering::*;
 use stages::pre_fetching::*;
+use crate::models::steam::SteamId;
 
 fn run() -> Result<(), Box<dyn std::error::Error>> {
-    let _ = fs::create_dir("./tmp/");
     let _ = fs::create_dir_all("./api/profiles/");
 
     let (records, stats) = get_records();
 
-    let mut player_ids = HashSet::<String>::new();
+    let mut player_ids = HashSet::<SteamId>::new();
     let mut api_records = models::api::Records::new();
+    let mut player_cache = PlayerCache::new("./tmp/");
 
     for record in records.iter()
-    /* .filter(|record| record.name == "Portal Gun" || record.name == "Doors") */
+     /* .filter(|record| record.name == "Portal Gun" || record.name == "Doors") */
+     /* .filter(|record| record.campaign == Campaign::Cooperative) */
     {
         info!("processing map {}", record.name);
 
@@ -64,13 +66,19 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                                     &record,
                                     &entries.as_slice()[..last_index],
                                     &mut player_ids,
+                                    &mut player_cache,
                                 );
                             }
 
                             return Ok(());
                         }
 
-                        ties += update_entries(&record, &entries.as_slice(), &mut player_ids);
+                        ties += update_entries(
+                            &record,
+                            &entries.as_slice(),
+                            &mut player_ids,
+                            &mut player_cache,
+                        );
 
                         Ok(())
                     }
@@ -86,10 +94,11 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
 
         api_records.maps.push(models::api::Map::new(&record, ties));
     }
+    let filtered_player_ids = filter_players(&player_ids, &mut player_cache);
 
-    let filtered_player_ids = filter_players(&player_ids);
-
-    export_all(&filtered_player_ids, &stats, &records, &mut api_records);
+    export_all(&filtered_player_ids, &stats, &records, &mut api_records, &mut player_cache);
+    
+    player_cache.save();
 
     Ok(())
 }

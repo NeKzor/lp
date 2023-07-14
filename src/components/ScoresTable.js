@@ -112,7 +112,8 @@ const ScoresTable = ({ data, handleClickOpen }) => {
                 <TableBody>
                     {stableSort(data, order, orderBy).map((item) => {
                         return (
-                            <TableRow hover tabIndex={-1} key={item._id}>
+                            <TableRow hover tabIndex={-1} key={item._id}
+                                      style={item.banned ? {backgroundColor: "#f005"} : {}}>
                                 <TableCell size="small" align="center">
                                     {item.rank === 1 ? (
                                         <FontAwesomeIcon title="Rank 1" icon="medal" color="#ffd700" />

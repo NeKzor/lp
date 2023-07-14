@@ -25,6 +25,7 @@ pub struct Ranking {
     #[serde(rename = "scoreOld")]
     pub old_score: i32,
     pub rank: i32,
+    pub banned: bool,
 }
 
 #[skip_serializing_none]
@@ -74,14 +75,12 @@ impl Map {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Records {
     pub maps: Vec<Map>,
-    pub cheaters: Vec<String>,
 }
 
 impl Records {
     pub fn new() -> Self {
         Records {
             maps: Vec::new(),
-            cheaters: Vec::new(),
         }
     }
 }

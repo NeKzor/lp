@@ -1,3 +1,4 @@
+use std::cmp;
 use std::collections::HashSet;
 
 use log::{error, info, warn};
@@ -32,90 +33,66 @@ pub fn fetch_entries(
     Ok(leaderboard)
 }
 
-pub fn update_entries(record: &Record, entries: &[Entry], player_ids: &mut HashSet<String>) -> i32 {
+pub fn update_entries(record: &Record, entries: &[Entry],
+                      player_ids: &mut HashSet<SteamId>, player_cache: &mut PlayerCache) -> i32 {
     let update_ids = record.name == "Portal Gun" || record.name == "Doors";
 
-    use std::sync::Mutex;
+    let mut wr_ties = 0;
 
-    let ids = Mutex::new(player_ids);
-    let wr_ties = Mutex::new(0);
-
-    entries.par_iter().chunks(2500).for_each(|entries| {
-        let mut temp_ids = HashSet::new();
-        let mut temp_wr_ties = 0;
-
-        for entry in entries {
-            let name = format!("./tmp/{}", entry.steam_id.value);
-
-            let mut player = {
-                if let Some(player) = Player::find(&name) {
-                    player
-                } else {
-                    let mut player = Player::default();
-                    player.id = entry.steam_id.value.clone();
-                    player
-                }
-            };
-
-            if player.is_banned {
-                continue;
-            }
-
-            let new_score = {
-                if let Some(ov) = record
-                    .overrides
-                    .iter()
-                    .find(|ov| ov.player == entry.steam_id.value)
-                {
-                    ov.score
-                } else {
-                    if !entry.is_valid(&record) {
-                        player.is_banned = true;
-                        warn!("Auto-banned player {} (score: {})", player.id, entry.score.value);
-                    }
-    
-                    entry.score.value
-                }
-            };
-
-            if let Some(mut score) = player
-                .scores
-                .iter_mut()
-                .find(|score| score.map_id == record.id)
-            {
-                score.old_score = Some(score.score);
-                score.score = new_score;
+    entries.iter().for_each(|entry| {
+        let mut player = {
+            if let Some(player) = player_cache.find(entry.steam_id.value) {
+                player
             } else {
-                player.scores.push(Score {
-                    map_id: record.id,
-                    campaign: record.campaign,
-                    score: new_score,
-                    old_score: None,
-                    delta: new_score - record.wr
-                });
+                let mut player = Player::default();
+                player.id = entry.steam_id.value.clone();
+                player_cache.insert(player)
             }
+        };
 
-            if !player.is_banned {
-                if record.wr == new_score {
-                    temp_wr_ties += 1;
+        let new_score = {
+            if let Some(ov) = record
+                .overrides
+                .iter()
+                .find(|ov| ov.player == entry.steam_id.value)
+            {
+                ov.score
+            } else {
+                if !player.is_banned && !entry.is_valid(&record) {
+                    player.is_banned = true;
+                    warn!("Auto-banned player {} (score: {})", player.id, entry.score.value);
                 }
 
-                if update_ids {
-                    temp_ids.insert(player.id.clone());
-                }
+                // clamp value for cheaters
+                cmp::max(entry.score.value, -10000)
             }
+        };
 
-            if player.save(&name).is_err() {
-                error!("failed to save player {}", player.id);
-            }
+        if let Some(mut score) = player
+            .scores
+            .iter_mut()
+            .find(|score| score.map_id == record.id)
+        {
+            score.old_score = Some(score.score);
+            score.score = new_score;
+        } else {
+            player.scores.push(Score {
+                map_id: record.id,
+                campaign: record.campaign,
+                score: new_score,
+                old_score: None,
+                delta: new_score - record.wr
+            });
         }
 
-        let mut mtx_ties = wr_ties.lock().unwrap();
-        let mut mtx_player_ids = ids.lock().unwrap();
+        if record.wr == new_score {
+            wr_ties += 1;
+        }
 
-        *mtx_ties += temp_wr_ties;
-        (*mtx_player_ids).extend(temp_ids);
+        if update_ids {
+            player_ids.insert(player.id.clone());
+        }
     });
 
-    wr_ties.into_inner().unwrap_or_default()
+    wr_ties
 }

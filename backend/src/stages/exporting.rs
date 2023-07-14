@@ -8,6 +8,7 @@ use log::{info, warn};
 
 use crate::models::api::*;
 use crate::models::database;
+use crate::models::database::PlayerCache;
 use crate::models::repository::Record;
 use crate::models::steam::*;
 
@@ -55,10 +56,11 @@ pub fn fetch_profiles(
 }
 
 pub fn export_all(
-    filtered_player_ids: &HashSet<String>,
+    filtered_player_ids: &HashSet<SteamId>,
     stats: &(i32, i32, i32),
     records: &Vec<Record>,
     api_records: &mut Records,
+    player_cache: &mut PlayerCache
 ) {
     let (perfect_sp_score, perfect_mp_score, perfect_ov_score) = stats;
 
@@ -66,7 +68,7 @@ pub fn export_all(
     let mut mp_ranks = Vec::<Ranking>::new();
     let mut ov_ranks = Vec::<Ranking>::new();
 
-    let mut ids_to_resolve = HashSet::<String>::new();
+    let mut ids_to_resolve = HashSet::<SteamId>::new();
 
     records.iter().for_each(|record| {
         record.showcases.iter().for_each(|showcase| {
@@ -87,13 +89,12 @@ pub fn export_all(
     info!("requesting {} api calls", chunks.len());
 
     let profiles: Vec<SteamUser> = chunks
-        .map(|ids| fetch_profiles(ids.into_iter().map(|id| id.clone()).collect()).unwrap())
+        .map(|ids| fetch_profiles(ids.into_iter().map(|id| id.clone().to_string()).collect()).unwrap())
         .flatten()
         .collect();
 
     for player_id in filtered_player_ids.iter() {
-        let name = format!("./tmp/{}", player_id);
-        let result = database::Player::find(&name);
+        let result = player_cache.find(*player_id);
 
         if result.is_none() {
             warn!("player {} not found", player_id);
@@ -142,10 +143,11 @@ pub fn export_all(
                 avatar: player.avatar.clone(),
                 country: player.country.clone(),
                 stats: Stats { delta, percentage },
-                id: player.id.clone(),
+                id: player.id.to_string(),
                 score: player.sp,
                 old_score: player.sp_old,
                 rank: 0,
+                banned: player.is_banned,
             });
         }
 
@@ -161,10 +163,11 @@ pub fn export_all(
                 avatar: player.avatar.clone(),
                 country: player.country.clone(),
                 stats: Stats { delta, percentage },
-                id: player.id.clone(),
+                id: player.id.to_string(),
                 score: player.mp,
                 old_score: player.mp_old,
                 rank: 0,
+                banned: player.is_banned,
             });
         }
 
@@ -180,10 +183,11 @@ pub fn export_all(
                 avatar: player.avatar.clone(),
                 country: player.country.clone(),
                 stats: Stats { delta, percentage },
-                id: player.id.clone(),
+                id: player.id.to_string(),
                 score: player.overall,
                 old_score: player.overall_old,
                 rank: 0,
+                banned: player.is_banned,
             });
         }
 
@@ -203,7 +207,7 @@ pub fn export_all(
             sp_old: player.sp_old,
             mp_old: player.mp_old,
             overall_old: player.overall_old,
-            id: player_id.clone(),
+            id: player_id.to_string(),
             name: player.name.clone(),
             avatar: player.avatar.clone(),
             country: player.country.clone(),
@@ -255,13 +259,13 @@ pub fn export_all(
     calc_ranks(&mut mp_ranks);
     calc_ranks(&mut ov_ranks);
 
-    let create_showcaser = |player_id: &Option<String>,
+    let create_showcaser = |player_id: &Option<SteamId>,
                             fallback_name: &Option<String>|
      -> Result<Showcaser, &'static str> {
         if let Some(id) = player_id {
             if let Some(profile) = profiles.iter().find(|profile| profile.steam_id == *id) {
                 Ok(Showcaser {
-                    id: Some(profile.steam_id.clone()),
+                    id: Some(profile.steam_id.to_string()),
                     name: profile.name.clone(),
                     avatar: Some(profile.avatar.clone()),
                     country: profile.country.clone(),
