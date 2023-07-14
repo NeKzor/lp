@@ -1,5 +1,3 @@
-#![feature(proc_macro_hygiene, decl_macro)]
-
 #[macro_use]
 extern crate actix_web;
 use actix_cors::Cors;
@@ -11,7 +9,7 @@ use actix_web::{
     middleware::{Compress, Logger},
     web, App, HttpResponse, HttpServer,
 };
-use clap::Clap;
+use clap::Parser;
 use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
 
 mod logger;
@@ -21,20 +19,20 @@ mod routes;
 use middleware::*;
 use routes::*;
 
-#[derive(Clap)]
-#[clap(version = "1.0.0", author = "NeKz")]
+#[derive(Parser)]
+#[command(version = "1.0.0", author = "NeKz")]
 struct Opts {
-    #[clap(short, long, default_value = "127.0.0.1")]
+    #[arg(short, long, default_value = "127.0.0.1")]
     address: String,
-    #[clap(short, long, default_value = "8080")]
+    #[arg(short, long, default_value = "8080")]
     port: String,
-    #[clap(short, long)]
+    #[arg(short, long)]
     enable_ssl: bool,
-    #[clap(long, default_value = "127.0.0.1-key.pem")]
+    #[arg(long, default_value = "127.0.0.1-key.pem")]
     ssl_key: String,
-    #[clap(long, default_value = "127.0.0.1.pem")]
+    #[arg(long, default_value = "127.0.0.1.pem")]
     ssl_cert: String,
-    #[clap(short, long)]
+    #[arg(short, long)]
     development: bool,
 }
 
