@@ -19,7 +19,7 @@ use stages::pre_fetching::*;
 use crate::models::steam::SteamId;
 
 fn run() -> Result<(), Box<dyn std::error::Error>> {
-    let _ = fs::create_dir_all("./api/profiles/");
+    let _ = fs::create_dir_all("./api/profiles/").expect("couldn't create ./api/profiles/");
 
     let (records, stats) = get_records();
 

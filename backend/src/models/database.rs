@@ -59,7 +59,7 @@ pub struct PlayerCache {
 
 impl PlayerCache {
     pub fn new(path: &str) -> Self {
-        let _ = fs::create_dir_all(path);
+        let _ = fs::create_dir_all(path).expect("couldn't create player cache path");
         PlayerCache {
             player_map: Default::default(),
             directory: path.to_string(),

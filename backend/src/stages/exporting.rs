@@ -298,7 +298,7 @@ pub fn export_all(
 
                 let player2 = if showcase.steam2.is_some() || showcase.player2.is_some() {
                     let showcaser = create_showcaser(&showcase.steam2, &showcase.player2);
-                    if let Err(oops) = player {
+                    if let Err(oops) = showcaser {
                         warn!("{}", oops);
                         None
                     } else {

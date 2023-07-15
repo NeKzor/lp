@@ -3,7 +3,7 @@ use std::collections::HashSet;
 
 use log::{error, info, warn};
 use rayon::prelude::*;
-use serde_xml_rs::from_reader;
+use quick_xml::de::from_reader;
 
 use crate::models::database::*;
 use crate::models::repository::*;
