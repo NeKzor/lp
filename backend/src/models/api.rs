@@ -25,6 +25,8 @@ pub struct Ranking {
     #[serde(rename = "scoreOld")]
     pub old_score: i32,
     pub rank: i32,
+    #[serde(rename = "rankBanned")]
+    pub rank_banned: i32,
     pub banned: bool,
 }
 

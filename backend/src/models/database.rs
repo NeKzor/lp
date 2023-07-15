@@ -17,8 +17,10 @@ pub struct Player {
     pub country: Option<String>,
     #[serde(rename = "entries")]
     pub scores: Vec<Score>,
-    #[serde(rename = "isBanned")]
-    pub is_banned: bool,
+    #[serde(rename = "spBanned")]
+    pub sp_banned: bool,
+    #[serde(rename = "mpBanned")]
+    pub mp_banned: bool,
     pub sp: i32,
     pub mp: i32,
     pub overall: i32,

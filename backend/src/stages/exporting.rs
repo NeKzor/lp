@@ -147,7 +147,8 @@ pub fn export_all(
                 score: player.sp,
                 old_score: player.sp_old,
                 rank: 0,
-                banned: player.is_banned,
+                rank_banned: 0,
+                banned: player.sp_banned,
             });
         }
 
@@ -167,7 +168,8 @@ pub fn export_all(
                 score: player.mp,
                 old_score: player.mp_old,
                 rank: 0,
-                banned: player.is_banned,
+                rank_banned: 0,
+                banned: player.mp_banned,
             });
         }
 
@@ -187,7 +189,8 @@ pub fn export_all(
                 score: player.overall,
                 old_score: player.overall_old,
                 rank: 0,
-                banned: player.is_banned,
+                rank_banned: 0,
+                banned: player.sp_banned || player.mp_banned,
             });
         }
 
@@ -246,12 +249,23 @@ pub fn export_all(
         let mut current_score = 0;
 
         rankings.iter_mut().for_each(|rank| {
-            if current_score != rank.score {
+            if current_score != rank.score && !rank.banned {
                 current_score = rank.score;
                 current_rank += 1;
             }
 
             rank.rank = current_rank;
+        });
+        let mut current_rank = 0;
+        let mut current_score = 0;
+
+        rankings.iter_mut().for_each(|rank| {
+            if current_score != rank.score {
+                current_score = rank.score;
+                current_rank += 1;
+            }
+
+            rank.rank_banned = current_rank;
         });
     }
 

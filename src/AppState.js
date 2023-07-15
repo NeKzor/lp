@@ -1,19 +1,21 @@
 import React from 'react';
 
-class DarkMode {
-    constructor() {
-        this.enabled = localStorage.getItem('dark_mode') === 'true';
+class Toggle {
+    constructor(name) {
+        this.enabled = localStorage.getItem(name) === 'true';
+        this.name = name;
     }
     toggle() {
         this.enabled = !this.enabled;
-        localStorage.setItem('dark_mode', this.enabled.toString());
+        localStorage.setItem(this.name, this.enabled.toString());
         return this;
     }
 }
 
 const initialState = {
     records: [],
-    darkMode: new DarkMode(),
+    darkMode: new Toggle("dark_mode"),
+    banned: new Toggle("banned_toggle"),
 };
 
 export const AppReducer = [
@@ -29,6 +31,11 @@ export const AppReducer = [
                 return {
                     ...state,
                     darkMode: state.darkMode.toggle(),
+                };
+            case 'toggleBanned':
+                return {
+                    ...state,
+                    banned: state.banned.toggle(),
                 };
             default:
                 throw new Error('Unknown action type.');

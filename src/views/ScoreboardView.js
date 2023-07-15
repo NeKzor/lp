@@ -7,6 +7,9 @@ import ScoresTable from '../components/ScoresTable';
 import Api from '../Api';
 import AppState from '../AppState';
 import { useIsMounted } from '../Hooks';
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
 
 const ScoreboardView = ({ boardType, profileId }) => {
     const isMounted = useIsMounted();
@@ -87,6 +90,14 @@ const ScoreboardView = ({ boardType, profileId }) => {
                 .catch((err) => console.error(err));
         }
     };
+    const {
+        state: { banned },
+        dispatch,
+    } = React.useContext(AppState);
+
+    const toggleBanned = () => {
+        dispatch({ action: 'toggleBanned' });
+    };
 
     return (
         <>
@@ -94,6 +105,14 @@ const ScoreboardView = ({ boardType, profileId }) => {
                 <Grid item xs={false} md={1} lg={3} />
                 <Grid item xs={12} md={10} lg={6}>
                     <Paper style={{ marginBottom: '50px' }}>
+                        <FormGroup row style={{margin: '0px 10px', justifyContent: "right"}} >
+                            <FormControlLabel
+                                control={
+                                    <Switch checked={banned.enabled} onChange={toggleBanned} color="primary" />
+                                }
+                                label="Show Banned Players"
+                            />
+                        </FormGroup>
                         {board.length === 0 && <LinearProgress />}
                         <ScoresTable data={board} handleClickOpen={handleProfileOpen} />
                     </Paper>

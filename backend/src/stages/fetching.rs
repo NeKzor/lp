@@ -58,9 +58,17 @@ pub fn update_entries(record: &Record, entries: &[Entry],
             {
                 ov.score
             } else {
-                if !player.is_banned && !entry.is_valid(&record) {
-                    player.is_banned = true;
-                    warn!("Auto-banned player {} (score: {})", player.id, entry.score.value);
+                if record.campaign == Campaign::SinglePlayer &&
+                    !player.sp_banned &&
+                    !entry.is_valid(&record) {
+                    player.sp_banned = true;
+                    warn!("SP Auto-banned player {} (score: {})", player.id, entry.score.value);
+                }
+                if record.campaign == Campaign::Cooperative &&
+                    !player.mp_banned &&
+                    !entry.is_valid(&record) {
+                    player.mp_banned = true;
+                    warn!("MP Auto-banned player {} (score: {})", player.id, entry.score.value);
                 }
 
                 // clamp value for cheaters

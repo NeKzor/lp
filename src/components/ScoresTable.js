@@ -15,6 +15,7 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Tooltip from '@material-ui/core/Tooltip';
 import { makeStyles } from '@material-ui/core/styles';
 import stableSort from '../utils/stableSort';
+import AppState from "../AppState";
 
 fa.add(faMedal);
 
@@ -86,6 +87,11 @@ const ScoresTable = ({ data, handleClickOpen }) => {
         orderBy: 'score',
     });
 
+
+    const {
+        state: { banned },
+    } = React.useContext(AppState);
+
     const handleRequestSort = (_, property) => {
         const orderBy = property;
         let order = 'desc';
@@ -110,19 +116,19 @@ const ScoresTable = ({ data, handleClickOpen }) => {
                     rowCount={data.length}
                 />
                 <TableBody>
-                    {stableSort(data, order, orderBy).map((item) => {
+                    {stableSort(data, order, orderBy).filter(e => banned.enabled || (!banned.enabled && !e.banned)).map((item) => {
                         return (
                             <TableRow hover tabIndex={-1} key={item._id}
                                       style={item.banned ? {backgroundColor: "#f005"} : {}}>
                                 <TableCell size="small" align="center">
-                                    {item.rank === 1 ? (
+                                    {(banned.enabled ? item.rankBanned : item.rank)  === 1 ? (
                                         <FontAwesomeIcon title="Rank 1" icon="medal" color="#ffd700" />
-                                    ) : item.rank === 2 ? (
+                                    ) : (banned.enabled ? item.rankBanned : item.rank) === 2 ? (
                                         <FontAwesomeIcon title="Rank 2" icon="medal" color="#C0C0C0" />
-                                    ) : item.rank === 3 ? (
+                                    ) : (banned.enabled ? item.rankBanned : item.rank) === 3 ? (
                                         <FontAwesomeIcon title="Rank 3" icon="medal" color="#cd7f32" />
                                     ) : (
-                                        item.rank
+                                        (banned.enabled ? item.rankBanned : item.rank)
                                     )}
                                 </TableCell>
                                 <TableCell size="small">
