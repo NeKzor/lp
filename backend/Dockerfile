@@ -17,9 +17,16 @@ RUN cargo build --release
 FROM debian:bullseye
 WORKDIR /app
 
+# install root certificates
+RUN \
+  apt-get update && \
+  apt-get install -y ca-certificates && \
+  apt-get clean
+
 COPY --from=builder /app/backend/target/release/backend ./
 
 # i wanted to put this in ../docker, but docker can't do that
 COPY docker-start.sh ./
+COPY *.yaml ./
 
 CMD ["sh", "/app/docker-start.sh"]

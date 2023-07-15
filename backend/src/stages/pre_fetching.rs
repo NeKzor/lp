@@ -1,22 +1,30 @@
+use std::fs;
 use log::info;
 
 use crate::models::database::*;
 use crate::models::repository::*;
 
-const MASTER_BRANCH: &str = "https://raw.githubusercontent.com/NeKzor/lp/master";
+const MASTER_BRANCH: &str = "https://raw.githubusercontent.com/NeKzor/lp/master/backend";
 
 fn sync_repository<T>() -> Vec<T>
 where
     T: RepositoryItem + serde::de::DeserializeOwned,
 {
     let item = T::link();
-    let url = format!("{}/{}", MASTER_BRANCH, item);
 
-    let res =
-        reqwest::blocking::get(&url.to_owned()).expect(format!("failed to fetch {}", url).as_ref());
+    let text;
+    let path = std::env::var("RECORDS_PATH");
+    if path.is_ok() {
+        let path = format!("{}/{}", path.unwrap(), item);
+        text = fs::read_to_string(&path).expect(format!("failed to read file {}", path).as_ref());
+    } else {
+        let url = format!("{}/{}", MASTER_BRANCH, item);
 
-    let text = res.text().expect("failed to read text");
+        let res =
+            reqwest::blocking::get(&url.to_owned()).expect(format!("failed to fetch {}", url).as_ref());
 
+        text = res.text().expect("failed to read text");
+    }
     let yaml: Vec<T> =
         serde_yaml::from_str(&text).expect(format!("failed to parse yaml for {}", item).as_ref());
 

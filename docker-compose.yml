@@ -4,9 +4,11 @@ services:
     secrets:
       - steam-api-key
 #    environment:
+#      - RECORDS_PATH=/app # if you want to use local .yaml files
 #      - STEAM_API_KEY=00000000000000000000000000000000
     volumes: #
       - /tmp/api:/app/api
+#      - ./tmp:/app/tmp # if you want to edit the bans or something
 #      - api:/app/api
   frontend:
     build:
