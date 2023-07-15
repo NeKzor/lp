@@ -20,12 +20,13 @@ use crate::models::steam::SteamId;
 
 fn run() -> Result<(), Box<dyn std::error::Error>> {
     let _ = fs::create_dir_all("./api/profiles/").expect("couldn't create ./api/profiles/");
+    let _ = fs::create_dir_all("./tmp/").expect("couldn't create ./tmp/");
 
     let (records, stats) = get_records();
 
     let mut player_ids = HashSet::<SteamId>::new();
     let mut api_records = models::api::Records::new();
-    let mut player_cache = PlayerCache::new("./tmp/");
+    let mut player_cache = PlayerCache::new("./tmp/profiles.json");
 
     for record in records.iter()
      /* .filter(|record| record.name == "Portal Gun" || record.name == "Doors") */
@@ -97,8 +98,8 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     let filtered_player_ids = filter_players(&player_ids, &mut player_cache);
 
     export_all(&filtered_player_ids, &stats, &records, &mut api_records, &mut player_cache);
-    
-    player_cache.save();
+
+    player_cache.save("./tmp/profiles.json");
 
     Ok(())
 }
