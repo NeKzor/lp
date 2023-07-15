@@ -92,9 +92,11 @@ pub fn update_entries(record: &Record, entries: &[Entry],
                 delta: new_score - record.wr
             });
         }
-
-        if record.wr == new_score {
-            wr_ties += 1;
+        if (record.campaign == Campaign::SinglePlayer && !player.sp_banned) ||
+            (record.campaign == Campaign::Cooperative && !player.mp_banned) {
+            if record.wr == new_score {
+                wr_ties += 1;
+            }
         }
 
         if update_ids {
