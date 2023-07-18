@@ -409,7 +409,7 @@
 - id: 47855
   name: Fling Block
   mode: 2
-  wr: 2
+  wr: 0
   index: 80
 
 - id: 47857

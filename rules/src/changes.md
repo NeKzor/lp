@@ -1,5 +1,9 @@
 # Changes
 
+## 2023-07-18
+
+World record on `Fling Block` is now 0.<br>Achieved first by [`BiSaXa`] and [`Oryn`].
+
 ## 2023-07-11
 
 World record on `Lasers` is now 2.<br>Achieved first by [`Nidboj132`] and [`Oryn`].
@@ -92,3 +96,4 @@ World record on `Laser Platform` is now 3.<br>Achieved first by [`Krzyhau`].
 [`Oryn`]: https://lp.nekz.me/@/76561198134041367
 [`feliser`]: https://lp.nekz.me/@/76561198084336096
 [`zach`]: https://lp.nekz.me/@/76561198096862334
+[`BiSaXa`]: https://lp.nekz.me/@/76561198131629989
