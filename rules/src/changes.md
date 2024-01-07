@@ -1,5 +1,8 @@
 # Changes
 
+## 2023-12-30
+World record on `Bridge Fling` is now 2.<br>Achieved first by `Seal` and `acuifex`.
+
 ## 2023-07-18
 
 World record on `Fling Block` is now 0.<br>Achieved first by [`BiSaXa`] and [`Oryn`].
