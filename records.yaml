@@ -50,7 +50,8 @@
 - id: 47745
   name: Trust Fling
   mode: 1
-  wr: 2
+  wr: 0
+  limit: 2
   index: 14
 
 - id: 47466

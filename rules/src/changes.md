@@ -1,6 +1,11 @@
 # Changes
 
+## 2024-01-28
+
+World record on `Trust Fling` is now 0.<br>Achieved first by [`SuperAiderton`].
+
 ## 2023-12-30
+
 World record on `Bridge Fling` is now 2.<br>Achieved first by `Seal` and `acuifex`.
 
 ## 2023-07-18
@@ -100,3 +105,4 @@ World record on `Laser Platform` is now 3.<br>Achieved first by [`Krzyhau`].
 [`feliser`]: https://lp.nekz.me/@/76561198084336096
 [`zach`]: https://lp.nekz.me/@/76561198096862334
 [`BiSaXa`]: https://lp.nekz.me/@/76561198131629989
+[`SuperAiderton`]: https://lp.nekz.me/@/76561199069631083
