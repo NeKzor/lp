@@ -76,7 +76,7 @@
 - id: 47750
   name: Ricochet
   mode: 1
-  wr: 2
+  wr: 0
   index: 18
 
 - id: 47753
@@ -224,7 +224,7 @@
 - id: 47796
   name: Conversion Intro
   mode: 1
-  wr: 9
+  wr: 8
   index: 45
 
 - id: 47799
@@ -308,7 +308,7 @@
 - id: 47457
   name: Finale 4
   mode: 1
-  wr: 6
+  wr: 4
   index: 61
 
 - id: 47740

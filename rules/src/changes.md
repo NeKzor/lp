@@ -1,5 +1,17 @@
 # Changes
 
+## 2024-08-07
+
+World record on `Conversion Intro` is now 8.<br>Achieved first by [`SuperAiderton`].
+
+## 2024-07-18
+
+World record on `Ricochet` is now 0.<br>Achieved first by [`Nidboj132`].
+
+## 2024-06-27
+
+World record on `Finale 4` is now 4.<br>Achieved first by [`Black_Semka`].
+
 ## 2024-01-28
 
 World record on `Trust Fling` is now 0.<br>Achieved first by [`SuperAiderton`].
@@ -106,3 +118,4 @@ World record on `Laser Platform` is now 3.<br>Achieved first by [`Krzyhau`].
 [`zach`]: https://lp.nekz.me/@/76561198096862334
 [`BiSaXa`]: https://lp.nekz.me/@/76561198131629989
 [`SuperAiderton`]: https://lp.nekz.me/@/76561199069631083
+[`Black_Semka`]: https://lp.nekz.me/@/76561198997027314
