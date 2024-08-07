@@ -1,5 +1,9 @@
 # Changes
 
+View [this spreadsheet] for the complete history.
+
+[this spreadsheet]: https://docs.google.com/spreadsheets/d/e/2PACX-1vTaJXOxGvVTeEMAMSXfbeLp_bMDEJGvPWVhLR7UQQ-ZZBpsTWhoPKxfRW1-lUJ6oNBZRuUXXKUNB8El/pubhtml
+
 ## 2024-08-07
 
 World record on `Conversion Intro` is now 8.<br>Achieved first by [`SuperAiderton`].
