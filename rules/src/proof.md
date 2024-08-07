@@ -4,8 +4,6 @@
 - Video showcases are highly encouraged
   - Shows whole run
   - No edits
-  - Includes link to demo recording, see [`Demo Recording`]
+  - Includes link to demo recording
   - Might show alternative ways to help other runners
 - A manual ban can happen in very suspicious cases
-
-[`Demo Recording`]: commands-demo.recording.md
