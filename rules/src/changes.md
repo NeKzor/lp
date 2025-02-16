@@ -4,6 +4,14 @@ View [this spreadsheet] for the complete history.
 
 [this spreadsheet]: https://docs.google.com/spreadsheets/d/e/2PACX-1vTaJXOxGvVTeEMAMSXfbeLp_bMDEJGvPWVhLR7UQQ-ZZBpsTWhoPKxfRW1-lUJ6oNBZRuUXXKUNB8El/pubhtml
 
+## 2025-02-16
+
+World record on `Catapults` is now 3.<br>Achieved first by `Seal` and `acuifex`.
+
+## 2025-01-24
+
+World record on `Finale 2` is now 0.<br>Achieved first by `Seal` and `acuifex`.
+
 ## 2024-08-07
 
 World record on `Conversion Intro` is now 8.<br>Achieved first by [`SuperAiderton`].
@@ -15,6 +23,22 @@ World record on `Ricochet` is now 0.<br>Achieved first by [`Nidboj132`].
 ## 2024-06-27
 
 World record on `Finale 4` is now 4.<br>Achieved first by [`Black_Semka`].
+
+## 2024-10-07
+
+World record on `Cooperative Bridges` is now 2.<br>Achieved first by `Seal` and `acuifex`.
+
+## 2024-09-07
+
+World record on `Turret Walls` is now 2.<br>Achieved first by `Seal` and `acuifex`.
+
+## 2024-02-15
+
+World record on `Double Bounce` is now 0.<br>Achieved first by `Seal` and `acuifex`.
+
+## 2024-02-10
+
+World record on `Rat Maze` is now 0.<br>Achieved first by `Seal` and `acuifex`.
 
 ## 2024-01-28
 

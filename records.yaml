@@ -296,7 +296,7 @@
 - id: 47822
   name: Finale 2
   mode: 1
-  wr: 2
+  wr: 0
   index: 59
 
 - id: 47823
@@ -332,7 +332,7 @@
 - id: 47830
   name: Rat Maze
   mode: 2
-  wr: 2
+  wr: 0
   index: 67
 
 - id: 45466
@@ -374,7 +374,7 @@
 - id: 47839
   name: Catapults
   mode: 2
-  wr: 4
+  wr: 3
   index: 74
 
 - id: 47842
@@ -398,7 +398,7 @@
 - id: 47847
   name: Cooperative Bridges
   mode: 2
-  wr: 3
+  wr: 2
   index: 78
 
 - id: 47850
@@ -428,7 +428,7 @@
 - id: 47860
   name: Turret Walls
   mode: 2
-  wr: 4
+  wr: 2
   index: 83
 
 - id: 52641
@@ -506,7 +506,7 @@
 - id: 52712
   name: Double Bounce
   mode: 2
-  wr: 2
+  wr: 0
   index: 96
 
 - id: 52713
