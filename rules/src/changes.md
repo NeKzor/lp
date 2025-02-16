@@ -10,7 +10,7 @@ World record on `Catapults` is now 3.<br>Achieved first by `Seal` and `acuifex`.
 
 ## 2025-01-24
 
-World record on `Finale 2` is now 0.<br>Achieved first by `Seal` and `acuifex`.
+World record on `Finale 2` is now 0.<br>Achieved first by [`TeePeeWee`].
 
 ## 2024-08-07
 
@@ -147,3 +147,4 @@ World record on `Laser Platform` is now 3.<br>Achieved first by [`Krzyhau`].
 [`BiSaXa`]: https://lp.nekz.me/@/76561198131629989
 [`SuperAiderton`]: https://lp.nekz.me/@/76561199069631083
 [`Black_Semka`]: https://lp.nekz.me/@/76561198997027314
+[`TeePeeWee`]: https://lp.nekz.me/@/76561199239427541
