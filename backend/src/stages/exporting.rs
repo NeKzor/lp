@@ -4,7 +4,10 @@ use std::fs;
 use std::io::Write;
 use std::iter::FromIterator;
 
+use log::error;
 use log::{info, warn};
+use retry::delay::Fixed;
+use retry::retry;
 
 use crate::models::api::*;
 use crate::models::database;
@@ -23,7 +26,7 @@ where
 }
 
 pub fn fetch_profiles(
-    profile_ids: Vec<String>,
+    profile_ids: &Vec<String>,
 ) -> Result<Vec<SteamUser>, Box<dyn std::error::Error>> {
     assert!(
         profile_ids.len() <= 100,
@@ -87,7 +90,23 @@ pub fn export_all(
     info!("requesting {} api calls", chunks.len());
 
     let profiles: Vec<SteamUser> = chunks
-        .map(|ids| fetch_profiles(ids.into_iter().map(|id| id.clone()).collect()).unwrap())
+        .map(|ids| {
+            let profile_ids = ids.into_iter().map(|id| id.clone()).collect();
+
+            let profiles = retry(Fixed::from_millis(1 * 1000).take(10), move || {
+                match fetch_profiles(&profile_ids) {
+                    Ok(profiles) => {
+                        Ok(profiles)
+                    }
+                    Err(oops) => {
+                        error!("{}", oops);
+                        Err("fetch_profiles failed, will retry in 1 second")
+                    }
+                }
+            });
+
+            profiles.unwrap()
+        })
         .flatten()
         .collect();
 
@@ -344,7 +363,7 @@ mod tests {
         profile_ids.push("76561198049848090".to_string());
         profile_ids.push("76561198049848090".to_string());
 
-        let profiles = fetch_profiles(profile_ids).unwrap();
+        let profiles = fetch_profiles(&profile_ids).unwrap();
 
         assert_eq!(profiles.len(), 2);
     }
