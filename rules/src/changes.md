@@ -4,9 +4,33 @@ View [this spreadsheet] for the complete history.
 
 [this spreadsheet]: https://docs.google.com/spreadsheets/d/e/2PACX-1vTaJXOxGvVTeEMAMSXfbeLp_bMDEJGvPWVhLR7UQQ-ZZBpsTWhoPKxfRW1-lUJ6oNBZRuUXXKUNB8El/pubhtml
 
+## 2025-11-13
+
+World record on `Cave Johnson` is now 3.<br>Achieved first by `Rattlé`.
+
+## 2025-09-24
+
+World record on `Repulsion Polarity` is now 0.<br>Achieved first by `Seal`.
+
+## 2025-07-09
+
+World record on `Lasers` is now 0.<br>Achieved first by `Seal` and `acuifex`.
+
+## 2025-04-19
+
+World record on `Turret Walls` is now 0.<br>Achieved first by `Seal` and `acuifex`.
+
 ## 2025-02-16
 
 World record on `Catapults` is now 3.<br>Achieved first by `Seal` and `acuifex`.
+
+## 2025-01-29
+
+World record on `Vertical Flings` is now 0.<br>Achieved first by `Seal` and `acuifex`.
+
+## 2025-01-28
+
+World record on `Buttons` is now 0.<br>Achieved first by `Seal` and `acuifex`.
 
 ## 2025-01-24
 
