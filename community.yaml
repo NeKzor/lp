@@ -229,9 +229,9 @@
 # Cave Johnson
 
 - id: 47785
-  steam: '76561198337970645'
-  date: Aug. 2021
-  media: qayVyToxvsg
+  player: Rattlé
+  date: Nov. 2025
+  media: IZ07o3hqywA
 
 - id: 47785
   steam: '76561198003223063'
@@ -365,14 +365,9 @@
 # Repulsion Polarity
 
 - id: 47820
-  steam: '76561198043899549'
-  date: Sep. 2014
-  media: 53OhbE9DeBs
-
-- id: 47820
-  steam: '76561198049848090'
-  date: Jun. 2016
-  media: jji7ojfqMgw
+  player: Seal
+  date: Sep. 2025
+  media: XkgVTXJlENc
 
 # Finale 2
 
@@ -406,18 +401,18 @@
 # Buttons
 
 - id: 47826
-  steam: '76561197980620221'
-  steam2: '76561197978601137'
-  date: Nov. 2011
-  media: TwUuzXIu0U8
+  player: Seal
+  player2: acuifex
+  date: Jan. 2025
+  media: wqtvPnzprAk
 
 # Lasers
 
 - id: 47827
-  steam: '76561198134041367'
-  steam2: '76561198337970645'
-  date: Jul. 2023
-  media: jLQvcqwR-ps
+  player: Seal
+  player2: acuifex
+  date: Jul. 2025
+  media: vSCKZF3gBaI
 
 # Rat Maze
 
@@ -470,10 +465,10 @@
 # Vertical Flings
 
 - id: 47838
-  steam: '76561198021734854'
-  player2: LongJohnDickWeed
-  date: Oct. 2011
-  media: 6kJE_xwm_Nc
+  player: Seal
+  player2: acuifex
+  date: Jan. 2025
+  media: Rq1yqXM9YkU
 
 # Catapults
 
@@ -570,8 +565,8 @@
 - id: 47860
   player: Seal
   player2: acuifex
-  date: Sep. 2024
-  media: DGdD4psCoVk
+  date: Apr. 2025
+  media: tAd5ttzkx2o
 
 # Turret Assassin
 
